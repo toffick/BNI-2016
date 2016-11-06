@@ -3,7 +3,6 @@
 #include "Error.h"
 #include "In.h"
 #include <fstream>
-#include <iostream>
 
 //организован алгоритм разбора исходного кода на отдельные цепочки
 

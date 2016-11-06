@@ -1,11 +1,11 @@
 #pragma once
 
 #define ID_MAXSIZE		10			//максимальное кол-во символов в идентификаторе
-#define TI_MAXSIZE		4096		//максимальное кол-во строк в идентификаторе
 #define TI_INT_DEFAULT	0x00000000	//значение по умолчанию для типа integer
 #define TI_STRDEFAULT	0x00		//значение по умолчанию для типа string
 #define TI_NULLIDX		0xffffffff	//нет элемента таблицы идентификаторов
 #define TI_STR_MAXSIZE	225	
+#define IT_MAXSIZE		4096
 #include "LT.h"
 namespace IT
 {

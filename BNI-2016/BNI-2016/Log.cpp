@@ -1,5 +1,3 @@
-//#define _crt_secure_no_warnings
-
 #pragma once
 #include "stdafx.h"
 #include <stdlib.h>

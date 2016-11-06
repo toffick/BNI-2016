@@ -1,9 +1,8 @@
-
+#pragma once
 
 #include "stdafx.h"
 #include "FST.h"
 #include <string.h>
-#include <iostream>
 #include "LT.h"
 
 namespace FST {
