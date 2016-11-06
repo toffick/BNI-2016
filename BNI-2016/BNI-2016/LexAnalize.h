@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "IT.h"
 #include "LT.h"
@@ -7,10 +7,10 @@
 
 namespace LEX
 {
-	struct Lex                 // структура результата работы лексического анализатора
+	struct Lex                 // СЃС‚СЂСѓРєС‚СѓСЂР° СЂРµР·СѓР»СЊС‚Р°С‚Р° СЂР°Р±РѕС‚С‹ Р»РµРєСЃРёС‡РµСЃРєРѕРіРѕ Р°РЅР°Р»РёР·Р°С‚РѕСЂР°
 	{
-		LT::LexTable lextable;   // таблица лексем
-		IT::IdTable  idtable;    // таблица идентиикаторов
+		LT::LexTable lextable;   // С‚Р°Р±Р»РёС†Р° Р»РµРєСЃРµРј
+		IT::IdTable  idtable;    // С‚Р°Р±Р»РёС†Р° РёРґРµРЅС‚РёРёРєР°С‚РѕСЂРѕРІ
 
 		Lex()
 			: lextable(LT::Create(LT_MAXSIZE)), idtable(IT::Create(IT_MAXSIZE))
@@ -19,7 +19,7 @@ namespace LEX
 		};
 	};
 
-	void newLexem(int line, char lex, Lex& lexer);                // сформировать строку для ТЛ
+	void newLexem(int line, char lex, Lex& lexer);                // СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂРѕРєСѓ РґР»СЏ РўР›
 	void newId(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
 
 	void newVariable(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
@@ -28,7 +28,7 @@ namespace LEX
 	void newLiteral(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
 	void newOperator(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
 
-	void handleId(FST::FST& fst, Error::Errors& ers, Lex& lex);   // сформировать запись для ТИ
+	void handleId(FST::FST& fst, Error::Errors& ers, Lex& lex);   // СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ Р·Р°РїРёСЃСЊ РґР»СЏ РўР
 
-	Lex LexicalAnalysis(In::IN& in, Error::Errors& ers);  // начать лексичский анализ
+	Lex LexicalAnalysis(In::IN& in, Error::Errors& ers);  // РЅР°С‡Р°С‚СЊ Р»РµРєСЃРёС‡СЃРєРёР№ Р°РЅР°Р»РёР·
 };
