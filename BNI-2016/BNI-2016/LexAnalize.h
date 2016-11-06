@@ -30,5 +30,5 @@ namespace LEX
 
 	void handleId(FST::FST& fst, Error::Errors& ers, Lex& lex);   // сформировать запись для ТИ
 
-	Lex LexicalAnalysis(In::IN& in, Error::Errors& ers);  // начать лексичский анализ
+	Lex StartLA(In::IN& in, Error::Errors& ers);  // начать лексичский анализ
 };

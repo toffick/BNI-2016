@@ -162,6 +162,7 @@
     <ClCompile Include="FST.cpp" />
     <ClCompile Include="In.cpp" />
     <ClCompile Include="IT.cpp" />
+    <ClCompile Include="LexAnalize.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LT.cpp" />
     <ClCompile Include="Parm.cpp" />
