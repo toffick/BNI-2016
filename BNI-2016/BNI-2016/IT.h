@@ -65,11 +65,11 @@ namespace IT
 		);
 	void Delete(IdTable& idtable);
 	int checkId(IdTable& idtable, char value[ID_MAXSIZE]);
-	int IsDublId(IdTable& idtable, char id[ID_MAXSIZE]); //проверка на дублирвание ид
+	int IsDublId(IdTable& idtable, char id[ID_MAXSIZE]);		//проверка на дублирвание ид
 	void Add(IdTable& idtable, Entry entry);
-	int checkId(IdTable& idtable, int value);//удалить таблицу лексем
-	int IsLiteral(IdTable&, char*);						//проверяет, есть ли такой литерал в ТИ
-	void RestartId(IT::Entry& e);						//перезагрузка элемента таилц идентификаторов;
-	short   getIdxTI(char l, IT::IdTable& it);               // получить индекс ТИ
+	int checkId(IdTable& idtable, int value);					//удалить таблицу лексем
+	int IsLiteral(IdTable&, char*);								//проверяет, есть ли такой литерал в ТИ
+	void RestartId(IT::Entry& e);								//перезагрузка элемента таилц идентификаторов;
+	short   getIdxTI(char l, IT::IdTable& it);					// получить индекс ТИ
 
 };

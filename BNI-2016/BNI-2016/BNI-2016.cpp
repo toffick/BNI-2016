@@ -7,6 +7,7 @@
 #include "Error.h"
 #include "In.h"
 #include "Log.h"
+#include "LexAnalize.h"
 
 
 
@@ -22,7 +23,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteLog(log);
 		Log::WriteParm(log,parm);
 		Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
-
+		LEX::Lex lex = LEX::StartLA(in, errors);
 	}
 	catch (Error::ERROR e)
 	{

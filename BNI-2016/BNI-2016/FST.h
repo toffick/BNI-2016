@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
 #define IN_CODE_SEP ';'
-#define FST_ARR_SIZE 24
+#define FST_ARR_SIZE 30
 
 namespace FST {
 
@@ -21,7 +21,7 @@ namespace FST {
 		FST_MAIN = 10,
 		FST_RETURN = 11,
 		FST_COND = 12,
-		FST_THEN = 13,
+		FST_ELSE = 13,
 		FST_IF = 14,
 		FST_COMMA = 15,
 		FST_LEFTBRACE = 16,
@@ -34,7 +34,11 @@ namespace FST {
 		FST_BLIT = 23,
 		FST_CMP = 24,
 		FST_LESS = 25,
-		FST_LARGER = 26
+		FST_LARGER = 26,
+		FST_UNARY = 27,
+		FST_FOR=28,
+		FST_TO = 29,
+		
 	};
 
 	struct RELATION {					//ребро: символ - > графа переходов КА

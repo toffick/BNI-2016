@@ -15,8 +15,11 @@
 #define LEX_ARIPH	    'a'				//  знак(арифм + булевы) 
 #define LEX_COND		'c'				//  условный оператор (< > ==)
 #define LEX_IF			'u'				//  if
-#define LEX_THEN		'h'				//	then
-#define LEX_LOOP		'w'				//  цикл
+#define LEX_ELSE		'h'				//	else
+
+#define LEX_FOR			'w'				//  for
+#define LEX_TO			'x'				//  to
+
 #define LEX_SEMICOLON	';'				//	;
 #define LEX_COMMA		','				//	,
 #define LEX_LEFTBRACE	'{'				//	{
@@ -27,6 +30,7 @@
 #define LEX_ASSIG		'='				//  =
 #define LEX_LESS		'<'				//	<
 #define LEX_LARGER		'>'				//	>
+#define LEX_UNARY       'k'				// ++ --
 
 
 

@@ -100,7 +100,7 @@ namespace FST {
 
 	NODE alllit() {
 		NODE p;
-		p.relations = new RELATION[316];
+		p.relations = new RELATION[318];
 		p.n_relation = 316;
 		int k = 0;
 		for (int i = 0x20; i < 0x7F; i++)
@@ -124,6 +124,16 @@ namespace FST {
 			p.relations[k].nnode = 1;
 			k++;
 		};
+
+
+		p.relations[k].symbol = (char)10;
+		p.relations[k].nnode = 1;
+		k++;
+		p.relations[k].symbol = (char)10;
+		p.relations[k].nnode = 2;
+		k++;
+
+
 		p.n_relation = k;
 		return p;
 
@@ -131,9 +141,9 @@ namespace FST {
 	FST* crfsts()
 	{
 		FST fst_strlit("", LEX_LITERAL, FST_STR, 4,
-			NODE(1, RELATION((char)0x27, 1)),
+			NODE(1, RELATION((char)0x22, 1)),
 			alllit(),
-			NODE(1, RELATION((char)0x27, 3)),
+			NODE(1, RELATION((char)0x22, 3)),
 			NODE()
 			);
 
@@ -199,14 +209,10 @@ namespace FST {
 
 
 
-		FST fst_var("", LEX_VAR,FST_VAR, 8,
-			NODE(1, RELATION('d', 1)),
-			NODE(1, RELATION('e', 2)),
-			NODE(1, RELATION('c', 3)),
-			NODE(1, RELATION('l', 4)),
-			NODE(1, RELATION('a', 5)),
-			NODE(1, RELATION('r', 6)),
-			NODE(1, RELATION('e', 7)),
+		FST fst_var("", LEX_VAR,FST_VAR, 4,
+			NODE(1, RELATION('v', 1)),
+			NODE(1, RELATION('a', 2)),
+			NODE(1, RELATION('r', 3)),
 			NODE()
 			);
 
@@ -235,13 +241,47 @@ namespace FST {
 			NODE(1, RELATION('n', 4)),
 			NODE()
 			);
-
-		FST fst_display("", LEX_DISPLAY, FST_DISPLAY,6,
-			NODE(1, RELATION('p', 1)),
-			NODE(1, RELATION('r', 2)),
-			NODE(1, RELATION('i', 3)),
-			NODE(1, RELATION('n', 4)),
-			NODE(1, RELATION('t', 5)),
+		FST fst_for("", LEX_FOR, FST_FOR, 4,
+			NODE(1, RELATION('f', 1)),
+			NODE(1, RELATION('o', 2)),
+			NODE(1, RELATION('r', 3)),
+			NODE()
+			);
+		FST fst_to("", LEX_TO, FST_TO, 3,
+			NODE(1, RELATION('t', 1)),
+			NODE(1, RELATION('o', 2)),
+			NODE()
+			);
+		FST fst_if("", LEX_IF, FST_IF, 3,
+			NODE(1, RELATION('i', 1)),
+			NODE(1, RELATION('f', 2)),
+			NODE()
+			);
+		FST fst_else("", LEX_ELSE, FST_ELSE, 5,
+			NODE(1, RELATION('e', 1)),
+			NODE(1, RELATION('l', 2)),
+			NODE(1, RELATION('s', 3)),
+			NODE(1, RELATION('e', 4)),
+			NODE()
+			);
+		FST fst_inc("", LEX_UNARY, FST_UNARY, 3,
+			NODE(1, RELATION('+', 1)),
+			NODE(1, RELATION('+', 2)),
+			NODE()
+			);
+		FST fst_dec("", LEX_UNARY, FST_UNARY, 3,
+			NODE(1, RELATION('-', 1)),
+			NODE(1, RELATION('-', 2)),
+			NODE()
+			);
+		FST fst_display("", LEX_DISPLAY, FST_DISPLAY,8,
+			NODE(1, RELATION('d', 1)),
+			NODE(1, RELATION('i', 2)),
+			NODE(1, RELATION('s', 3)),
+			NODE(1, RELATION('p', 4)),
+			NODE(1, RELATION('l', 5)),
+			NODE(1, RELATION('a', 6)),
+			NODE(1, RELATION('y', 7)),
 			NODE()
 			);
 
@@ -293,7 +333,7 @@ namespace FST {
 				RELATION('&', 1),
 				RELATION('|', 1)),
 			NODE());
-
+		
 		FST fst_id("", LEX_ID, FST_ID, 2,
 			NODE(52,
 				RELATION('a', 0), RELATION('a', 1),
@@ -327,6 +367,13 @@ namespace FST {
 
 		FST* mas = new FST[FST_ARR_SIZE];
 		int i = 0;
+		mas[i++] = fst_if;
+		mas[i++] = fst_else;
+		mas[i++] = fst_for;
+		mas[i++] = fst_to;
+		mas[i++] = fst_dec;
+		mas[i++] = fst_inc;
+		mas[i++] = fst_var;
 		mas[i++] = fst_ariph;
 		mas[i++] = fst_assig;
 		mas[i++] = fst_bool;
@@ -335,9 +382,7 @@ namespace FST {
 		mas[i++] = fst_display;
 		mas[i++] = fst_false;
 		mas[i++] = fst_func;
-		mas[i++] = fst_id;
 		mas[i++] = fst_int;
-		mas[i++] = fst_intlit;
 		mas[i++] = fst_larger;
 		mas[i++] = fst_leftbrace;
 		mas[i++] = fst_lefthesis;
@@ -348,9 +393,11 @@ namespace FST {
 		mas[i++] = fst_righthesis;
 		mas[i++] = fst_semicolon;
 		mas[i++] = fst_str;
-		mas[i++] = fst_strlit;
 		mas[i++] = fst_true;
-		mas[i++] = fst_var;
+		mas[i++] = fst_intlit;
+		mas[i++] = fst_strlit;
+		mas[i++] = fst_id;
+	
 		
 
 		return mas;
