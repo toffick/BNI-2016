@@ -36,6 +36,19 @@ namespace LT {								//таблица лексем
 		char lexema;		//лексема
 		int sn;								//номер строки в исходном коде
 		int idxTI;							//индекс в таблице идентификаторов 
+
+		Entry()
+		{ };
+
+		Entry(char l, int s)
+			: lexema(l), sn(s)
+		{ };
+
+		Entry(char l, int s, int i)
+			: lexema(l), sn(s), idxTI(i)
+		{ };
+
+
 	};
 	struct LexTable 
 	{
@@ -52,4 +65,6 @@ namespace LT {								//таблица лексем
 		Entry entry							//строка таблцы лексем
 		);
 	void Delete(LexTable& lextable);	//удалить таблицу лексем
+
+
 }

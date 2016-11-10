@@ -326,8 +326,39 @@ namespace FST {
 			);
 
 		FST* mas = new FST[FST_ARR_SIZE];
-
+		int i = 0;
+		mas[i++] = fst_ariph;
+		mas[i++] = fst_assig;
+		mas[i++] = fst_bool;
+		mas[i++] = fst_cmp;
+		mas[i++] = fst_comma;
+		mas[i++] = fst_display;
+		mas[i++] = fst_false;
+		mas[i++] = fst_func;
+		mas[i++] = fst_id;
+		mas[i++] = fst_int;
+		mas[i++] = fst_intlit;
+		mas[i++] = fst_larger;
+		mas[i++] = fst_leftbrace;
+		mas[i++] = fst_lefthesis;
+		mas[i++] = fst_less;
+		mas[i++] = fst_main;
+		mas[i++] = fst_ret;
+		mas[i++] = fst_rightbrace;
+		mas[i++] = fst_righthesis;
+		mas[i++] = fst_semicolon;
+		mas[i++] = fst_str;
+		mas[i++] = fst_strlit;
+		mas[i++] = fst_true;
+		mas[i++] = fst_var;
+		
 
 		return mas;
 	}
+	void restartFST(FST& fst, char* chain)
+	{
+		fst.position = -1;
+		fst.rstates[0] = 0;
+		fst.string = chain;
+	};
 }

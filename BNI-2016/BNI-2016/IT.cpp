@@ -93,5 +93,9 @@ namespace IT {
 		}
 		return rc ? i : TI_NULLIDX;
 	}
+	short getIdxTI(char l, IT::IdTable& it)
+	{
+		return (l == LEX_LITERAL || l == LEX_ID || l == LEX_ARIPH) ? it.size : TI_NULLIDX;
+	};
 }
 

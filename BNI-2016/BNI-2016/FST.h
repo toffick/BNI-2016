@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
 #define IN_CODE_SEP ';'
-#define FST_ARR_SIZE 26
+#define FST_ARR_SIZE 24
 
 namespace FST {
 
@@ -84,4 +84,5 @@ namespace FST {
 	bool step(FST&, short*&);
 	FST* crfsts();					//создать массив конечных автоматов
 	NODE alllit();					//функция для узла КА со стринговым литералом
+	void restartFST(FST& fst, char* chain);
 };

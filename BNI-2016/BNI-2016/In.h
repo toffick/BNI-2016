@@ -39,9 +39,9 @@ namespace In {
 		int ignor;							//кол-во игнор символов	
 		struct Chain
 		{
-			unsigned char* chain;
+			 char* chain;
 			int line;
-			Chain():chain(new unsigned char[IN_CHAIN_MAX_LEN]),line(0){};
+			Chain():chain(new char[IN_CHAIN_MAX_LEN]),line(0){};
 		} *chains;
 
 		int code[256]=IN_CODE_TABLE;														//таблица проврки

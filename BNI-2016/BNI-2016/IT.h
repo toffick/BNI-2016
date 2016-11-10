@@ -70,4 +70,6 @@ namespace IT
 	int checkId(IdTable& idtable, int value);//удалить таблицу лексем
 	int IsLiteral(IdTable&, char*);						//проверяет, есть ли такой литерал в ТИ
 	void RestartId(IT::Entry& e);						//перезагрузка элемента таилц идентификаторов;
+	short   getIdxTI(char l, IT::IdTable& it);               // получить индекс ТИ
+
 };
