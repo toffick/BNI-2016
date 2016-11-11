@@ -2,10 +2,13 @@
 
 #define ID_MAXSIZE		10			//максимальное кол-во символов в идентификаторе
 #define TI_INT_DEFAULT	0x00000000	//значение по умолчанию для типа integer
-#define TI_STRDEFAULT	0x00		//значение по умолчанию для типа string
+#define TI_STRDEFAULT	"\0"		//значение по умолчанию для типа string
 #define TI_NULLIDX		0xffffffff	//нет элемента таблицы идентификаторов
 #define TI_STR_MAXSIZE	225	
 #define IT_MAXSIZE		4096
+#define TI_PREFIX_MAX_SIZE	5
+#define TI_BOOL_DEFAULT false
+
 #include "LT.h"
 namespace IT
 {
@@ -23,7 +26,8 @@ namespace IT
 		P = 3, 				//параметр
 		L = 4,				//литерал
 		O = 5,				//оператор
-		C = 6				//цикл
+		C = 6,				//цикл
+		U = 7				//условный(< > ~)	
 	};   
 	struct Entry
 	{

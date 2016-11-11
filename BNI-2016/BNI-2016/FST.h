@@ -35,9 +35,9 @@ namespace FST {
 		FST_CMP = 24,
 		FST_LESS = 25,
 		FST_LARGER = 26,
-		FST_UNARY = 27,
-		FST_FOR=28,
-		FST_TO = 29,
+		FST_FOR=27,
+		FST_TO = 28,
+
 		
 	};
 

@@ -19,16 +19,7 @@ namespace LEX
 		};
 	};
 
-	void newLexem(int line, char lex, Lex& lexer);                // сформировать строку для ТЛ
-	void newId(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
-
-	void newVariable(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
-	void newFunction(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
-	void newParameter(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
-	void newLiteral(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
-	void newOperator(char* prefix, char* name, IT::Entry& itEntry, Error::Errors& ers, Lex& lex);
-
-	void handleId(FST::FST& fst, Error::Errors& ers, Lex& lex);   // сформировать запись для ТИ
-
+	void newId(char* prefix, char* name, IT::Entry& ItE, Error::Errors& ers, Lex& lex, int line);
+	void CreatId(int line, FST::FST& fst, Error::Errors& ers, Lex& lex);   // сформировать запись для ТИ
 	Lex StartLA(In::IN& in, Error::Errors& ers);  // начать лексичский анализ
 };

@@ -264,12 +264,12 @@ namespace FST {
 			NODE(1, RELATION('e', 4)),
 			NODE()
 			);
-		FST fst_inc("", LEX_UNARY, FST_UNARY, 3,
+		FST fst_inc("", LEX_UNARY, FST_ARIPH, 3,
 			NODE(1, RELATION('+', 1)),
 			NODE(1, RELATION('+', 2)),
 			NODE()
 			);
-		FST fst_dec("", LEX_UNARY, FST_UNARY, 3,
+		FST fst_dec("", LEX_UNARY, FST_ARIPH, 3,
 			NODE(1, RELATION('-', 1)),
 			NODE(1, RELATION('-', 2)),
 			NODE()
