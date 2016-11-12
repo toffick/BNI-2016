@@ -40,29 +40,51 @@ namespace IT {
 		}
 		return TI_NULLIDX;
 	}
-	int IT::IsLiteral(IdTable& idtable, char* value)
+	int IT::IsLiteral(IdTable& idtable, char* value, IT::Entry& ItE)
 	{
 		bool rc = false;
 		int i;
 
 		for (i = 0; i < idtable.size; i++)
 		{
-			if (idtable.table[i].idtype == IT::TYPE::L)
+			switch (ItE.iddatatype) 
 			{
-				if (!strcmp(idtable.table[i].value.vstr.str, value) )
+			case IT::STR: 
+			{
+				if (!strcmp(idtable.table[i].value.vstr.str, value))
 				{
-					rc = true;
-					break;
+					return i;
 				}
-				else if (idtable.table[i].value.vind == /*(strchr(value, '\'') ? -1 :*/ atoi(value))
-				{
-					rc = true;
-					break;
-				}
-			}
-		};
+				break;
 
-		return rc ? i : TI_NULLIDX;
+			}
+			case IT::INT:
+			{
+				if (idtable.table[i].value.vind == /*(strchr(value, '\'') ? -1 :*/ atoi(value))
+				{
+					return i;
+				}
+				break;
+
+			}
+			case IT::BOOL:
+			{
+				if((!strcmp(LEX_FALSE_LIT, value)) && (idtable.table[i].value.vbool==0))
+				{
+					return i;
+				}
+
+				if(!strcmp(LEX_TRUE_LIT, value) && idtable.table[i].value.vbool == 1)
+				{
+					return i;
+				}
+
+				break;
+			}
+			}
+		}; 
+
+		return  TI_NULLIDX;
 	};
 	int IsDublId(IdTable& idtable, char id[ID_MAXSIZE]) {
 		for (int i = 0; i < idtable.size-1; i++) {

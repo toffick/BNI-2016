@@ -19,7 +19,9 @@ namespace LEX
 		};
 	};
 
-	void newId(char* prefix, char* name, IT::Entry& ItE, Error::Errors& ers, Lex& lex, int line);
+	bool newId(char* prefix, char* name, IT::Entry& ItE, Error::Errors& ers, Lex& lex, int line);
 	void CreatId(int line, FST::FST& fst, Error::Errors& ers, Lex& lex);   // сформировать запись для ТИ
 	Lex StartLA(In::IN& in, Error::Errors& ers);  // начать лексичский анализ
+	void RestartItE(IT::Entry& ItE);
+
 };

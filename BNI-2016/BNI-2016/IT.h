@@ -8,7 +8,6 @@
 #define IT_MAXSIZE		4096
 #define TI_PREFIX_MAX_SIZE	5
 #define TI_BOOL_DEFAULT false
-
 #include "LT.h"
 namespace IT
 {
@@ -27,7 +26,6 @@ namespace IT
 		L = 4,				//литерал
 		O = 5,				//оператор
 		C = 6,				//цикл
-		U = 7				//условный(< > ~)	
 	};   
 	struct Entry
 	{
@@ -37,7 +35,7 @@ namespace IT
 		TYPE		idtype;				//тип идентификатора
 		struct
 		{
-			bool vbool;
+			int vbool;
 			int vind;				//значение integer
 			struct {
 				int len;						//длина string
@@ -72,7 +70,7 @@ namespace IT
 	int IsDublId(IdTable& idtable, char id[ID_MAXSIZE]);		//проверка на дублирвание ид
 	void Add(IdTable& idtable, Entry entry);
 	int checkId(IdTable& idtable, int value);					//удалить таблицу лексем
-	int IsLiteral(IdTable&, char*);								//проверяет, есть ли такой литерал в ТИ
+	int IsLiteral(IdTable&, char*, IT::Entry& ItE);								//проверяет, есть ли такой литерал в ТИ
 	void RestartId(IT::Entry& e);								//перезагрузка элемента таилц идентификаторов;
 	short   getIdxTI(char l, IT::IdTable& it);					// получить индекс ТИ
 

@@ -140,14 +140,14 @@ namespace FST {
 	}
 	FST* crfsts()
 	{
-		FST fst_strlit("", LEX_LITERAL, FST_STR, 4,
+		FST fst_strlit("", LEX_LITERAL, FST_SLIT, 4,
 			NODE(1, RELATION((char)0x22, 1)),
 			alllit(),
 			NODE(1, RELATION((char)0x22, 3)),
 			NODE()
 			);
 
-		FST fst_intlit("", LEX_LITERAL, FST_INT, 2,
+		FST fst_intlit("", LEX_LITERAL, FST_ILIT, 2,
 			NODE(20,
 				RELATION('0', 1), RELATION('0', 0),
 				RELATION('1', 1), RELATION('1', 0),
@@ -309,28 +309,24 @@ namespace FST {
 			NODE(1, RELATION(')', 1)),
 			NODE());
 
-		FST fst_cmp("", LEX_CMP, FST_CMP, 2,
-			NODE(1, RELATION('~', 1)),
-			NODE());
+	
 
 		FST fst_assig("", LEX_ASSIG, FST_ASSIG, 2,
 			NODE(1, RELATION('=', 1)),
 			NODE());
 		
-		FST fst_less("", LEX_LESS, FST_LESS, 2,
-			NODE(1, RELATION('<', 1)),
-			NODE());
-
-		FST fst_larger("", LEX_LARGER, FST_LARGER, 2,
-			NODE(1, RELATION('>', 1)),
-			NODE());
+	
 		FST fst_ariph("", LEX_ARIPH, FST_ARIPH, 2,
-			NODE(6,
+			NODE(9,
 				RELATION('+', 1),
 				RELATION('-', 1),
 				RELATION('*', 1),
 				RELATION('/', 1),
 				RELATION('&', 1),
+				RELATION('>', 1),
+				RELATION('<', 1),
+				RELATION('~', 1),
+
 				RELATION('|', 1)),
 			NODE());
 		
@@ -377,16 +373,13 @@ namespace FST {
 		mas[i++] = fst_ariph;
 		mas[i++] = fst_assig;
 		mas[i++] = fst_bool;
-		mas[i++] = fst_cmp;
 		mas[i++] = fst_comma;
 		mas[i++] = fst_display;
 		mas[i++] = fst_false;
 		mas[i++] = fst_func;
 		mas[i++] = fst_int;
-		mas[i++] = fst_larger;
 		mas[i++] = fst_leftbrace;
 		mas[i++] = fst_lefthesis;
-		mas[i++] = fst_less;
 		mas[i++] = fst_main;
 		mas[i++] = fst_ret;
 		mas[i++] = fst_rightbrace;

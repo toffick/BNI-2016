@@ -31,6 +31,8 @@
 #define LEX_LESS		'<'				//	<
 #define LEX_LARGER		'>'				//	>
 #define LEX_UNARY       'k'				// ++ --
+#define LEX_TRUE_LIT	"true"
+#define LEX_FALSE_LIT	"false"
 
 
 
