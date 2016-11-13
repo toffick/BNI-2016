@@ -79,73 +79,81 @@ namespace Log {
 			}
 		}
 	}
-//	void WriteLexTable(LT::LexTable lextable, LOG log)
-//	{
-//		int k = 0;
-//		*(log.stream) << "\n\nТаблица лексем\n0: ";
-//		for (int i = 0; i < lextable.size; i++) {
-//			if (lextable.table[i].sn != k) {
-//				*(log.stream) << "\n" << lextable.table[i].sn << ": ";
-//
-//				k = lextable.table[i].sn;
-//				*(log.stream) << lextable.table[i].lexema;
-//
-//			}
-//			else
-//				*(log.stream) << lextable.table[i].lexema;
-//		}
-//	}
-//	void WriteIdTable(IT::IdTable idT)
-//	{
-//		
-//		{
-//			for (int i = 0; i < idT.size; i++) {
-//				std::cout << "\n\nИдентификатор №" << i << ": " << idT.table[i].id;
-//				//std::cout << "\nНомер в таблице идентификаторов: " << lexT.table[i].idxTI;
-//				std::cout << "\nПервая строка определения: " << idT.table[i].idxfirstLE;
-//				if (idT.table[i].iddatatype == IT::INT)
-//					std::cout << "\nТип данных: integer";
-//				else if (idT.table[i].iddatatype == IT::STR)
-//					std::cout << "\nТип данных: string";
-//				else
-//					std::cout << "\nТип данных: operator";
-//				if (idT.table[i].idtype == IT::F)
-//					std::cout << "\nТип ид: F";
-//				else if (idT.table[i].idtype == IT::V)
-//					std::cout << "\nТип ид: V";
-//				else if (idT.table[i].idtype == IT::P)
-//					std::cout << "\nТип ид: P";
-//				else if (idT.table[i].idtype == IT::L)
-//					std::cout << "\nТип ид: L";
-//				else
-//					std::cout << "\nТип ид: O";
-//
-//				if ((idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::V) ||
-//					(idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::L))
-//					std::cout << "\nЗначение: " << idT.table[i].value.vind;
-//				else if ((idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::V) ||
-//					(idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::L))
-//				{
-//					if (idT.table[i].value.vstr.str[0] == NULL)
-//						std::cout << "\nСтрока: NULL";
-//					else {
-//						std::cout << "\nСтрока: " << idT.table[i].value.vstr.str;
-//						std::cout << "\nДлина строки: " << idT.table[i].value.vstr.len;
-//					}
-//				}
-//			}
-//		}
-//	}
-//	void WriteLAtables(LT::LexTable lextable, IT::IdTable idtable, Parm::PARM parm, LOG log)
-//	{
-//		if (parm.it)
-//			WriteIdTable(idtable);
-//		if (parm.lt)
-//			WriteLexTable(lextable,log);
-//	}
-//	void close(LOG log) {
-//		(log.stream)->close();
-//		delete log.stream;
-//	}
-//
+	void WriteLexTable(LT::LexTable lextable, LOG log)
+	{
+		int k = 0;
+		*(log.stream) << "\n\nТаблица лексем\n0: ";
+		for (int i = 0; i < lextable.size; i++) {
+			if (lextable.table[i].sn != k) {
+				*(log.stream) << "\n" << lextable.table[i].sn << ": ";
+
+				k = lextable.table[i].sn;
+				*(log.stream) << lextable.table[i].lexema;
+
+			}
+			else
+				*(log.stream) << lextable.table[i].lexema;
+		}
+	}
+	void WriteIdTable(IT::IdTable idT)
+	{
+		
+		{
+			for (int i = 0; i < idT.size; i++) {
+				std::cout << "\n\nИдентификатор №" << i << ": " << idT.table[i].id;
+				std::cout << "\nПервая строка определения: " << idT.table[i].idxfirstLE;
+				if (idT.table[i].iddatatype == IT::INT)
+					std::cout << "\nТип данных: integer";
+				else
+					if (idT.table[i].iddatatype == IT::BOOL)
+						std::cout << "\nТип данных: bool";
+					else if (idT.table[i].iddatatype == IT::STR)
+						std::cout << "\nТип данных: string";
+					else
+						std::cout << "\nТип данных: operator";
+					if (idT.table[i].idtype == IT::F)
+						std::cout << "\nТип ид: F";
+					else if (idT.table[i].idtype == IT::V)
+						std::cout << "\nТип ид: V";
+					else if (idT.table[i].idtype == IT::P)
+						std::cout << "\nТип ид: P";
+					else if (idT.table[i].idtype == IT::L)
+						std::cout << "\nТип ид: L";
+					else if (idT.table[i].idtype == IT::O)
+						std::cout << "\nТип ид: O";
+
+
+					if ((idT.table[i].iddatatype == IT::BOOL && idT.table[i].idtype == IT::V) ||
+						(idT.table[i].iddatatype == IT::BOOL && idT.table[i].idtype == IT::L))
+						std::cout << "\nЗначение: " << idT.table[i].value.vbool;
+
+					else if ((idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::V) ||
+						(idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::L))
+						std::cout << "\nЗначение: " << idT.table[i].value.vind;
+					else if ((idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::V) ||
+						(idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::L))
+					{
+						if (idT.table[i].value.vstr.str[0] == NULL)
+							std::cout << "\nСтрока: NULL";
+						else {
+							std::cout << "\nСтрока: " << idT.table[i].value.vstr.str;
+							std::cout << "\nДлина строки: " << idT.table[i].value.vstr.len;
+						}
+					}
+			}
+		}
+	}
+	void WriteLAtables(LT::LexTable lt, IT::IdTable it, Parm::PARM parm, LOG log)
+	{
+		if (parm.it)
+			WriteIdTable(it);
+		if (parm.lt)
+			WriteLexTable(lt,log);
+	}
+	void close(LOG log)
+	{
+		(log.stream)->close();
+		delete log.stream;
+	}
+
 }

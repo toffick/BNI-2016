@@ -19,60 +19,58 @@ namespace LEX
 		switch (fst.ind)
 		{
 
-		case FST::FST_INT: 
-			ItE.iddatatype = IT::INT;
-			if(param) ItE.idtype = IT::P;
-			break;
-		case FST::FST_STR: 
-			ItE.iddatatype = IT::STR;
-			if (param) ItE.idtype = IT::P;
-			break;
-		case FST::FST_BOOL:
-			ItE.iddatatype = IT::BOOL; 
-			if (param) ItE.idtype = IT::P;
-			break;
-		case FST::FST_VAR:  
-			ItE.idtype = IT::V;   
-			break;
-		case FST::FST_FUNC: 
-			ItE.idtype = IT::F;
-			param = true;
-			break;
-		case FST::FST_ARIPH:    
-			ItE.idtype = IT::O;   
-			rc=newId(prefix, fst.string, ItE, ers, lex, line);
-			break;
-		case FST::FST_MAIN: 
-			ItE.iddatatype = IT::OFF;
-			ItE.idtype = IT::F;
-			rc=newId(prefix, fst.string, ItE, ers, lex, line);
-			break;
+			case FST::FST_INT: 
+				ItE.iddatatype = IT::INT;
+				if(param) ItE.idtype = IT::P;
+				break;
+			case FST::FST_STR: 
+				ItE.iddatatype = IT::STR;
+				if (param) ItE.idtype = IT::P;
+				break;
+			case FST::FST_BOOL:
+				ItE.iddatatype = IT::BOOL; 
+				if (param) ItE.idtype = IT::P;
+				break;
+			case FST::FST_VAR:  
+				ItE.idtype = IT::V;   
+				break;
+			case FST::FST_FUNC: 
+				ItE.idtype = IT::F;
+				param = true;
+				break;
+			case FST::FST_ARIPH:    
+				ItE.idtype = IT::O;   
+				rc=newId(prefix, fst.string, ItE, ers, lex, line);
+				break;
+			case FST::FST_MAIN: 
+				ItE.iddatatype = IT::OFF;
+				ItE.idtype = IT::F;
+				rc=newId(prefix, fst.string, ItE, ers, lex, line);
+				break;
 
-		case FST::FST_ID:
-			rc=newId(prefix, fst.string, ItE, ers, lex,line);
-			break;
+			case FST::FST_ID:
+				rc=newId(prefix, fst.string, ItE, ers, lex,line);
+				break;
 
-		case FST::FST_BLIT:
-			ItE.idtype = IT::L; 
-			ItE.iddatatype = IT::BOOL;
-			rc = newId(prefix, fst.string, ItE, ers, lex, line);
-			break;
-		case FST::FST_ILIT:
-			ItE.idtype = IT::L;
-			ItE.iddatatype = IT::INT;
-			rc = newId(prefix, fst.string, ItE, ers, lex, line);
-			break;
-		case FST::FST_SLIT:
-			ItE.idtype = IT::L; 
-			ItE.iddatatype = IT::STR;
-			rc = newId(prefix, fst.string, ItE, ers, lex, line);
-			break;
-		case FST::FST_RIGHTHESIS:
-			param = false;
-			break;
+			case FST::FST_BLIT:
+				ItE.idtype = IT::L; 
+				ItE.iddatatype = IT::BOOL;
+				rc = newId(prefix, fst.string, ItE, ers, lex, line);
+				break;
+			case FST::FST_ILIT:
+				ItE.idtype = IT::L;
+				ItE.iddatatype = IT::INT;
+				rc = newId(prefix, fst.string, ItE, ers, lex, line);
+				break;
+			case FST::FST_SLIT:
+				ItE.idtype = IT::L; 
+				ItE.iddatatype = IT::STR;
+				rc = newId(prefix, fst.string, ItE, ers, lex, line);
+				break;
+			case FST::FST_RIGHTHESIS:
+				param = false;
+				break;
 		};
-		
-	
 	};
 
 
@@ -113,8 +111,7 @@ namespace LEX
 				}
 				else
 				{
-					std::cout << "dubl";
-					//ошибка дублирования ида
+					Error::adderr(120, line, ers);
 				}
 
 				
@@ -127,10 +124,12 @@ namespace LEX
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX)
 				{
-					
-
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
 					IT::Add(lex.idtable, ItE);
+				}
+				else
+				{
+					Error::adderr(120, line, ers);
 				}
 
 
@@ -202,10 +201,7 @@ namespace LEX
 				rc = IT::IsId(lex.idtable, ItE.id);				//ид переменной
 				if (rc == TI_NULLIDX && fc == TI_NULLIDX)
 				{
-					std::cout << "dont";
-
 					Error::adderr(122,line,  ers);
-
 				}
 				else
 				{
@@ -213,7 +209,6 @@ namespace LEX
 					ItE = IT::getEntry(lex.idtable, rc);
 					else 
 					ItE = IT::getEntry(lex.idtable, fc);
-
 				}
 				break;
 			}
@@ -232,8 +227,7 @@ namespace LEX
 		return true;
 	}
 
-	void RestartItE(IT::Entry& ItE) {
-		
+	void RestartItE(IT::Entry& ItE) {	
 		ItE.idxfirstLE = 0;
 		ItE.value.vind = 0;
 		ItE.value.vbool = -1;
@@ -242,9 +236,7 @@ namespace LEX
 		ItE.id[0] = 0x00;
 		ItE.iddatatype = IT::OFF;
 		ItE.idtype = IT::N;
-	
 	}
-
 
 	Lex StartLA(In::IN& in, Error::Errors& ers)  // начать лексичский анализ
 	{
@@ -266,13 +258,14 @@ namespace LEX
 		}
 
 
+
+
 		for (int i = 0; i < lex.lextable.size; i++)
 		{
 			std::cout << std::endl<< lex.lextable.table[i].lexema;
 			if (lex.lextable.table[i].idxTI != LT_TI_NULLIDX)
 				std::cout <<"   "<< lex.idtable.table[lex.lextable.table[i].idxTI].id<< "  "<< lex.lextable.table[i].idxTI;
 		}
-
 
 		int k = 0;
 		std::cout << "\n\nТаблица лексем\n0: ";
@@ -287,53 +280,6 @@ namespace LEX
 			else
 				std::cout << lex.lextable.table[i].lexema;
 		}
-
-
-
-		for (int i = 0; i < lex.idtable.size; i++) {
-				std::cout << "\n\nИдентификатор №" << i << ": " << lex.idtable.table[i].id;
-				//std::cout << "\nНомер в таблице идентификаторов: " << lexT.table[i].idxTI;
-				std::cout << "\nПервая строка определения: " << lex.idtable.table[i].idxfirstLE;
-				if (lex.idtable.table[i].iddatatype == IT::INT)
-					std::cout << "\nТип данных: integer";
-				else
-					if (lex.idtable.table[i].iddatatype == IT::BOOL)
-						std::cout << "\nТип данных: bool";
-				else if (lex.idtable.table[i].iddatatype == IT::STR)
-					std::cout << "\nТип данных: string";
-				else
-					std::cout << "\nТип данных: operator";
-				if (lex.idtable.table[i].idtype == IT::F)
-					std::cout << "\nТип ид: F";
-				else if (lex.idtable.table[i].idtype == IT::V)
-					std::cout << "\nТип ид: V";
-				else if (lex.idtable.table[i].idtype == IT::P)
-					std::cout << "\nТип ид: P";
-				else if (lex.idtable.table[i].idtype == IT::L)
-					std::cout << "\nТип ид: L";
-				else if(lex.idtable.table[i].idtype == IT::O)
-					std::cout << "\nТип ид: O";
-
-
-				if ((lex.idtable.table[i].iddatatype == IT::BOOL && lex.idtable.table[i].idtype == IT::V) ||
-					(lex.idtable.table[i].iddatatype == IT::BOOL && lex.idtable.table[i].idtype == IT::L))
-					std::cout << "\nЗначение: " << lex.idtable.table[i].value.vbool;
-
-				else if ((lex.idtable.table[i].iddatatype == IT::INT && lex.idtable.table[i].idtype == IT::V) ||
-					(lex.idtable.table[i].iddatatype == IT::INT && lex.idtable.table[i].idtype == IT::L))
-					std::cout << "\nЗначение: " << lex.idtable.table[i].value.vind;
-				else if ((lex.idtable.table[i].iddatatype == IT::STR && lex.idtable.table[i].idtype == IT::V) ||
-					(lex.idtable.table[i].iddatatype == IT::STR && lex.idtable.table[i].idtype == IT::L))
-				{
-					if (lex.idtable.table[i].value.vstr.str[0] == NULL)
-						std::cout << "\nСтрока: NULL";
-					else {
-						std::cout << "\nСтрока: " << lex.idtable.table[i].value.vstr.str;
-						std::cout << "\nДлина строки: " << lex.idtable.table[i].value.vstr.len;
-					}
-				}
-			}
-
 
 		return lex;
 	}

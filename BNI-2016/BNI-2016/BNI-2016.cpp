@@ -19,11 +19,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		Parm::PARM parm = Parm::getparm(argc, argv,errors);
 		In::IN in = In::getin(parm.in,errors);
-		Log::LOG log = Log::getlog(parm.log,errors);
+		Log::LOG log= Log::getlog(parm.log,errors);
 		Log::WriteLog(log);
 		Log::WriteParm(log,parm);
 		LEX::Lex lex = LEX::StartLA(in, errors);
+		Log::WriteLAtables(lex.lextable, lex.idtable, parm, log);
 		Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
+		Log::close(log);
 
 	}
 	catch (Error::ERROR e)

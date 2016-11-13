@@ -12,11 +12,7 @@ namespace LEX
 		LT::LexTable lextable;   // таблица лексем
 		IT::IdTable  idtable;    // таблица идентиикаторов
 
-		Lex()
-			: lextable(LT::Create(LT_MAXSIZE)), idtable(IT::Create(IT_MAXSIZE))
-		{
-
-		};
+		Lex():lextable(LT::Create(LT_MAXSIZE)), idtable(IT::Create(IT_MAXSIZE)){};
 	};
 
 	bool newId(char* prefix, char* name, IT::Entry& ItE, Error::Errors& ers, Lex& lex, int line);
