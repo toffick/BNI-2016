@@ -34,9 +34,9 @@ namespace Error
 		ERROR_ENTRY_NODEF(114),
 		ERROR_ENTRY_NODEF(115),
 		ERROR_ENTRY_NODEF(116), ERROR_ENTRY_NODEF(117), ERROR_ENTRY_NODEF(118), ERROR_ENTRY_NODEF(119),
-		ERROR_ENTRY(120,"Дублирование идентификатора"),
-		ERROR_ENTRY(121, "Нет функции main"),
-		ERROR_ENTRY(122, "Идентификатор не определен"),
+		ERROR_ENTRY(120,"LA: Дублирование идентификатора"),
+		ERROR_ENTRY(121, "LA: Нет функции main"),
+		ERROR_ENTRY(122, "LA: Идентификатор не определен"),
 		ERROR_ENTRY_NODEF(123),ERROR_ENTRY_NODEF(124),
 		ERROR_ENTRY_NODEF(125),ERROR_ENTRY_NODEF(126),ERROR_ENTRY_NODEF(127),ERROR_ENTRY_NODEF(128),
 		ERROR_ENTRY_NODEF(129),
@@ -88,6 +88,12 @@ namespace Error
 	{
 		if (e.size < ERRORS_MAX_SIZE)
 			e.errors[e.size++] = ERROR_THROW_IN(id, line, pos)
+		else throw ERROR_THROW(2);
+	};
+	void adderr(int id, int line, Errors& e)
+	{
+		if (e.size < ERRORS_MAX_SIZE)
+			e.errors[e.size++] = ERROR_THROW_IN(id, line,-1)
 		else throw ERROR_THROW(2);
 	};
 	void printerr(Errors& e)

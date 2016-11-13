@@ -111,6 +111,11 @@ namespace LEX
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
 					IT::Add(lex.idtable, ItE);
 				}
+				else
+				{
+					std::cout << "dubl";
+					//ошибка дублирования ида
+				}
 
 				
 				break;
@@ -190,15 +195,17 @@ namespace LEX
 			default:										//когда пришел ид без параметров
 			{
 				int fc;
-				strcpy(ItE.id, name);							//доделать диблирование идентификатора не функции
-				fc = IT::IsId(lex.idtable, ItE.id);
+				strcpy(ItE.id, name);							
+				fc = IT::IsId(lex.idtable, ItE.id);				//ид функции
 				strcpy(ItE.id,prefix);
-				strcat(ItE.id, name);							//доделать диблирование идентификатора не функции
-				rc = IT::IsId(lex.idtable, ItE.id);
+				strcat(ItE.id, name);							
+				rc = IT::IsId(lex.idtable, ItE.id);				//ид переменной
 				if (rc == TI_NULLIDX && fc == TI_NULLIDX)
 				{
-					std::cout << "1111";
-					//ошибка о неизвестном иде
+					std::cout << "dont";
+
+					Error::adderr(122,line,  ers);
+
 				}
 				else
 				{

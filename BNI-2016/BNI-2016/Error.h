@@ -36,9 +36,12 @@ namespace Error
 	};
 
 	void adderr(int, Errors& );														 // добавить ошибку
+	void adderr(int, int line , Errors&);
 	void adderr(int id, int line, int pos, Errors& ErrArr);
 	void printerr(Errors&);
 	ERROR geterror(int id);															//cформировать ERROR для ERROR_THROW 
+																//cформировать ERROR для ERROR_THROW 
+
 	ERROR geterrorin(int id, int line, int col);									//сформировать ERROR для ERROR_THROW_IN
 
 }

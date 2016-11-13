@@ -22,8 +22,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::LOG log = Log::getlog(parm.log,errors);
 		Log::WriteLog(log);
 		Log::WriteParm(log,parm);
-		Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
 		LEX::Lex lex = LEX::StartLA(in, errors);
+		Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
+
 	}
 	catch (Error::ERROR e)
 	{
