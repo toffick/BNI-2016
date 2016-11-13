@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <fstream>
 #include "In.h"
 #include "Parm.h"
@@ -14,15 +14,15 @@ namespace Log {
 		}
 	};
 //	static const LOG INITLOG = { L"", NULL };			
-	LOG getlog(wchar_t logfile[], Error::Errors&);						//начальная инициализация LOG
-	void WriteLine(LOG log, char* c, ...);				//сформировать структуру LOG
+	LOG getlog(wchar_t logfile[], Error::Errors&);						//РЅР°С‡Р°Р»СЊРЅР°СЏ РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ LOG
+	void WriteLine(LOG log, char* c, ...);				//СЃС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂСѓРєС‚СѓСЂСѓ LOG
 	void WriteLine(LOG log, wchar_t* c, ...);
-	void WriteLog(LOG log);								//вывести в протокол конкатенацию строк
-	void WriteParm(LOG log, Parm::PARM parm);			//вывести в протокол информацию о входных данных
-	void WriteIn(LOG log, In::IN in);					//вывести в протокол информациб о входном потоке
-	void WriteError(LOG log, Error::Errors&);		//вывести в протокол информациб об ошибке
+	void WriteLog(LOG log);								//РІС‹РІРµСЃС‚Рё РІ РїСЂРѕС‚РѕРєРѕР» РєРѕРЅРєР°С‚РµРЅР°С†РёСЋ СЃС‚СЂРѕРє
+	void WriteParm(LOG log, Parm::PARM parm);			//РІС‹РІРµСЃС‚Рё РІ РїСЂРѕС‚РѕРєРѕР» РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…
+	void WriteIn(LOG log, In::IN in);					//РІС‹РІРµСЃС‚Рё РІ РїСЂРѕС‚РѕРєРѕР» РёРЅС„РѕСЂРјР°С†РёР± Рѕ РІС…РѕРґРЅРѕРј РїРѕС‚РѕРєРµ
+	void WriteError(LOG log, Error::Errors&);		//РІС‹РІРµСЃС‚Рё РІ РїСЂРѕС‚РѕРєРѕР» РёРЅС„РѕСЂРјР°С†РёР± РѕР± РѕС€РёР±РєРµ
 	//void WriteLexTable(LT::LexTable, LOG);
 	//void WriteIdTable(IT::IdTable);
 	//void WriteLAtables(LT::LexTable, IT::IdTable, Parm::PARM, LOG);
-	void close(LOG log);								//закрыть протокол
+	void close(LOG log);								//Р·Р°РєСЂС‹С‚СЊ РїСЂРѕС‚РѕРєРѕР»
 };

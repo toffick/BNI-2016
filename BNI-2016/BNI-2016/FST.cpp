@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "stdafx.h"
 #include "FST.h"
@@ -7,18 +7,18 @@
 
 namespace FST {
 	RELATION::RELATION(char c, short ns) {
-		symbol = c;					//символ перехода
-		nnode = ns;					//номер узла перехода
+		symbol = c;					//СЃРёРјРІРѕР» РїРµСЂРµС…РѕРґР°
+		nnode = ns;					//РЅРѕРјРµСЂ СѓР·Р»Р° РїРµСЂРµС…РѕРґР°
 	}
 	NODE::NODE() {
 		n_relation = 0;
 		RELATION *relations = NULL;
 	}
 	NODE::NODE(short n, RELATION rel, ...) {
-		n_relation = n;						//кол-во ребер
-		RELATION* buf = &rel;				//первый из разного кол-во параметров
-		relations = new RELATION[n];		//массив ребер
-		for (int i = 0; i < n_relation; i++) {		//заполнение массива ребер
+		n_relation = n;						//РєРѕР»-РІРѕ СЂРµР±РµСЂ
+		RELATION* buf = &rel;				//РїРµСЂРІС‹Р№ РёР· СЂР°Р·РЅРѕРіРѕ РєРѕР»-РІРѕ РїР°СЂР°РјРµС‚СЂРѕРІ
+		relations = new RELATION[n];		//РјР°СЃСЃРёРІ СЂРµР±РµСЂ
+		for (int i = 0; i < n_relation; i++) {		//Р·Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° СЂРµР±РµСЂ
 			relations[i] = buf[i];
 		}
 	}
@@ -28,15 +28,15 @@ namespace FST {
 		line = 0;
 		pos = 0;
 		ind = FST_NOIND;
-		string = s;							//входная цепочка
-		nstates = ns;						//общее кол-во состояний ка
+		string = s;							//РІС…РѕРґРЅР°СЏ С†РµРїРѕС‡РєР°
+		nstates = ns;						//РѕР±С‰РµРµ РєРѕР»-РІРѕ СЃРѕСЃС‚РѕСЏРЅРёР№ РєР°
 		position = -1;
 		NODE* buf = &n;
 		nodes = new NODE[ns];
-		for (int i = 0; i < ns; i++) {		//заполнение графа узлами	
+		for (int i = 0; i < ns; i++) {		//Р·Р°РїРѕР»РЅРµРЅРёРµ РіСЂР°С„Р° СѓР·Р»Р°РјРё	
 			nodes[i] = buf[i];
 		}
-		rstates = new short[ns];			//массив возможных состочяний ка на позиции
+		rstates = new short[ns];			//РјР°СЃСЃРёРІ РІРѕР·РјРѕР¶РЅС‹С… СЃРѕСЃС‚РѕС‡СЏРЅРёР№ РєР° РЅР° РїРѕР·РёС†РёРё
 		rstates[0] = 0;
 	}
 
@@ -45,23 +45,23 @@ namespace FST {
 		line = 0;
 		pos = 0;
 		ind = val;
-		string = s;							//входная цепочка
-		nstates = ns;						//общее кол-во состояний ка
+		string = s;							//РІС…РѕРґРЅР°СЏ С†РµРїРѕС‡РєР°
+		nstates = ns;						//РѕР±С‰РµРµ РєРѕР»-РІРѕ СЃРѕСЃС‚РѕСЏРЅРёР№ РєР°
 		position = -1;
 		NODE* buf = &n;
 		nodes = new NODE[ns];
-		for (int i = 0; i < ns; i++) {		//заполнение графа узлами	
+		for (int i = 0; i < ns; i++) {		//Р·Р°РїРѕР»РЅРµРЅРёРµ РіСЂР°С„Р° СѓР·Р»Р°РјРё	
 			nodes[i] = buf[i];
 		}
-		rstates = new short[ns];			//массив возможных состочяний ка на позиции
+		rstates = new short[ns];			//РјР°СЃСЃРёРІ РІРѕР·РјРѕР¶РЅС‹С… СЃРѕСЃС‚РѕС‡СЏРЅРёР№ РєР° РЅР° РїРѕР·РёС†РёРё
 		rstates[0] = 0;
 	}
 
 	bool execute(FST& fst)
 	{
-		short* rstates = new short[fst.nstates];		//массив размером кол-ва состояний
+		short* rstates = new short[fst.nstates];		//РјР°СЃСЃРёРІ СЂР°Р·РјРµСЂРѕРј РєРѕР»-РІР° СЃРѕСЃС‚РѕСЏРЅРёР№
 		memset(rstates, 0xff, sizeof(short)*fst.nstates);
-		size_t lstring = strlen(fst.string);				//длина входной цепочки
+		size_t lstring = strlen(fst.string);				//РґР»РёРЅР° РІС…РѕРґРЅРѕР№ С†РµРїРѕС‡РєРё
 		bool rc = true;
 		for (size_t i = 0; i < lstring && rc; i++)
 		{
@@ -75,21 +75,21 @@ namespace FST {
 		}
 
 		delete[] rstates;
-		return (rc ? (fst.rstates[fst.nstates - 1] == lstring) : rc);	//true, если последний элемент массива равен
-	}																   //кол-ву значимых символов входной цепочки
+		return (rc ? (fst.rstates[fst.nstates - 1] == lstring) : rc);	//true, РµСЃР»Рё РїРѕСЃР»РµРґРЅРёР№ СЌР»РµРјРµРЅС‚ РјР°СЃСЃРёРІР° СЂР°РІРµРЅ
+	}																   //РєРѕР»-РІСѓ Р·РЅР°С‡РёРјС‹С… СЃРёРјРІРѕР»РѕРІ РІС…РѕРґРЅРѕР№ С†РµРїРѕС‡РєРё
 
-	bool step(FST& fst, short* &rstetes) {		//ка, массив возможных состочяний ка на позиции
+	bool step(FST& fst, short* &rstetes) {		//РєР°, РјР°СЃСЃРёРІ РІРѕР·РјРѕР¶РЅС‹С… СЃРѕСЃС‚РѕС‡СЏРЅРёР№ РєР° РЅР° РїРѕР·РёС†РёРё
 		bool rc = false;
-		std::swap(rstetes, fst.rstates);		//замена массива местами
-		for (short i = 0; i < fst.nstates; i++)// проверка всех узлов(вершин)
+		std::swap(rstetes, fst.rstates);		//Р·Р°РјРµРЅР° РјР°СЃСЃРёРІР° РјРµСЃС‚Р°РјРё
+		for (short i = 0; i < fst.nstates; i++)// РїСЂРѕРІРµСЂРєР° РІСЃРµС… СѓР·Р»РѕРІ(РІРµСЂС€РёРЅ)
 		{
-			if (rstetes[i] == fst.position)		//если у нас возможно взождение в узел по текущей позиции
+			if (rstetes[i] == fst.position)		//РµСЃР»Рё Сѓ РЅР°СЃ РІРѕР·РјРѕР¶РЅРѕ РІР·РѕР¶РґРµРЅРёРµ РІ СѓР·РµР» РїРѕ С‚РµРєСѓС‰РµР№ РїРѕР·РёС†РёРё
 			{
-				for (short j = 0; j < fst.nodes[i].n_relation; j++)		//проверка всех ребер этого узла
+				for (short j = 0; j < fst.nodes[i].n_relation; j++)		//РїСЂРѕРІРµСЂРєР° РІСЃРµС… СЂРµР±РµСЂ СЌС‚РѕРіРѕ СѓР·Р»Р°
 				{
-					if (fst.nodes[i].relations[j].symbol == fst.string[fst.position])		//если символ равен символу перехода
+					if (fst.nodes[i].relations[j].symbol == fst.string[fst.position])		//РµСЃР»Рё СЃРёРјРІРѕР» СЂР°РІРµРЅ СЃРёРјРІРѕР»Сѓ РїРµСЂРµС…РѕРґР°
 					{
-						fst.rstates[fst.nodes[i].relations[j].nnode] = fst.position + 1; //заполнение массива узло на позиции i для след итерации
+						fst.rstates[fst.nodes[i].relations[j].nnode] = fst.position + 1; //Р·Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° СѓР·Р»Рѕ РЅР° РїРѕР·РёС†РёРё i РґР»СЏ СЃР»РµРґ РёС‚РµСЂР°С†РёРё
 						rc = true;
 					}
 				}
@@ -193,7 +193,7 @@ namespace FST {
 			NODE(1, RELATION('t', 3)),
 			
 			NODE()
-			);					//ка для интовых литералов
+			);					//РєР° РґР»СЏ РёРЅС‚РѕРІС‹С… Р»РёС‚РµСЂР°Р»РѕРІ
 
 
 

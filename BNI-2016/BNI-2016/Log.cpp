@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "stdafx.h"
 #include <stdlib.h>
 #include "Log.h"
@@ -32,16 +32,16 @@ namespace Log {
 			}
 		}
 	void WriteLog(LOG log) {
-		WriteLine(log,"---- Протокол работы BNI-2016 ----\n","");
+		WriteLine(log,"---- РџСЂРѕС‚РѕРєРѕР» СЂР°Р±РѕС‚С‹ BNI-2016 ----\n","");
 		time_t rawtime;
-		char buffer[80];                                // строка, в которой будет храниться текущее время
+		char buffer[80];                                // СЃС‚СЂРѕРєР°, РІ РєРѕС‚РѕСЂРѕР№ Р±СѓРґРµС‚ С…СЂР°РЅРёС‚СЊСЃСЏ С‚РµРєСѓС‰РµРµ РІСЂРµРјСЏ
 		time(&rawtime);                               
 		tm *k = localtime(&rawtime);
 		strftime(buffer, 80, " %x %X", k);
-		WriteLine(log,"  Дата: ", buffer, "\n","");
+		WriteLine(log,"  Р”Р°С‚Р°: ", buffer, "\n","");
 	}
 	void WriteParm(LOG log, Parm::PARM parm) {
-		WriteLine(log,"\n---- Параметры ----","");
+		WriteLine(log,"\n---- РџР°СЂР°РјРµС‚СЂС‹ ----","");
 		WriteLine(log,"\n -in:  ","");
 		WriteLine(log,parm.in, L"");
 		WriteLine(log, "\n -log: ", "");
@@ -49,40 +49,40 @@ namespace Log {
 		WriteLine(log, "\n -out: ", "");
 		WriteLine(log, parm.log, L"");
 		if (parm.it)
-			WriteLine(log, "\n -it вывод таблицы идентификаторов", "");
+			WriteLine(log, "\n -it РІС‹РІРѕРґ С‚Р°Р±Р»РёС†С‹ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ", "");
 		if (parm.lt)
-			WriteLine(log, "\n -lt вывод таблицы лексем", "");
+			WriteLine(log, "\n -lt РІС‹РІРѕРґ С‚Р°Р±Р»РёС†С‹ Р»РµРєСЃРµРј", "");
 		if(parm.st)
-			WriteLine(log, "\n -st вывод дерева разбора", "");
+			WriteLine(log, "\n -st РІС‹РІРѕРґ РґРµСЂРµРІР° СЂР°Р·Р±РѕСЂР°", "");
 		if (parm.tr)
-			WriteLine(log, "\n -tr вывод трассировки", "");
+			WriteLine(log, "\n -tr РІС‹РІРѕРґ С‚СЂР°СЃСЃРёСЂРѕРІРєРё", "");
 	}
 //	void WriteIn(LOG log, In::IN in) {
-//	/*	*(log.stream) << "---- Исходные данные ------ \n\n\n\n";
+//	/*	*(log.stream) << "---- РСЃС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ ------ \n\n\n\n";
 //		for (int i = 0; i<in.size; i++) {
 //			
 //			 (*log.stream) << in.text[i];
 //		}*/
-//		*(log.stream) << "\n\n\nКоличество символов: " << in.size <<
-//						 "\nПроигнорировано    : " << in.ignor <<
-//						 "\nКоличество строк   : " << in.lines;
+//		*(log.stream) << "\n\n\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ: " << in.size <<
+//						 "\nРџСЂРѕРёРіРЅРѕСЂРёСЂРѕРІР°РЅРѕ    : " << in.ignor <<
+//						 "\nРљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє   : " << in.lines;
 //	}
 	void WriteError(LOG log, Error::Errors& e) {
 		if (e.size != 0) 
 		{
-			WriteLine(log, "\n\n---- Ошибки ----", "");
+			WriteLine(log, "\n\n---- РћС€РёР±РєРё ----", "");
 
 			for (int i = 0; i < e.size; i++)
 			{
-				*(log.stream) << "\nОшибка " << e.errors[i].id << ": " << e.errors[i].message << ", строка " <<
-					e.errors[i].intext.line << " позиция " << e.errors[i].intext.col << std::endl;
+				*(log.stream) << "\nРћС€РёР±РєР° " << e.errors[i].id << ": " << e.errors[i].message << ", СЃС‚СЂРѕРєР° " <<
+					e.errors[i].intext.line << " РїРѕР·РёС†РёСЏ " << e.errors[i].intext.col << std::endl;
 			}
 		}
 	}
 //	void WriteLexTable(LT::LexTable lextable, LOG log)
 //	{
 //		int k = 0;
-//		*(log.stream) << "\n\nТаблица лексем\n0: ";
+//		*(log.stream) << "\n\nРўР°Р±Р»РёС†Р° Р»РµРєСЃРµРј\n0: ";
 //		for (int i = 0; i < lextable.size; i++) {
 //			if (lextable.table[i].sn != k) {
 //				*(log.stream) << "\n" << lextable.table[i].sn << ": ";
@@ -100,37 +100,37 @@ namespace Log {
 //		
 //		{
 //			for (int i = 0; i < idT.size; i++) {
-//				std::cout << "\n\nИдентификатор №" << i << ": " << idT.table[i].id;
-//				//std::cout << "\nНомер в таблице идентификаторов: " << lexT.table[i].idxTI;
-//				std::cout << "\nПервая строка определения: " << idT.table[i].idxfirstLE;
+//				std::cout << "\n\nРРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ в„–" << i << ": " << idT.table[i].id;
+//				//std::cout << "\nРќРѕРјРµСЂ РІ С‚Р°Р±Р»РёС†Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ: " << lexT.table[i].idxTI;
+//				std::cout << "\nРџРµСЂРІР°СЏ СЃС‚СЂРѕРєР° РѕРїСЂРµРґРµР»РµРЅРёСЏ: " << idT.table[i].idxfirstLE;
 //				if (idT.table[i].iddatatype == IT::INT)
-//					std::cout << "\nТип данных: integer";
+//					std::cout << "\nРўРёРї РґР°РЅРЅС‹С…: integer";
 //				else if (idT.table[i].iddatatype == IT::STR)
-//					std::cout << "\nТип данных: string";
+//					std::cout << "\nРўРёРї РґР°РЅРЅС‹С…: string";
 //				else
-//					std::cout << "\nТип данных: operator";
+//					std::cout << "\nРўРёРї РґР°РЅРЅС‹С…: operator";
 //				if (idT.table[i].idtype == IT::F)
-//					std::cout << "\nТип ид: F";
+//					std::cout << "\nРўРёРї РёРґ: F";
 //				else if (idT.table[i].idtype == IT::V)
-//					std::cout << "\nТип ид: V";
+//					std::cout << "\nРўРёРї РёРґ: V";
 //				else if (idT.table[i].idtype == IT::P)
-//					std::cout << "\nТип ид: P";
+//					std::cout << "\nРўРёРї РёРґ: P";
 //				else if (idT.table[i].idtype == IT::L)
-//					std::cout << "\nТип ид: L";
+//					std::cout << "\nРўРёРї РёРґ: L";
 //				else
-//					std::cout << "\nТип ид: O";
+//					std::cout << "\nРўРёРї РёРґ: O";
 //
 //				if ((idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::V) ||
 //					(idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::L))
-//					std::cout << "\nЗначение: " << idT.table[i].value.vind;
+//					std::cout << "\nР—РЅР°С‡РµРЅРёРµ: " << idT.table[i].value.vind;
 //				else if ((idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::V) ||
 //					(idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::L))
 //				{
 //					if (idT.table[i].value.vstr.str[0] == NULL)
-//						std::cout << "\nСтрока: NULL";
+//						std::cout << "\nРЎС‚СЂРѕРєР°: NULL";
 //					else {
-//						std::cout << "\nСтрока: " << idT.table[i].value.vstr.str;
-//						std::cout << "\nДлина строки: " << idT.table[i].value.vstr.len;
+//						std::cout << "\nРЎС‚СЂРѕРєР°: " << idT.table[i].value.vstr.str;
+//						std::cout << "\nР”Р»РёРЅР° СЃС‚СЂРѕРєРё: " << idT.table[i].value.vstr.len;
 //					}
 //				}
 //			}

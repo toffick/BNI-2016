@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "stdafx.h"
 #include "IT.h"
 
@@ -23,7 +23,7 @@ namespace IT {
 		return (idtable.table[n]);
 	
 	}
-	void IT::RestartId(IT::Entry& e)											//преехагрузка элемента таблиц идентификаторов
+	void IT::RestartId(IT::Entry& e)											//РїСЂРµРµС…Р°РіСЂСѓР·РєР° СЌР»РµРјРµРЅС‚Р° С‚Р°Р±Р»РёС† РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРІ
 	{
 		e.id[0] = 0x00;
 		e.iddatatype = IT::DATATYPE::OFF;
