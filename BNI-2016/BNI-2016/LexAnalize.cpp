@@ -86,7 +86,7 @@ namespace LEX
 			{
 				strcpy(ItE.id, prefix);
 				strcat(ItE.id, name);
-				rc = IT::IsId(lex.idtable, name);
+				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX) {
 					switch (ItE.iddatatype)
 					{
@@ -117,11 +117,13 @@ namespace LEX
 			}
 			case IT::F:
 			{
-				rc = IT::IsId(lex.idtable, name);
+				strncpy(prefix, name, TI_PREFIX_MAX_SIZE);
+				strcat(ItE.id, name);
+				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX)
 				{
-					strncpy(prefix, name, TI_PREFIX_MAX_SIZE);
-					strcpy(ItE.id, name);
+					
+
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
 					IT::Add(lex.idtable, ItE);
 				}
@@ -185,14 +187,40 @@ namespace LEX
 				break;
 			}
 
-			default:
+			default:										//когда пришел ид без параметров
 			{
-				
-			
-			}
+				int fc;
+				strcpy(ItE.id, name);							//доделать диблирование идентификатора не функции
+				fc = IT::IsId(lex.idtable, ItE.id);
+				strcpy(ItE.id,prefix);
+				strcat(ItE.id, name);							//доделать диблирование идентификатора не функции
+				rc = IT::IsId(lex.idtable, ItE.id);
+				if (rc == TI_NULLIDX && fc == TI_NULLIDX)
+				{
+					std::cout << "1111";
+					//ошибка о неизвестном иде
+				}
+				else
+				{
+					if(rc!= TI_NULLIDX)
+					ItE = IT::getEntry(lex.idtable, rc);
+					else 
+					ItE = IT::getEntry(lex.idtable, fc);
+
+				}
 				break;
 			}
+			
+			}
 		
+			if (ItE.idtype != IT::L)
+			{
+				lex.lextable.table[lex.lextable.size - 1].idxTI = IT::IsId(lex.idtable, ItE.id);
+			}
+			else
+			{
+				lex.lextable.table[lex.lextable.size - 1].idxTI = IT::IsLiteral(lex.idtable, name,ItE);
+			};
 		
 		return true;
 	}
@@ -210,16 +238,11 @@ namespace LEX
 	
 	}
 
-	
 
 	Lex StartLA(In::IN& in, Error::Errors& ers)  // начать лексичский анализ
 	{
 		Lex lex;                               
 		FST::FST* fsts = FST::crfsts();  
-	/*	for (int i = 0; i < in.size; i++)
-		{
-			std::cout << in.chains[i].chain << '_'<<std::endl;
-		}*/
 		for (int i = 0; i < in.size; i++)
 		{
 			for (int j = 0; j < FST_ARR_SIZE; j++)
@@ -236,6 +259,12 @@ namespace LEX
 		}
 
 
+		for (int i = 0; i < lex.lextable.size; i++)
+		{
+			std::cout << std::endl<< lex.lextable.table[i].lexema;
+			if (lex.lextable.table[i].idxTI != LT_TI_NULLIDX)
+				std::cout <<"   "<< lex.idtable.table[lex.lextable.table[i].idxTI].id<< "  "<< lex.lextable.table[i].idxTI;
+		}
 
 
 		int k = 0;

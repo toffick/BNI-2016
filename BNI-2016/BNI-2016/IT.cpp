@@ -117,6 +117,10 @@ namespace IT {
 		}
 		return rc ? i : TI_NULLIDX;
 	}
+	Entry getEntry(IdTable & idtable, int value)
+	{
+		return idtable.table[value];
+	}
 	short getIdxTI(char l, IT::IdTable& it)
 	{
 		return (l == LEX_LITERAL || l == LEX_ID || l == LEX_ARIPH) ? it.size : TI_NULLIDX;

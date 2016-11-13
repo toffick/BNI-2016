@@ -69,6 +69,7 @@ namespace IT
 	int IsDublId(IdTable& idtable, char id[ID_MAXSIZE]);		//проверка на дублирвание ид
 	void Add(IdTable& idtable, Entry entry);
 	int checkId(IdTable& idtable, int value);					//удалить таблицу лексем
+	Entry getEntry(IdTable& idtable, int value);
 	int IsLiteral(IdTable&, char*, IT::Entry& ItE);								//проверяет, есть ли такой литерал в ТИ
 	void RestartId(IT::Entry& e);								//перезагрузка элемента таилц идентификаторов;
 	short   getIdxTI(char l, IT::IdTable& it);					// получить индекс ТИ
