@@ -17,8 +17,8 @@
 #define LEX_IF			'u'				//  if
 #define LEX_ELSE		'h'				//	else
 
-#define LEX_FOR			'w'				//  for
-#define LEX_TO			'x'				//  to
+#define LEX_WHILE		'w'				//  while
+
 
 #define LEX_SEMICOLON	';'				//	;
 #define LEX_COMMA		','				//	,

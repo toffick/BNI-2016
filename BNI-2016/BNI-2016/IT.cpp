@@ -47,40 +47,42 @@ namespace IT {
 
 		for (i = 0; i < idtable.size; i++)
 		{
-			switch (ItE.iddatatype) 
-			{
-			case IT::STR: 
-			{
-				if (!strcmp(idtable.table[i].value.vstr.str, value))
+			if(idtable.table[i].idtype==IT::L){
+				switch (ItE.iddatatype)
 				{
-					return i;
-				}
-				break;
-
-			}
-			case IT::INT:
-			{
-				if (idtable.table[i].value.vind == /*(strchr(value, '\'') ? -1 :*/ atoi(value))
+				case IT::STR:
 				{
-					return i;
-				}
-				break;
+					if (!strcmp(idtable.table[i].value.vstr.str, value))
+					{
+						return i;
+					}
+					break;
 
-			}
-			case IT::BOOL:
-			{
-				if((!strcmp(LEX_FALSE_LIT, value)) && (idtable.table[i].value.vbool==0))
+				}
+				case IT::INT:
 				{
-					return i;
-				}
+					if (idtable.table[i].value.vind == /*(strchr(value, '\'') ? -1 :*/ atoi(value))
+					{
+						return i;
+					}
+					break;
 
-				if(!strcmp(LEX_TRUE_LIT, value) && idtable.table[i].value.vbool == 1)
+				}
+				case IT::BOOL:
 				{
-					return i;
-				}
+					if ((!strcmp(LEX_FALSE_LIT, value)) && (idtable.table[i].value.vbool == 0))
+					{
+						return i;
+					}
 
-				break;
-			}
+					if (!strcmp(LEX_TRUE_LIT, value) && idtable.table[i].value.vbool == 1)
+					{
+						return i;
+					}
+
+					break;
+				}
+				}
 			}
 		}; 
 

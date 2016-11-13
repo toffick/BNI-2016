@@ -7,27 +7,36 @@ namespace LEX
 {
 	void CreatId(int line, FST::FST& fst, Error::Errors& ers, Lex& lex)
 	{
-		static IT::Entry ItE;                     // формируемая строка ТИ
-		static char  prefix[TI_PREFIX_MAX_SIZE];   // имя текущей функции (префикс)
-
-		//static bool checkRetType = false;             // проверить возвращаемый тип
-
-		static bool param;
-		bool rc=false;
+		static IT::Entry ItE;											// формируемая строка ТИ
+		static char  prefix[TI_PREFIX_MAX_SIZE];						// имя текущей функции (префикс)
+		static bool param;												// ссчитываем ли параметры функции
+		static bool rc=true;											// проверка на очистку стрки ти 
+		if (rc)															
+		{		
+			RestartItE(ItE);											//очистка добавляемой строки ТИ
+			rc = false;
+		}
 		switch (fst.ind)
 		{
 
-		case FST::FST_INT:  ItE.iddatatype = IT::INT; if(param) ItE.idtype = IT::P;  break;
-		case FST::FST_STR:  ItE.iddatatype = IT::STR; if (param) ItE.idtype = IT::P; break;
-		case FST::FST_BOOL: ItE.iddatatype = IT::BOOL; if (param) ItE.idtype = IT::P; break;
-		case FST::FST_VAR:  ItE.idtype = IT::V;     break;
+		case FST::FST_INT: 
+			ItE.iddatatype = IT::INT;
+			if(param) ItE.idtype = IT::P;
+			break;
+		case FST::FST_STR: 
+			ItE.iddatatype = IT::STR;
+			if (param) ItE.idtype = IT::P;
+			break;
+		case FST::FST_BOOL:
+			ItE.iddatatype = IT::BOOL; 
+			if (param) ItE.idtype = IT::P;
+			break;
+		case FST::FST_VAR:  
+			ItE.idtype = IT::V;   
+			break;
 		case FST::FST_FUNC: 
 			ItE.idtype = IT::F;
 			param = true;
-			break;
-		case FST::FST_FOR:		
-			ItE.idtype = IT::C; 
-			ItE.iddatatype = IT::INT;
 			break;
 		case FST::FST_ARIPH:    
 			ItE.idtype = IT::O;   
@@ -44,23 +53,25 @@ namespace LEX
 			break;
 
 		case FST::FST_BLIT:
-			ItE.idtype = IT::L; ItE.iddatatype = IT::BOOL;
+			ItE.idtype = IT::L; 
+			ItE.iddatatype = IT::BOOL;
 			rc = newId(prefix, fst.string, ItE, ers, lex, line);
 			break;
 		case FST::FST_ILIT:
-			ItE.idtype = IT::L; ItE.iddatatype = IT::INT;
+			ItE.idtype = IT::L;
+			ItE.iddatatype = IT::INT;
 			rc = newId(prefix, fst.string, ItE, ers, lex, line);
 			break;
 		case FST::FST_SLIT:
-			ItE.idtype = IT::L; ItE.iddatatype = IT::STR;
+			ItE.idtype = IT::L; 
+			ItE.iddatatype = IT::STR;
 			rc = newId(prefix, fst.string, ItE, ers, lex, line);
 			break;
 		case FST::FST_RIGHTHESIS:
 			param = false;
 			break;
 		};
-		if (rc)
-			RestartItE(ItE);
+		
 	
 	};
 
@@ -139,7 +150,7 @@ namespace LEX
 					case IT::STR:
 						{
 							strcpy(ItE.value.vstr.str,name);
-							ItE.value.vstr.len = strlen(name);
+							ItE.value.vstr.len = strlen(name)-2;
 							break;
 						}
 					case IT::INT:
@@ -165,10 +176,15 @@ namespace LEX
 			}
 			case IT::O:
 			{
-				strcpy(ItE.id,name);
-				IT::Add(lex.idtable, ItE);
+				rc = IT::IsId(lex.idtable, name);
+				if (rc == TI_NULLIDX)
+				{
+					strcpy(ItE.id, name);
+					IT::Add(lex.idtable, ItE);
+				}
 				break;
 			}
+
 			default:
 			{
 				
@@ -182,15 +198,15 @@ namespace LEX
 	}
 
 	void RestartItE(IT::Entry& ItE) {
+		
+		ItE.idxfirstLE = 0;
+		ItE.value.vind = 0;
+		ItE.value.vbool = -1;
+		ItE.value.vstr.len = 0;
+		ItE.value.vstr.str[0] = 0;
 		ItE.id[0] = 0x00;
 		ItE.iddatatype = IT::OFF;
 		ItE.idtype = IT::N;
-		ItE.idxfirstLE = 0;
-		ItE.value.vbool = -1;
-		ItE.value.vind = 0;
-		ItE.value.vstr.len = 0;
-		ItE.value.vstr.str[0] = 0;
-	
 	
 	}
 
@@ -261,8 +277,7 @@ namespace LEX
 					std::cout << "\nТип ид: L";
 				else if(lex.idtable.table[i].idtype == IT::O)
 					std::cout << "\nТип ид: O";
-				else if(lex.idtable.table[i].idtype == IT::C)
-					std::cout << "\nТип ид: C(цикл)";
+
 
 				if ((lex.idtable.table[i].iddatatype == IT::BOOL && lex.idtable.table[i].idtype == IT::V) ||
 					(lex.idtable.table[i].iddatatype == IT::BOOL && lex.idtable.table[i].idtype == IT::L))

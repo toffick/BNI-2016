@@ -177,6 +177,14 @@ namespace FST {
 			NODE()
 			);
 
+		FST fst_while("", LEX_WHILE, FST_WHILE, 6,
+			NODE(1, RELATION('w', 1)),
+			NODE(1, RELATION('h', 2)),
+			NODE(1, RELATION('i', 3)),
+			NODE(1, RELATION('l', 4)),
+			NODE(1, RELATION('e', 5)),
+			NODE()
+			);
 
 
 		FST fst_int("", LEX_INT, FST_INT, 4,
@@ -241,17 +249,7 @@ namespace FST {
 			NODE(1, RELATION('n', 4)),
 			NODE()
 			);
-		FST fst_for("", LEX_FOR, FST_FOR, 4,
-			NODE(1, RELATION('f', 1)),
-			NODE(1, RELATION('o', 2)),
-			NODE(1, RELATION('r', 3)),
-			NODE()
-			);
-		FST fst_to("", LEX_TO, FST_TO, 3,
-			NODE(1, RELATION('t', 1)),
-			NODE(1, RELATION('o', 2)),
-			NODE()
-			);
+
 		FST fst_if("", LEX_IF, FST_IF, 3,
 			NODE(1, RELATION('i', 1)),
 			NODE(1, RELATION('f', 2)),
@@ -269,6 +267,7 @@ namespace FST {
 			NODE(1, RELATION('+', 2)),
 			NODE()
 			);
+	
 		FST fst_dec("", LEX_UNARY, FST_ARIPH, 3,
 			NODE(1, RELATION('-', 1)),
 			NODE(1, RELATION('-', 2)),
@@ -363,10 +362,10 @@ namespace FST {
 
 		FST* mas = new FST[FST_ARR_SIZE];
 		int i = 0;
+		mas[i++] = fst_while;
 		mas[i++] = fst_if;
 		mas[i++] = fst_else;
-		mas[i++] = fst_for;
-		mas[i++] = fst_to;
+		
 		mas[i++] = fst_dec;
 		mas[i++] = fst_inc;
 		mas[i++] = fst_var;
@@ -390,7 +389,7 @@ namespace FST {
 		mas[i++] = fst_intlit;
 		mas[i++] = fst_strlit;
 		mas[i++] = fst_id;
-	
+
 		
 
 		return mas;
