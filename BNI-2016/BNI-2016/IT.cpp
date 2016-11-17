@@ -40,7 +40,7 @@ namespace IT {
 		}
 		return TI_NULLIDX;
 	}
-	int IT::IsLiteral(IdTable& idtable, char* value, IT::Entry& ItE)
+	int IsLiteral(IdTable& idtable, char* value, IT::Entry& ItE)
 	{
 		bool rc = false;
 		int i;

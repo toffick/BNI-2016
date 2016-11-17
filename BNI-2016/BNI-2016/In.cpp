@@ -93,11 +93,15 @@ namespace In {
 						ret.chains[ret.size].chain[chain_len++] = t;									//дописываем кавычку 
 						ret.chains[ret.size++].chain[chain_len] = 0x00;
 						chain_len = 0;
+						break;
 					}
+					default: 
+						Error::adderr(111, ret.lines, pos, errarr);
+						break;
 				}
 				pt = t;																					//предыдущий  символ
 				ret.chains[ret.size].line=ret.lines;													//запись в текущую цепочку номера строки 
-
+				pos++;
 			}
 			if (chain_len)																				//костыль: если есть строка на конце файла, то записываем ее в массив 
 				ret.chains[ret.size++].chain[chain_len] = 0x00;

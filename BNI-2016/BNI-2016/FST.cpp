@@ -365,7 +365,6 @@ namespace FST {
 		mas[i++] = fst_while;
 		mas[i++] = fst_if;
 		mas[i++] = fst_else;
-		
 		mas[i++] = fst_dec;
 		mas[i++] = fst_inc;
 		mas[i++] = fst_var;
