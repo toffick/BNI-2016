@@ -5,6 +5,8 @@
 #include "Error.h"
 #include "LT.h"
 #include "IT.h"
+#include "LexAnalize.h"
+
 
 namespace Log {
 	struct LOG {
@@ -25,5 +27,6 @@ namespace Log {
 	void WriteLexTable(LT::LexTable, LOG);
 	void WriteIdTable(IT::IdTable);
 	void WriteLAtables(LT::LexTable, IT::IdTable, Parm::PARM, LOG);
+
 	void close(LOG log);								//закрыть протокол
 };
