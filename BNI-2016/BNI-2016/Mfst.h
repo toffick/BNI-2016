@@ -1,7 +1,8 @@
 #pragma once
 #include <stack>
 #include "LexAnalize.h"
-#include "Greibach.h"
+#include "GRB.h"
+#include "Parm.h"
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 
@@ -67,11 +68,11 @@ namespace MFST
 		char* getCSt(char* buf);
 		char* getCLenta(char* buf, short pos, short n = 25);
 		char* getDiagnosis(short n, char* buf);
-		bool saveState();
-		bool reststate();
+		bool saveState(Parm::PARM);
+		bool reststate(Parm::PARM);
 		bool push_chain(GRB::Rule::Chain chain);
-		RC_STEP step();
-		bool start();
+		RC_STEP step(Parm::PARM);
+		bool start(Parm::PARM);
 		bool savediagnosis(RC_STEP pprc_step);
 		void printrules();						//напечатать дерево разбора
 		struct Deducation

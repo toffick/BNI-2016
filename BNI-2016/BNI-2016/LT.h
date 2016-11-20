@@ -14,8 +14,7 @@
 #define LEX_MAIN		'm'				//	main
 #define LEX_ARIPH	    'a'				//  знак(арифм + булевы) 
 #define LEX_COND		'c'				//  условный оператор (< > ==)
-#define LEX_IF			'u'				//  if
-#define LEX_ELSE		'h'				//	else
+
 
 #define LEX_WHILE		'w'				//  while
 

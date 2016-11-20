@@ -1,7 +1,7 @@
 ﻿
 #include "stdafx.h"
 #define IN_CODE_SEP ';'
-#define FST_ARR_SIZE 29
+#define FST_ARR_SIZE 30
 
 namespace FST {
 
@@ -21,8 +21,8 @@ namespace FST {
 		FST_MAIN = 10,
 		FST_RETURN = 11,
 		FST_COND = 12,
-		FST_ELSE = 13,
-		FST_IF = 14,
+		
+		
 		FST_COMMA = 15,
 		FST_LEFTBRACE = 16,
 		FST_RIGHTBRACE = 17,
@@ -33,6 +33,7 @@ namespace FST {
 		FST_ASSIG = 22,
 		FST_BLIT = 23,
 		FST_CMP = 24,
+		FST_STD_LIB = 25,
 		FST_WHILE=27
 		
 	};

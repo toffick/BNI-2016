@@ -13,10 +13,10 @@
 #define IN_CODE_TABLE {\
     IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::D, IN::D, IN::F, IN::F, IN::I, IN::F, IN::F, \
     IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
-    IN::D, IN::S, IN::Q, IN::F, IN::F, IN::S, IN::S, IN::F, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, \
-    IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, \
-    IN::S, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
-    IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::F, IN::S, IN::S, IN::F, \
+    IN::D, IN::S, IN::Q, IN::F, IN::F, IN::S, IN::S, IN::F, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S/*47*/, \
+    IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S/*63*/, \
+    IN::S, IN::F/*A*/, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+    IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F/*Z*/, IN::S, IN::F, IN::S, IN::S, IN::F, \
     IN::F, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, \
     IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::S, IN::S, IN::S, IN::F, \
     \

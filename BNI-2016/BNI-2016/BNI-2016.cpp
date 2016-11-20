@@ -8,6 +8,7 @@
 #include "In.h"
 #include "Log.h"
 #include "LexAnalize.h"
+#include "Mfst.h"
 
 
 
@@ -26,16 +27,23 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteParm(log,parm);
 		LEX::Lex lex = LEX::StartLA(in, errors);
 		Log::WriteLAtables(lex.lextable, lex.idtable, parm, log);
-		Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
+
+
+		MFST::Mfst mfst(lex, GRB::getGreibach());
+		mfst.start(parm);
+		mfst.savededucation();
+		mfst.printrules();
+
 
 
 	}
 	catch (Error::ERROR e)
 	{
 		std::cout << e.id << ": " << e.message << std::endl << std::endl;
-		Log::WriteError(log, errors);
+		
 		printerr(errors);
 	}
+	Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
 	Log::close(log);
 
 	return 0;

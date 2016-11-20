@@ -10,6 +10,7 @@ namespace LEX
 		static IT::Entry ItE;											// формируемая строка ТИ
 		static char  prefix[TI_PREFIX_MAX_SIZE];						// имя текущей функции (префикс)
 		static bool param;												// ссчитываем ли параметры функции
+		static bool inloop = false;										// находимся ли в нутри цикла
 		static bool rc=true;											// проверка на очистку стрки ти 
 		if (rc)															
 		{		
@@ -21,22 +22,33 @@ namespace LEX
 
 			case FST::FST_INT: 
 				ItE.iddatatype = IT::INT;
-				if(param) ItE.idtype = IT::P;
+				if(param) 
+					ItE.idtype = IT::P;
 				break;
 			case FST::FST_STR: 
 				ItE.iddatatype = IT::STR;
-				if (param) ItE.idtype = IT::P;
+				if (param)
+					ItE.idtype = IT::P;
 				break;
 			case FST::FST_BOOL:
 				ItE.iddatatype = IT::BOOL; 
-				if (param) ItE.idtype = IT::P;
+				if (param)
+					ItE.idtype = IT::P;
 				break;
 			case FST::FST_VAR:  
+				if(inloop)
+					Error::adderr(123, line, ers);
+
 				ItE.idtype = IT::V;   
 				break;
 			case FST::FST_FUNC: 
 				ItE.idtype = IT::F;
 				param = true;
+				break;
+			case FST::FST_STD_LIB:
+				ItE.idtype = IT::F;	
+				ItE.iddatatype = IT::INT;
+				rc = newId(prefix, fst.string, ItE, ers, lex, line);
 				break;
 			case FST::FST_ARIPH:    
 				ItE.idtype = IT::O;   
@@ -67,9 +79,16 @@ namespace LEX
 				ItE.iddatatype = IT::STR;
 				rc = newId(prefix, fst.string, ItE, ers, lex, line);
 				break;
+			case FST::FST_RIGHTBRACE:
+				inloop = false;																		//вышли из цикла
+
 			case FST::FST_RIGHTHESIS:
-				param = false;
+				param = false;																		//вышли из параметров
+
 				break;
+			case FST::FST_WHILE:
+				inloop = true;
+
 		};
 	};
 

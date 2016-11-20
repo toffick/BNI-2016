@@ -10,7 +10,7 @@ char rbuf[205], sbuf[205], lbuf[1024]; // печать
 #define TS(n) GRB::Ru1e::Chain::T(n)
 #define ISNS(n) GRB::Rule::Chain::isN(n)
 
-#define MFST_TRACE1 std::cout << std::setw(4) << std::left << ++FST_TRACE_n<<": "\
+#define MFST_TRACE1  std::cout << std::setw(4) << std::left << ++FST_TRACE_n<<": "\
                          << std::setw(20) << std::left << rule.getCRule(rbuf, nrulechain)\
                          << std::setw(30) << std::left << MFST::Mfst::getCLenta(lbuf, lenta_position)\
                          << std::setw(20) << std::left << MFST::Mfst::getCSt(sbuf)\
@@ -128,9 +128,10 @@ namespace MFST
 		buf[i - pos] = 0x00;
 		return buf;
 	}
-	bool Mfst::saveState() {
+	bool Mfst::saveState(Parm::PARM parm) {
 
 		storestate.push(MfstState(lenta_position, st,nrule, nrulechain));	//сохраняет текущее положение мпка в стек ка
+		if (parm.tr)
 		MFST_TRACE6("SAVESTATE: ", storestate.size());
 		return true;
 	}
@@ -140,7 +141,7 @@ namespace MFST
 			st.push(chain.nt[i]);
 		return true;
 	}
-	bool Mfst::reststate() 
+	bool Mfst::reststate(Parm::PARM parm) 
 	{
 		bool rc;
 		MfstState tmp;
@@ -152,8 +153,11 @@ namespace MFST
 			st = tmp.st;
 			storestate.pop();
 			rc = true;
-			MFST_TRACE5("RESTATE");
-			MFST_TRACE2;
+			if (parm.tr)
+			{
+				MFST_TRACE5("RESTATE");
+				MFST_TRACE2;
+			}
 		}
 		else
 			rc = false;
@@ -196,11 +200,12 @@ namespace MFST
 		{
 			state = storestate._Get_container()[k];
 			rule = grebach.getRule(state.nrule);
+			
 			MFST_TRACE7
 		}
 	}
 
-	bool Mfst::savededucation()															//ЕБАНУТЫЙ БАГ С ОШИБКОЙ ДОСТУПА К ЦЕПОЧКЕ !!!!!!!!!!!!
+	bool Mfst::savededucation()															
 	{
 		MfstState state;
 		GRB::Rule rule;
@@ -216,7 +221,7 @@ namespace MFST
 		return true;
 		
 	}
-	Mfst::RC_STEP Mfst::step()
+	Mfst::RC_STEP Mfst::step(Parm::PARM parm)
 	{
 		RC_STEP rc = SURPRISE;
 
@@ -230,18 +235,21 @@ namespace MFST
 					GRB::Rule::Chain chain;
 					if ((nrulechain = rule.getNextChain(lenta[lenta_position], chain, nrulechain + 1)) >= 0)
 					{
-						MFST_TRACE1;
-						saveState();
+						if(parm.tr)
+							MFST_TRACE1;
+						saveState(parm);
 						st.pop();
 						push_chain(chain);
 						rc = NS_OK;
-						MFST_TRACE2;
+						if (parm.tr)
+							MFST_TRACE2;
 					}
 					else
 					{
-						MFST_TRACE4("TNS_NORULECHAIN/NS_NORULE");
+						if (parm.tr)
+							MFST_TRACE4("TNS_NORULECHAIN/NS_NORULE");
 						savediagnosis(NS_NORULECHAIN);
-						rc = reststate() ? NS_NORULECHAIN : NS_NORULE;
+						rc = reststate(parm) ? NS_NORULECHAIN : NS_NORULE;
 					};
 				}
 				else
@@ -255,49 +263,66 @@ namespace MFST
 				st.pop();
 				nrulechain = -1;
 				rc = TS_OK;
-				MFST_TRACE3;
+				if (parm.tr)
+					MFST_TRACE3;
 			}
 			else
 			{
-				MFST_TRACE4("TS_NOK/NS_NORULECHAIN");
-				rc = reststate() ? TS_NOK : NS_NORULECHAIN;
+				if (parm.tr)
+					MFST_TRACE4("TS_NOK/NS_NORULECHAIN");
+				rc = reststate(parm) ? TS_NOK : NS_NORULECHAIN;
 			};
 		}
 		else
 		{
 			rc = LENTA_END;
-			//MFST_TRACE4("LENTA_END");
 		};
 
 		return rc;
 	};
 	
-	bool Mfst::start()
+	bool Mfst::start(Parm::PARM parm)
 	{
+		if(parm.tr)
+			MFST_TRACE_START;
+
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
 		char buf[MFST_DIAGN_MAXSIZE];
-		rc_step = step();
+		rc_step = step(parm);
 		while (rc_step == NS_OK || rc_step == NS_NORULECHAIN || rc_step == TS_OK || rc_step == TS_NOK)
-			rc_step = step();
+			rc_step = step(parm);
 		switch (rc_step)
 		{
 		case LENTA_END: 
-			MFST_TRACE4("--------->LENTA_END")
-				std::cout << "---------------------------------------------------------------------------------------\n";
-				sprintf_s(buf,MFST_DIAGN_MAXSIZE,"%d: всего строк %d, синтаксический анализ выполнен без ошибокб",0,lenta_size);
+			if (parm.tr)
+			{
+				MFST_TRACE4("--------->LENTA_END")
+					std::cout << "---------------------------------------------------------------------------------------\n";
+				sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: всего строк %d, синтаксический анализ выполнен без ошибокб", 0, lenta_size);
 				std::cout << std::setw(4) << std::left << 0 << ": всего строк" << lenta_size << ", синтаксический анализ выполнен без ошибок\n";
+			}
 				rc = true;
 				break;
-		case NS_NORULE: { std::cout << "NS_NORULE"; 
-			std::cout << getDiagnosis(0, buf) << std::endl;
-			std::cout << getDiagnosis(1, buf) << std::endl;
-			std::cout << getDiagnosis(2, buf) << std::endl;
+		case NS_NORULE: { 
+			if (parm.tr)
+			{
+				std::cout << "NS_NORULE";
+				std::cout << getDiagnosis(0, buf) << std::endl;
+				std::cout << getDiagnosis(1, buf) << std::endl;
+				std::cout << getDiagnosis(2, buf) << std::endl;
+			}
 			break;
 		}
-		case NS_NORULECHAIN: std::cout << "NS_NORULECHAIN"; break;
-		case NS_ERROR: std::cout << "NS_ERROR"; break;
-		case SURPRISE: std::cout << "SURPRISE"; break;
+		case NS_NORULECHAIN:
+			if (parm.tr)
+				std::cout << "NS_NORULECHAIN"; break;
+		case NS_ERROR: 
+			if (parm.tr)
+				std::cout << "NS_ERROR"; break;
+		case SURPRISE: 
+			if (parm.tr)
+				std::cout << "SURPRISE"; break;
 		}
 		return rc;
 	}
