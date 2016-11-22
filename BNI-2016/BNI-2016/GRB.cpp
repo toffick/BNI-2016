@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "GRB.h"
 #include "Error.h"
 #include "string.h"
@@ -8,23 +8,25 @@ namespace GRB {
 #define NS(n) Rule::Chain::N(n)
 #define TS(n) Rule::Chain::T(n)
 
-	// ---------- ГРАММАТИКА ГРЕЙБАХ ----------
+	// ---------- Р“Р РђРњРњРђРўРРљРђ Р“Р Р•Р™Р‘РђРҐ ----------
 
 	Greibach greibach(
-		NS('S'), TS('$'),                     // стартовый символ, дно стека
-		6,									  // количество правил
+		NS('S'), TS('$'),                     // СЃС‚Р°СЂС‚РѕРІС‹Р№ СЃРёРјРІРѕР», РґРЅРѕ СЃС‚РµРєР°
+		6,									  // РєРѕР»РёС‡РµСЃС‚РІРѕ РїСЂР°РІРёР»
 		Rule(
-			NS('S'), GRB_ERROR_SERIES + 0,    // неверная структура программы
-			6,                                // S->m{NrE;}; | m{N}; | m{NrE;};S | tfi(F){NrE;};S |  tfi(F){NrE;}; | tfi(F){N};
+			NS('S'), GRB_ERROR_SERIES + 0,    // РЅРµРІРµСЂРЅР°СЏ СЃС‚СЂСѓРєС‚СѓСЂР° РїСЂРѕРіСЂР°РјРјС‹
+			8,                                // S->m{NrE;}; | m{N}; | m{NrE;};S | tfi(F){NrE;};S |  tfi(F){NrE;}; | tfi(F){N};
 			Rule::Chain(14, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
 			Rule::Chain(13, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
+			Rule::Chain(13, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'),  TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
+			Rule::Chain(12, TS('t'), TS('f'), TS('i'), TS('('), NS('F'), TS(')'), TS('{'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
 			Rule::Chain(8, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';')),
 			Rule::Chain(9, TS('m'), TS('{'), NS('N'), TS('r'), NS('E'), TS(';'), TS('}'), TS(';'), NS('S')),
 			Rule::Chain(5, TS('m'), TS('{'), NS('N'), TS('}'), TS(';')),
 			Rule::Chain(10, TS('t'), TS('f'), TS('i'), TS('('), NS('N'), TS(')'), TS('{'), NS('N'), TS('}'), TS(';'))
 			),
 		Rule(
-			NS('N'), GRB_ERROR_SERIES + 1,    // ошибочный оператор
+			NS('N'), GRB_ERROR_SERIES + 1,    // РѕС€РёР±РѕС‡РЅС‹Р№ РѕРїРµСЂР°С‚РѕСЂ
 			15,                               // N->dti; | rE; | i=E; | dtfi(F); | dtiN | rE;N | i=E;N | dtfi(F);N |
 			Rule::Chain(4, TS('v'), TS('t'), TS('i'), TS(';')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),
@@ -34,7 +36,7 @@ namespace GRB {
 			Rule::Chain(3, TS('d'), NS('E'), TS(';')),
 			Rule::Chain(3, TS('i'), NS('E'), TS(';')),									//++ --
 			Rule::Chain(4, TS('i'), NS('E'), TS(';'), NS('N')),									//++ --
-			Rule::Chain(7, TS('w'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}')),									//цикл
+			Rule::Chain(7, TS('w'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}')),									//С†РёРєР»
 
 			Rule::Chain(5, TS('v'), TS('t'), TS('i'), TS(';'), NS('N')),
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),
@@ -44,7 +46,7 @@ namespace GRB {
 			Rule::Chain(4, TS('d'), NS('E'), TS(';'), NS('N'))
 			),
 		Rule(
-			NS('E'), GRB_ERROR_SERIES + 2,    // ошибка в выражении
+			NS('E'), GRB_ERROR_SERIES + 2,    // РѕС€РёР±РєР° РІ РІС‹СЂР°Р¶РµРЅРёРё
 			9,                                // E?i | l | (E) | i(W) | iM | lM | (E)M | i(W)M
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
@@ -57,13 +59,13 @@ namespace GRB {
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M'))
 			),
 		Rule(
-			NS('F'), GRB_ERROR_SERIES + 3,    // ошибка в параметрах функции
+			NS('F'), GRB_ERROR_SERIES + 3,    // РѕС€РёР±РєР° РІ РїР°СЂР°РјРµС‚СЂР°С… С„СѓРЅРєС†РёРё
 			2,                                // F? ti | ti,F
 			Rule::Chain(2, TS('t'), TS('i')),
 			Rule::Chain(4, TS('t'), TS('i'), TS(','), NS('F'))
 			),
 		Rule(
-			NS('W'), GRB_ERROR_SERIES + 4,    // ошибка в параметрах вызываемой функции 
+			NS('W'), GRB_ERROR_SERIES + 4,    // РѕС€РёР±РєР° РІ РїР°СЂР°РјРµС‚СЂР°С… РІС‹Р·С‹РІР°РµРјРѕР№ С„СѓРЅРєС†РёРё 
 			4,                                // W? i | l | i,W | l,W 
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
@@ -71,7 +73,7 @@ namespace GRB {
 			Rule::Chain(3, TS('l'), TS(','), NS('W'))
 			),
 		Rule(
-			NS('M'), GRB_ERROR_SERIES + 5,    // операторы в выражениях
+			NS('M'), GRB_ERROR_SERIES + 5,    // РѕРїРµСЂР°С‚РѕСЂС‹ РІ РІС‹СЂР°Р¶РµРЅРёСЏС…
 			2,								  // M ? aE | aEM
 			Rule::Chain(2, TS('a'), NS('E')),
 			Rule::Chain(3, TS('a'), NS('E'), NS('M'))

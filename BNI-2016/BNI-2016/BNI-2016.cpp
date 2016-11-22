@@ -9,7 +9,7 @@
 #include "Log.h"
 #include "LexAnalize.h"
 #include "Mfst.h"
-
+#include "GEN.h"
 
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -33,7 +33,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		mfst.start(parm);
 		mfst.savededucation();
 		mfst.printrules();
-
+		Gen::StartGen(lex,mfst,log,parm);
 
 
 	}

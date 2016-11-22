@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include "Error.h"
 #include <iostream>
 #include <iomanip>
@@ -11,7 +11,7 @@ namespace GRB {
 		GRBALPHABET nn;
 		int iderror;
 		short size;
-		struct Chain				//цепочка (правая часть правила)
+		struct Chain				//С†РµРїРѕС‡РєР° (РїСЂР°РІР°СЏ С‡Р°СЃС‚СЊ РїСЂР°РІРёР»Р°)
 		{
 			short size;
 			GRBALPHABET* nt;

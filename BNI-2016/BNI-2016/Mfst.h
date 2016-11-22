@@ -1,17 +1,18 @@
-#pragma once
+п»ї#pragma once
 #include <stack>
 #include "LexAnalize.h"
 #include "GRB.h"
 #include "Parm.h"
+
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
 
 
 
-#define MFST_TRACE_START cout<<endl<<setw( 4)<<left<<"Шаг"<<":"<<\
-						setw(20)<<left<<"Правило"<<\
-						setw(30)<<left<<"Входная лента"<<\
-						setw(20)<<left<<"Стек"<<endl;
+#define MFST_TRACE_START cout<<endl<<setw( 4)<<left<<"РЁР°Рі"<<":"<<\
+						setw(20)<<left<<"РџСЂР°РІРёР»Рѕ"<<\
+						setw(30)<<left<<"Р’С…РѕРґРЅР°СЏ Р»РµРЅС‚Р°"<<\
+						setw(20)<<left<<"РЎС‚РµРє"<<endl;
 
 
 
@@ -26,24 +27,24 @@ namespace MFST
 		MFSTSTSTACK st;
 		MfstState();
 		MfstState(short pposition, MFSTSTSTACK pst, short pnrulechain);
-		MfstState(                    // конструктор с аргументами
-			short pposition,          // позиция на ленте
-			MFSTSTSTACK pst,             // стек автомата
-			short pnrule,             // номер текущего правила
-			short pnrulechain        // номер текущей цепочки
+		MfstState(                    // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ СЃ Р°СЂРіСѓРјРµРЅС‚Р°РјРё
+			short pposition,          // РїРѕР·РёС†РёСЏ РЅР° Р»РµРЅС‚Рµ
+			MFSTSTSTACK pst,             // СЃС‚РµРє Р°РІС‚РѕРјР°С‚Р°
+			short pnrule,             // РЅРѕРјРµСЂ С‚РµРєСѓС‰РµРіРѕ РїСЂР°РІРёР»Р°
+			short pnrulechain        // РЅРѕРјРµСЂ С‚РµРєСѓС‰РµР№ С†РµРїРѕС‡РєРё
 			);
 	};
 	struct Mfst 
 	{
-		enum RC_STEP {					//код возврата функции step
-						NS_OK,			//найдено правило и цепочка, цепочка записана в стек
-						NS_NORULE,		//не найдено прввило грамматики(ошибка в грамматике)
-						NS_NORULECHAIN,	//не найдена подходящая цепочка правила(ошибка в исходном коде)
-						NS_ERROR,		//неизвестный нетерминальный символ грамматики
-						TS_OK,			//тек. символ ленты == вершине стека, продвиналась лента, pop(0) стека
-						TS_NOK,			//тек. символ ленты != вершине стек, восстановлено расстояние 
-						LENTA_END,		//текущая позиция ленты >= lenta_size
-						SURPRISE		//деожиданно код возврата (ошибка в step)
+		enum RC_STEP {					//РєРѕРґ РІРѕР·РІСЂР°С‚Р° С„СѓРЅРєС†РёРё step
+						NS_OK,			//РЅР°Р№РґРµРЅРѕ РїСЂР°РІРёР»Рѕ Рё С†РµРїРѕС‡РєР°, С†РµРїРѕС‡РєР° Р·Р°РїРёСЃР°РЅР° РІ СЃС‚РµРє
+						NS_NORULE,		//РЅРµ РЅР°Р№РґРµРЅРѕ РїСЂРІРІРёР»Рѕ РіСЂР°РјРјР°С‚РёРєРё(РѕС€РёР±РєР° РІ РіСЂР°РјРјР°С‚РёРєРµ)
+						NS_NORULECHAIN,	//РЅРµ РЅР°Р№РґРµРЅР° РїРѕРґС…РѕРґСЏС‰Р°СЏ С†РµРїРѕС‡РєР° РїСЂР°РІРёР»Р°(РѕС€РёР±РєР° РІ РёСЃС…РѕРґРЅРѕРј РєРѕРґРµ)
+						NS_ERROR,		//РЅРµРёР·РІРµСЃС‚РЅС‹Р№ РЅРµС‚РµСЂРјРёРЅР°Р»СЊРЅС‹Р№ СЃРёРјРІРѕР» РіСЂР°РјРјР°С‚РёРєРё
+						TS_OK,			//С‚РµРє. СЃРёРјРІРѕР» Р»РµРЅС‚С‹ == РІРµСЂС€РёРЅРµ СЃС‚РµРєР°, РїСЂРѕРґРІРёРЅР°Р»Р°СЃСЊ Р»РµРЅС‚Р°, pop(0) СЃС‚РµРєР°
+						TS_NOK,			//С‚РµРє. СЃРёРјРІРѕР» Р»РµРЅС‚С‹ != РІРµСЂС€РёРЅРµ СЃС‚РµРє, РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЂР°СЃСЃС‚РѕСЏРЅРёРµ 
+						LENTA_END,		//С‚РµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ Р»РµРЅС‚С‹ >= lenta_size
+						SURPRISE		//РґРµРѕР¶РёРґР°РЅРЅРѕ РєРѕРґ РІРѕР·РІСЂР°С‚Р° (РѕС€РёР±РєР° РІ step)
 		};
 		struct MfstDiagnosis
 		{
@@ -74,15 +75,15 @@ namespace MFST
 		RC_STEP step(Parm::PARM);
 		bool start(Parm::PARM);
 		bool savediagnosis(RC_STEP pprc_step);
-		void printrules();						//напечатать дерево разбора
+		void printrules();						//РЅР°РїРµС‡Р°С‚Р°С‚СЊ РґРµСЂРµРІРѕ СЂР°Р·Р±РѕСЂР°
 		struct Deducation
 		{
-			short size;							//кол-во шагов в выводе
-			short* nrules;						//номер правила грамматики
-			short* nrulechains;					//номер цепочек правил грамматики(nrules)
+			short size;							//РєРѕР»-РІРѕ С€Р°РіРѕРІ РІ РІС‹РІРѕРґРµ
+			short* nrules;						//РЅРѕРјРµСЂ РїСЂР°РІРёР»Р° РіСЂР°РјРјР°С‚РёРєРё
+			short* nrulechains;					//РЅРѕРјРµСЂ С†РµРїРѕС‡РµРє РїСЂР°РІРёР» РіСЂР°РјРјР°С‚РёРєРё(nrules)
 			Deducation() { size = 0; nrules = 0; nrulechains = 0; };
 		}deducation;
-		bool savededucation();					//созхранитьдерево разбора	
+		bool savededucation();					//СЃРѕР·С…СЂР°РЅРёС‚СЊРґРµСЂРµРІРѕ СЂР°Р·Р±РѕСЂР°	
 
 	};
 }

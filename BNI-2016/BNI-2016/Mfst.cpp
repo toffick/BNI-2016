@@ -1,10 +1,10 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "Mfst.h"
 #include "LexAnalize.h"
 using namespace std;
 int FST_TRACE_n = - 1;
 
-char rbuf[205], sbuf[205], lbuf[1024]; // печать
+char rbuf[205], sbuf[205], lbuf[1024]; // РїРµС‡Р°С‚СЊ
 
 #define NS(n) GRB::Rule::Chain::N(n)
 #define TS(n) GRB::Ru1e::Chain::T(n)
@@ -37,10 +37,10 @@ char rbuf[205], sbuf[205], lbuf[1024]; // печать
 #define MFST_TRACE7 std::cout << std::setw(4) << std::left << state.lenta_position << ": "\
 	<< std :: setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain)\
 	<< std::endl;
-#define MFST_TRACE_START cout<<endl<<setw( 4)<<left<<"Шаг"<<":"<<\
-						setw(20)<<left<<"Правило"<<\
-						setw(30)<<left<<"Входная лента"<<\
-						setw(20)<<left<<"Стек"<<endl;
+#define MFST_TRACE_START cout<<endl<<setw( 4)<<left<<"РЁР°Рі"<<":"<<\
+						setw(20)<<left<<"РџСЂР°РІРёР»Рѕ"<<\
+						setw(30)<<left<<"Р’С…РѕРґРЅР°СЏ Р»РµРЅС‚Р°"<<\
+						setw(20)<<left<<"РЎС‚РµРє"<<endl;
 #define COD(x) lex_to_lenta(x)
 GRBALPHABET lex_to_lenta(char t) {
 	using namespace  GRB;
@@ -101,7 +101,7 @@ namespace MFST
 		nrule = -1;
 		lenta = new GRBALPHABET[lex.lextable.size];
 		lenta_size = lex.lextable.size;
-		for (int i = 0; i < lenta_size; i++)					//перекодирование ленты
+		for (int i = 0; i < lenta_size; i++)					//РїРµСЂРµРєРѕРґРёСЂРѕРІР°РЅРёРµ Р»РµРЅС‚С‹
 			lenta[i] = GRB::Rule::Chain::T(lex.lextable.table[i].lexema);
 		lenta_position = 0;
 		st.push(grebach.stbottomT);
@@ -113,7 +113,7 @@ namespace MFST
 	char* Mfst::getCSt(char* buf) {
 		for (int i = st.size()-1, j=0; i>=0; --i,j++)
 		{
-			buf[j] = GRB::Rule::Chain::alphabet_to_char(st._Get_container()[i]);	//заполнение буфера содержимым стека
+			buf[j] = GRB::Rule::Chain::alphabet_to_char(st._Get_container()[i]);	//Р·Р°РїРѕР»РЅРµРЅРёРµ Р±СѓС„РµСЂР° СЃРѕРґРµСЂР¶РёРјС‹Рј СЃС‚РµРєР°
 		}
 		buf[st.size()] = '\0';
 		return buf;
@@ -130,7 +130,7 @@ namespace MFST
 	}
 	bool Mfst::saveState(Parm::PARM parm) {
 
-		storestate.push(MfstState(lenta_position, st,nrule, nrulechain));	//сохраняет текущее положение мпка в стек ка
+		storestate.push(MfstState(lenta_position, st,nrule, nrulechain));	//СЃРѕС…СЂР°РЅСЏРµС‚ С‚РµРєСѓС‰РµРµ РїРѕР»РѕР¶РµРЅРёРµ РјРїРєР° РІ СЃС‚РµРє РєР°
 		if (parm.tr)
 		MFST_TRACE6("SAVESTATE: ", storestate.size());
 		return true;
@@ -172,7 +172,7 @@ namespace MFST
 		{
 			errid = grebach.getRule(diagnosis[n].nrule).iderror;
 			Error::ERROR err = Error::geterror(errid);
-			sprintf_s(buf,MFST_DIAGN_MAXSIZE, "%d: строка %d, %s", err.id, lex.lextable.table[lpos].sn, err.message);
+			sprintf_s(buf,MFST_DIAGN_MAXSIZE, "%d: СЃС‚СЂРѕРєР° %d, %s", err.id, lex.lextable.table[lpos].sn, err.message);
 			rc = buf;
 		}
 		return buf;
@@ -195,7 +195,7 @@ namespace MFST
 	{
 		MfstState state;
 		GRB::Rule rule;
-		std::cout << "\nДерево разбора\n";
+		std::cout << "\nР”РµСЂРµРІРѕ СЂР°Р·Р±РѕСЂР°\n";
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 			state = storestate._Get_container()[k];
@@ -299,8 +299,8 @@ namespace MFST
 			{
 				MFST_TRACE4("--------->LENTA_END")
 					std::cout << "---------------------------------------------------------------------------------------\n";
-				sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: всего строк %d, синтаксический анализ выполнен без ошибокб", 0, lenta_size);
-				std::cout << std::setw(4) << std::left << 0 << ": всего строк" << lenta_size << ", синтаксический анализ выполнен без ошибок\n";
+				sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: РІСЃРµРіРѕ СЃС‚СЂРѕРє %d, СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР· РІС‹РїРѕР»РЅРµРЅ Р±РµР· РѕС€РёР±РѕРєР±", 0, lenta_size);
+				std::cout << std::setw(4) << std::left << 0 << ": РІСЃРµРіРѕ СЃС‚СЂРѕРє" << lenta_size << ", СЃРёРЅС‚Р°РєСЃРёС‡РµСЃРєРёР№ Р°РЅР°Р»РёР· РІС‹РїРѕР»РЅРµРЅ Р±РµР· РѕС€РёР±РѕРє\n";
 			}
 				rc = true;
 				break;
