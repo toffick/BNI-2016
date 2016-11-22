@@ -276,9 +276,6 @@ namespace LEX
 			};
 		}
 
-
-
-
 		for (int i = 0; i < lex.lextable.size; i++)
 		{
 			std::cout << std::endl<< lex.lextable.table[i].lexema;
@@ -299,7 +296,6 @@ namespace LEX
 			else
 				std::cout << lex.lextable.table[i].lexema;
 		}
-
 		return lex;
 	}
 }
