@@ -8,5 +8,8 @@
 namespace Gen
 {
 	void StartGen(LEX::Lex lex, MFST::Mfst mfst,Log::LOG log, Parm::PARM parm);
+	std::string CreateConstSeg(LEX::Lex lex );
+	std::string CreateProtSeg(LEX::Lex lex);
+	std::string CreateDatSeg(LEX::Lex lex);
 
 }

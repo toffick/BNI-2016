@@ -102,7 +102,7 @@ namespace LEX
 			case IT::V:
 			{
 				strcpy(ItE.id, prefix);
-				strcat(ItE.id, name);
+				strncat(ItE.id, name,5);
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX) {
 					switch (ItE.iddatatype)
@@ -139,7 +139,7 @@ namespace LEX
 			case IT::F:
 			{
 				strncpy(prefix, name, TI_PREFIX_MAX_SIZE);
-				strcat(ItE.id, name);
+				strcat(ItE.id, prefix);
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX)
 				{

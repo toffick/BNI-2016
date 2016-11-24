@@ -141,9 +141,9 @@ namespace FST {
 	FST* crfsts()
 	{
 		FST fst_strlit("", LEX_LITERAL, FST_SLIT, 4,
-			NODE(1, RELATION((char)0x22, 1)),
+			NODE(1, RELATION((char)0x27, 1)),
 			alllit(),
-			NODE(1, RELATION((char)0x22, 3)),
+			NODE(1, RELATION((char)0x27, 3)),
 			NODE()
 			);
 

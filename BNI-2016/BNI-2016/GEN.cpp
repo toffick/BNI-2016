@@ -1,12 +1,112 @@
 ﻿#include "stdafx.h"
 #include "GEN.h"
-
-#define TITLE ".586\n .model flat, stdcall\n includelib kernel32.lib"
-
+#include <iostream>
+#define DW " DW "
+#define DB " DB "
+#define VAL_INT_DEFAULT " 0 "
+#define VAL_STR_DEFAULT "\'\',0"
+#define VAL_BOOL_DEFAULT "0"
+#define SPACE ' '
+#define PROTO "PROTO"
+#define PROT_PARM ":DWORD"
+#define STACK ".stack 4096\n"
+#define LINE_BREAK '\n'
+#define TITLE ".586\n.model flat, stdcall\n\nincludelib kernel32.lib\n"
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
 	std::string gencode;
 	gencode += TITLE;
-	//для начала создадим области переменных и констант + шапку(с прототипами функций) 
+	gencode += LINE_BREAK;
+	gencode += CreateProtSeg(lex);
+	gencode += LINE_BREAK;
+	gencode += STACK;
+	gencode += SPACE;
+	gencode += CreateDatSeg(lex);
+	gencode += CreateConstSeg(lex);
+std::cout << gencode;
+*(log.stream) << "\n\n\nКод асм\n\n\n" << gencode;
+
+}
+std::string Gen::CreateDatSeg(LEX::Lex lex)
+{
+	std::string tmp;
+	tmp += "\n.data\n";
+	for (int i = 0; i < lex.idtable.size; i++)
+	{
+		if (lex.idtable.table[i].idtype == IT::V)
+		{
+			tmp += lex.idtable.table[i].id;
+			tmp += DB;
+			switch (lex.idtable.table[i].iddatatype)
+			{
+			case IT::INT:
+				tmp += VAL_INT_DEFAULT;
+				break;
+			case IT::STR:
+				tmp += VAL_STR_DEFAULT;
+				break;
+			case IT::BOOL:
+				tmp += VAL_BOOL_DEFAULT;
+				break;
+			}
+			tmp += LINE_BREAK;
+		}
+	}
+	return tmp;
+}
+std::string Gen::CreateConstSeg(LEX::Lex lex)
+{
+	std::string tmp;
+	tmp += "\n.const\n";
+	for (int i = 0; i < lex.idtable.size; i++)
+	{
+		if (lex.idtable.table[i].idtype == IT::L)
+		{
+			tmp += lex.idtable.table[i].id;
+			tmp += DB;
+			switch (lex.idtable.table[i].iddatatype)
+			{
+			case IT::INT:
+				char bufint[10];
+				_itoa(lex.idtable.table[i].value.vind,bufint,10);
+				tmp += bufint;
+				break;
+			case IT::STR:
+				
+				tmp += lex.idtable.table[i].value.vstr.str;
+				tmp += ", 0";
+				break;
+			case IT::BOOL:
+				char boolint[10];
+				_itoa(lex.idtable.table[i].value.vind, boolint, 10);
+				tmp += boolint;
+				break;
+			}
+			tmp += LINE_BREAK;
+		}
+			
+	}
+	return tmp;
+}
+std::string Gen::CreateProtSeg(LEX::Lex lex)
+{
+	std::string tmp;
+	for (int i = 0; i < lex.idtable.size; i++)
+	{
+		if (lex.idtable.table[i].idtype == IT::F && strcmp(lex.idtable.table[i].id, "main"))
+		{
+			tmp += lex.idtable.table[i++].id;
+			tmp += SPACE;
+			tmp += PROTO;
+			tmp += SPACE;
+			while (lex.idtable.table[i++].idtype == IT::P)
+			{
+				tmp += PROT_PARM;
+				tmp += ',';
+			}
+			tmp[tmp.size()-1] = LINE_BREAK;
+		}
+	}
+	return tmp;
 
 }

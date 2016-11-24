@@ -74,6 +74,12 @@ namespace In {
 					case IN::F:
 					{
 						Error::adderr(111, ret.lines, pos, errarr);
+						if (chain_len)
+						{
+							ret.chains[ret.size++].chain[chain_len] = 0x00;
+							chain_len = 0;
+						}
+
 						break;
 					}
 					case IN::I:
