@@ -19,7 +19,6 @@ namespace LEX
 		}
 		switch (fst.ind)
 		{
-
 			case FST::FST_INT: 
 				ItE.iddatatype = IT::INT;
 				if(param) 
@@ -38,7 +37,6 @@ namespace LEX
 			case FST::FST_VAR:  
 				if(inloop)
 					Error::adderr(123, line, ers);
-
 				ItE.idtype = IT::V;   
 				break;
 			case FST::FST_FUNC: 
@@ -59,11 +57,9 @@ namespace LEX
 				ItE.idtype = IT::F;
 				rc=newId(prefix, fst.string, ItE, ers, lex, line);
 				break;
-
 			case FST::FST_ID:
 				rc=newId(prefix, fst.string, ItE, ers, lex,line);
 				break;
-
 			case FST::FST_BLIT:
 				ItE.idtype = IT::L; 
 				ItE.iddatatype = IT::BOOL;
@@ -84,14 +80,11 @@ namespace LEX
 
 			case FST::FST_RIGHTHESIS:
 				param = false;																		//вышли из параметров
-
 				break;
 			case FST::FST_WHILE:
 				inloop = true;
-
 		};
 	};
-
 
 	bool newId(char* prefix, char* name, IT::Entry& ItE, Error::Errors& ers, Lex& lex,int line)
 	{
@@ -123,7 +116,6 @@ namespace LEX
 						ItE.value.vbool = TI_BOOL_DEFAULT;
 						break;
 					}
-
 					}
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
 					IT::Add(lex.idtable, ItE);
@@ -131,9 +123,7 @@ namespace LEX
 				else
 				{
 					Error::adderr(120, line, ers);
-				}
-
-				
+				}			
 				break;
 			}
 			case IT::F:
@@ -150,8 +140,6 @@ namespace LEX
 				{
 					Error::adderr(120, line, ers);
 				}
-
-
 				break;
 			}
 			case IT::P:
@@ -230,10 +218,8 @@ namespace LEX
 					ItE = IT::getEntry(lex.idtable, fc);
 				}
 				break;
-			}
-			
-			}
-		
+			}		
+			}		
 			if (ItE.idtype != IT::L)
 			{
 				lex.lextable.table[lex.lextable.size - 1].idxTI = IT::IsId(lex.idtable, ItE.id);
@@ -274,27 +260,6 @@ namespace LEX
 					break;
 				};
 			};
-		}
-
-		for (int i = 0; i < lex.lextable.size; i++)
-		{
-			std::cout << std::endl<< lex.lextable.table[i].lexema;
-			if (lex.lextable.table[i].idxTI != LT_TI_NULLIDX)
-				std::cout <<"   "<< lex.idtable.table[lex.lextable.table[i].idxTI].id<< "  "<< lex.lextable.table[i].idxTI;
-		}
-
-		int k = 0;
-		std::cout << "\n\nТаблица лексем\n0: ";
-		for (int i = 0; i < lex.lextable.size; i++) 
-		{
-			if (lex.lextable.table[i].sn != k) 
-			{
-				std::cout << "\n" << lex.lextable.table[i].sn << ": ";
-				k = lex.lextable.table[i].sn;
-				std::cout << lex.lextable.table[i].lexema;
-			}
-			else
-				std::cout << lex.lextable.table[i].lexema;
 		}
 		return lex;
 	}

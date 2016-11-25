@@ -12,21 +12,75 @@
 #define STACK ".stack 4096\n"
 #define LINE_BREAK '\n'
 #define TITLE ".586\n.model flat, stdcall\n\nincludelib kernel32.lib\n"
+#define GEN1(tt) sprintf_s()
+#define GEN2(tt, val) std::string(tt)+std::string(val)
+#define T0_0 
+
+#define r "ret"
+
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
 	std::string gencode;
+	gencode += GEN2("fi", "koko");
 	gencode += TITLE;
 	gencode += LINE_BREAK;
 	gencode += CreateProtSeg(lex);
 	gencode += LINE_BREAK;
 	gencode += STACK;
 	gencode += SPACE;
-	gencode += CreateDatSeg(lex);
-	gencode += CreateConstSeg(lex);
+	//gencode += CreateDatSeg(lex);
+	//gencode += CreateConstSeg(lex);
+
+
+	MFST::MfstState state;
+	GRB::Rule rule;
+	std::cout << "\nДерево разбора\n";
+	char rbuf[205];
+
+	for (unsigned short k = 0; k < mfst.storestate.size(); k++)
+	{
+		state = mfst.storestate._Get_container()[k];
+		rule = mfst.grebach.getRule(state.nrule);
+		std::cout << rule.getCRule(rbuf, state.nrulechain);
+	}
+	
+
 std::cout << gencode;
 *(log.stream) << "\n\n\nКод асм\n\n\n" << gencode;
 
 }
+std::string MainGen(LEX::Lex lex, MFST::Mfst mfst)
+{
+	MFST::MfstState state;
+	GRB::Rule rule;
+	std::string tmp;
+	for (unsigned short k = 0; k < mfst.storestate.size(); k++)
+	{
+		state = mfst.storestate._Get_container()[k];
+		rule = mfst.grebach.getRule(state.nrule);
+
+		switch (state.nrule)
+		{
+		case 0:
+		{
+			switch (state.nrulechain)
+			{
+			case 0:
+				//tmp += 
+				//тут вставляем шаблон для 0 правила 0 цепочки
+				break;
+			}
+			break;
+
+		}
+		}
+
+
+
+	}
+	return tmp;
+}
+
 std::string Gen::CreateDatSeg(LEX::Lex lex)
 {
 	std::string tmp;

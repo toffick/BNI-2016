@@ -124,11 +124,8 @@ namespace GRB {
 		b[1] = '-';
 		b[2] = '>';
 		b[3] = 0x00;
-		/*for (int z = 0; i < chains[nchain].size; z++,i++) {
-			b[i] = GRB::Rule::Chain::alphabet_to_char(chains[nchain].nt[z]);
-		}*/
+		
 		chains[nchain].getChain(tmp);
-		//strcat(b, tmp);
 		strcat_s(b,sizeof(tmp)+5,tmp);
 		return b;
 	}

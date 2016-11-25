@@ -84,6 +84,5 @@ namespace MFST
 			Deducation() { size = 0; nrules = 0; nrulechains = 0; };
 		}deducation;
 		bool savededucation();					//созхранитьдерево разбора	
-
 	};
 }

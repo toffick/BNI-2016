@@ -12,4 +12,5 @@ namespace Gen
 	std::string CreateProtSeg(LEX::Lex lex);
 	std::string CreateDatSeg(LEX::Lex lex);
 
+	std::string MainGen(LEX::Lex lex, MFST::Mfst mfst);
 }
