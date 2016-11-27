@@ -16,14 +16,15 @@
 #define GEN2(b, tmp, var1,var2)	sprintf_s(b, 1024, tmp, var1,var2)
 #define GEN1(b, tmp, var1)	sprintf_s(b, 1024, tmp, var1)
 #define GEN0(b, tmp)		sprintf_s(b,1024,tmp)
-#define T0_0 "%s PROC uses eax ebx ecx edi esi\n ;F\n ;N\n pop eax\n ret\n%s ENDP \n;S\n\n"
+#define T0_0 "%s PROC uses eax ebx ecx edi esi\n ;N\n pop eax\n ret\n%s ENDP\n\n"
 #define T0_1 "%s PROC uses eax ebx ecx edi esi\n ;F\n ;N\n pop eax\nret\n%s ENDP \n\n"
-#define T0_2 "%s PROC uses eax ebx ecx edi esi\n ;F\n pop eax\n ret\n%s ENDP \n;S \n\n"
-#define T0_3 "%s PROC uses eax ebx ecx edi esi\n ;F\n pop eax\n ret\n%s ENDP\n\n"
-#define T0_4 "%s PROC uses eax ebx ecx edi esi\n ;N\n pop eax\n ret\n%s ENDP\n\n"
-#define T0_5 "%s PROC uses eax ebx ecx edi esi\n ;N\n pop eax\n ret\n%s ENDP\n;S\n\n"
+#define T0_2 "%s PROC uses eax ebx ecx edi esi\n ;F\n pop eax\n ret\n%s ENDP  \n\n"
+#define T0_3 "%s PROC uses eax ebx ecx edi esi\n ;F\n pop eax\n ret\n%s ENDP \n;S\n\n"
+#define T0_4 "%s PROC uses eax ebx ecx edi esi\n ;F\n pop eax\n ret\n%s ENDP\n;S\n\n"
+#define T0_5 "%s PROC uses eax ebx ecx edi esi\n pop eax\n ret\n%s ENDP\n;S\n\n"
 
-
+#define T3_0 "\n ,%s: dword\n"
+#define T3_1 "\n ,%s: dword\n ;F"
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
 	std::string gencode;
@@ -61,6 +62,8 @@ std::string Gen::MainGen(LEX::Lex lex, MFST::Mfst mfst)
 		state = mfst.storestate._Get_container()[i];
 		rule = mfst.grebach.getRule(state.nrule);
 
+		//где-то тут идет поиск нетерменалов
+		
 		switch (state.nrule)
 		{
 		case 0:
@@ -93,7 +96,15 @@ std::string Gen::MainGen(LEX::Lex lex, MFST::Mfst mfst)
 				break;
 			}
 			break;
-
+		case 3:
+			switch (state.nrulechain)
+			{
+			case 0:
+				k += GEN1(buf + k, T3_0, lex.idtable.table[id].id);
+				id++;
+				break;
+			}
+			break;
 		}
 		}
 
