@@ -4,7 +4,7 @@
 #include "Log.h"
 #include "Parm.h"
 #include <string>
-
+#include "format.h"
 namespace Gen
 {
 	void StartGen(LEX::Lex lex, MFST::Mfst mfst,Log::LOG log, Parm::PARM parm);

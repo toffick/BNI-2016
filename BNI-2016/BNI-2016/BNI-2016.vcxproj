@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Error.h" />
+    <ClInclude Include="format.h" />
     <ClInclude Include="FST.h" />
     <ClInclude Include="GEN.h" />
     <ClInclude Include="GRB.h" />
@@ -162,6 +163,7 @@
   <ItemGroup>
     <ClCompile Include="BNI-2016.cpp" />
     <ClCompile Include="Error.cpp" />
+    <ClCompile Include="format.cc" />
     <ClCompile Include="FST.cpp" />
     <ClCompile Include="GEN.cpp" />
     <ClCompile Include="GRB.cpp" />
