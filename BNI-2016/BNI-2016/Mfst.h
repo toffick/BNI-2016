@@ -81,6 +81,7 @@ namespace MFST
 			short size;							//кол-во шагов в выводе
 			short* nrules;						//номер правила грамматики
 			short* nrulechains;					//номер цепочек правил грамматики(nrules)
+			int* lp;							//lenta position
 			Deducation() { size = 0; nrules = 0; nrulechains = 0; };
 		}deducation;
 		bool savededucation();					//созхранитьдерево разбора	

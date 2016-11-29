@@ -211,12 +211,14 @@ namespace MFST
 		GRB::Rule rule;
 		deducation.nrules = new short[deducation.size = storestate.size()];
 		deducation.nrulechains = new short[deducation.size];
+		deducation.lp = new int[deducation.size];
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 
 			state = storestate._Get_container()[k];
 			deducation.nrules[k] = state.nrule;
 			deducation.nrulechains[k] = state.nrulechain;
+			deducation.lp[k] = state.lenta_position;
 		}
 		return true;
 		
