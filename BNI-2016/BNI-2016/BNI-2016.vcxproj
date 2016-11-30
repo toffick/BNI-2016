@@ -157,6 +157,7 @@
     <ClInclude Include="LT.h" />
     <ClInclude Include="Mfst.h" />
     <ClInclude Include="Parm.h" />
+    <ClInclude Include="PolishNotation.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClCompile Include="LT.cpp" />
     <ClCompile Include="Mfst.cpp" />
     <ClCompile Include="Parm.cpp" />
+    <ClCompile Include="PolishNotation.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

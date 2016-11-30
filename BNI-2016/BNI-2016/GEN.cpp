@@ -22,14 +22,15 @@
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "{0} PROC uses eax ebx ecx edi esi\n ;N\n ;E\n push 0\ncall ExitProcess\n {0} ENDP\n\n"
+#define T0_0 "{0} PROC uses eax ebx ecx edi esi\n ;N\n ;E\n push 0\n call ExitProcess\n {0} ENDP\n\n"
 #define T0_1 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n ;N\n pop eax\nret\n{0} ENDP \n\n"
 #define T0_2 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP  \n\n"
 #define T0_3 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP \n;S\n\n"
 #define T0_4 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP\n;S\n\n"
-#define T0_5 "{0} PROC uses eax ebx ecx edi esi\n ;E\n push 0\ncall ExitProcess\n{0} ENDP\n;S\n\n"
+#define T0_5 "{0} PROC uses eax ebx ecx edi esi\n ;E\n push 0\n call ExitProcess\n{0} ENDP\n;S\n\n"
 
-
+#define T1_3 ";E\n pop {0}\n"
+#define T1_11 ";E\n pop {0}\n;N\n"
 
 
 #define T3_0 "\n ,{0}: dword\n"
@@ -37,7 +38,7 @@
 
 
 //1. переписать правило для главной функции и шаблоны для них
-//2. переделать удаление замененных нетерменалов
+
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
 	std::string gencode;
@@ -52,10 +53,13 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	CreateDatSeg(gencode, lex);
 	gencode += STACK;
 	gencode += DBLINE_BREAK;
+
+
+	CreateConstSeg(gencode, lex);
+	gencode += STACK;
+	gencode += DBLINE_BREAK;
 	gencode += CODE;
 	gencode += DBLINE_BREAK;
-
-
 
 	gencode += MainGen(gencode,lex, mfst);
 	//gencode += CreateDatSeg(lex);
@@ -66,7 +70,7 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	
 	std::cout << "-----------------------------\n";
 
-std::cout << gencode;
+//std::cout << gencode;
 *(log.stream) << "\n\n\nКод асм\n\n\n" << gencode;
 
 }
@@ -131,7 +135,21 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 				tmp.erase(firstOfNoTerminal, 3);
 				break;
 			}
+			case 3:/*N-> i=E;*/
+			{
 
+				/*сраная польская запись*/
+				PN::PolishNotation(mfst.deducation.lp[i]+2, &lex.lextable, &lex.idtable);
+				tmp.erase(firstOfNoTerminal, 3);
+				tmp.insert(firstOfNoTerminal, GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+				break;
+			}
+			case 11: /*N-> i=E;N*/
+			{
+				tmp.erase(firstOfNoTerminal, 3);
+				tmp.insert(firstOfNoTerminal, GEN1(T1_11, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+				break;
+			}
 			}
 			break;
 		}
@@ -158,7 +176,7 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 	<< std :: setw(5) << std::left << rule.getCRule(rbuf, state.nrulechain)\
 	<<"-----------------------------" << std::endl << "*********\n";
 
-			std::cout << "\n" << tmp;
+			std::cout << "\n" << tmp<<"\n-----------------------------\n";
 	}
 //------------------------------------	
 	return tmp;
@@ -216,4 +234,41 @@ std::string Gen::CreateDatSeg(std::string& tmp, LEX::Lex lex)
 		}
 	}
 	return tmp;
+}
+std::string Gen::CreateConstSeg(std::string& tmp, LEX::Lex lex)
+{
+	tmp += DBLINE_BREAK;
+	tmp += CONST;
+	tmp += LINE_BREAK;
+for (int i = 0; i < lex.idtable.size; i++)
+ {
+	 if (lex.idtable.table[i].idtype == IT::L)
+	 {
+	tmp += lex.idtable.table[i].id;
+	switch (lex.idtable.table[i].iddatatype)
+		 {
+		case IT::INT:
+			tmp += SDW;
+			tmp += SPACE;
+			tmp += to_string(lex.idtable.table[i].value.vind);
+			break;
+
+		case IT::STR:
+			tmp += BT;
+			tmp += SPACE;
+			tmp += lex.idtable.table[i].value.vstr.str;
+			tmp += ", 0";
+			break;
+
+		case IT::BOOL:
+			tmp += BT;
+			tmp += SPACE;
+			tmp += to_string(lex.idtable.table[i].value.vbool);
+			break;
+					}
+	tmp += LINE_BREAK;
+	}
+
+}
+return tmp;
 }
