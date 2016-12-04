@@ -5,7 +5,6 @@
 #define BT " BYTE "
 #define VAL_INT_DEFAULT " 0 "
 #define VAL_STR_DEFAULT "\'\',0"
-#define VAL_BOOL_DEFAULT "0"
 #define SPACE ' '
 #define PROTO "PROTO"
 #define PROT_PARM ":DWORD"
@@ -42,6 +41,8 @@
 
 #define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n push eax\n"
 #define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n push eax\n"
+#define EXPR_SUB_IMUL " pop eax\n pop ebx\n sub eax,ebx\n push eax\n"
+#define EXPR_DIV_IMUL " pop ebx\n pop eax\n cdq\n idiv ebx\n push eax\n"
 
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
@@ -92,9 +93,9 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 
 		//_______________________________________________________________________
 
-		std::string tempforfind(";");
-		tempforfind.push_back(GRB::Rule::Chain::alphabet_to_char(rule.nn));
-		int firstOfNoTerminal = tmp.find(tempforfind);					//поиск позиции нетерменала текущего правила в строке
+		std::string notermforfind(";");
+		notermforfind.push_back(GRB::Rule::Chain::alphabet_to_char(rule.nn));
+		int firstOfNoTerminal = tmp.find(notermforfind);					//поиск позиции нетерменала текущего правила в строке
 		switch (mfst.deducation.nrules[i])
 		{
 	/*программные конструкции*/
@@ -221,6 +222,12 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 			case '*':
 				tmp += EXPR_INT_IMUL;
 				break;
+			case '-':
+				tmp += EXPR_SUB_IMUL;
+				break;
+			case '/':
+				tmp += EXPR_DIV_IMUL;
+				break;
 			}
 			break;
 		}
@@ -271,10 +278,6 @@ std::string Gen::CreateDatSeg(std::string& tmp, LEX::Lex lex)
 				tmp += BT;
 				tmp += VAL_STR_DEFAULT;
 				break;
-			case IT::BOOL:
-				tmp += BT;
-				tmp += VAL_BOOL_DEFAULT;
-				break;
 			}
 			tmp += LINE_BREAK;
 		}
@@ -304,12 +307,6 @@ for (int i = 0; i < lex.idtable.size; i++)
 			tmp += SPACE;
 			tmp += lex.idtable.table[i].value.vstr.str;
 			tmp += ", 0";
-			break;
-
-		case IT::BOOL:
-			tmp += BT;
-			tmp += SPACE;
-			tmp += to_string(lex.idtable.table[i].value.vbool);
 			break;
 					}
 	tmp += LINE_BREAK;

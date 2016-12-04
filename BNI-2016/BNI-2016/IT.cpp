@@ -68,20 +68,7 @@ namespace IT {
 					break;
 
 				}
-				case IT::BOOL:
-				{
-					if ((!strcmp(LEX_FALSE_LIT, value)) && (idtable.table[i].value.vbool == 0))
-					{
-						return i;
-					}
-
-					if (!strcmp(LEX_TRUE_LIT, value) && idtable.table[i].value.vbool == 1)
-					{
-						return i;
-					}
-
-					break;
-				}
+				
 				}
 			}
 		}; 

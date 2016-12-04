@@ -7,7 +7,6 @@
 #define TI_STR_MAXSIZE	225	
 #define IT_MAXSIZE		4096
 #define TI_PREFIX_MAX_SIZE	5
-#define TI_BOOL_DEFAULT false
 #include "LT.h"
 namespace IT
 {
@@ -15,7 +14,6 @@ namespace IT
 	{	OFF = 0, 
 		INT = 1,
 		STR = 2,
-		BOOL = 3
 	};
 	enum TYPE
 	{
@@ -34,7 +32,6 @@ namespace IT
 		TYPE		idtype;				//тип идентификатора
 		struct
 		{
-			int vbool;
 			int vind;				//значение integer
 			int parmvalue;
 			struct {

@@ -29,11 +29,7 @@ namespace LEX
 				if (param)
 					ItE.idtype = IT::P;
 				break;
-			case FST::FST_BOOL:
-				ItE.iddatatype = IT::BOOL; 
-				if (param)
-					ItE.idtype = IT::P;
-				break;
+			
 			case FST::FST_VAR:  
 				if(inloop)
 					Error::adderr(123, line, ers);
@@ -60,11 +56,7 @@ namespace LEX
 			case FST::FST_ID:
 				rc=newId(prefix, fst.string, ItE, ers, lex,line);
 				break;
-			case FST::FST_BLIT:
-				ItE.idtype = IT::L; 
-				ItE.iddatatype = IT::BOOL;
-				rc = newId(prefix, fst.string, ItE, ers, lex, line);
-				break;
+			
 			case FST::FST_ILIT:
 				ItE.idtype = IT::L;
 				ItE.iddatatype = IT::INT;
@@ -112,11 +104,7 @@ namespace LEX
 						ItE.value.vstr.len = 0;
 						break;
 					}
-					case IT::BOOL:
-					{
-						ItE.value.vbool = TI_BOOL_DEFAULT;
-						break;
-					}
+					
 					}
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
 					IT::Add(lex.idtable, ItE);
@@ -177,14 +165,7 @@ namespace LEX
 						
 						break;
 					}
-					case IT::BOOL:
-					{	
-						if (!strcmp(name, LEX_TRUE_LIT))
-							ItE.value.vbool = true;
-						if(!strcmp(name, LEX_FALSE_LIT))
-							ItE.value.vbool = false;
-						break;
-					}
+					
 
 					}
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
@@ -243,7 +224,6 @@ namespace LEX
 	void RestartItE(IT::Entry& ItE) {	
 		ItE.idxfirstLE = 0;
 		ItE.value.vind = 0;
-		ItE.value.vbool = -1;
 		ItE.value.vstr.len = 0;
 		ItE.value.vstr.str[0] = 0;
 		ItE.value.parmvalue = 0;

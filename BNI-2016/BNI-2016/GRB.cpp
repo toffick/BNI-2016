@@ -32,10 +32,10 @@ namespace GRB {
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),														//возврат
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),												//присвоение значения
 			Rule::Chain(3, TS('d'), NS('E'), TS(';')),														//вывод выражения 
-			Rule::Chain(3, TS('i'), NS('E'), TS(';')),														//только для унарных
+			Rule::Chain(3, TS('i'), NS('k'), TS(';')),														//только для унарных
 			Rule::Chain(8, TS('w'), TS('('), NS('E'), TS(')'), TS('{'), NS('N'), TS('}'), NS('N')),			//цикл
 			Rule::Chain(4, TS('i'), NS('E'), TS(';'), NS('N')),												//только для унарных
-			Rule::Chain(4, TS('i'), NS('E'), TS(';'), NS('N')),												//унарный
+			Rule::Chain(4, TS('i'), NS('k'), TS(';'), NS('N')),												//унарный
 			Rule::Chain(5, TS('v'), TS('t'), TS('i'), TS(';'), NS('N')),									//объявления переенной
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),												//вохврат 
 			Rule::Chain(5, TS('i'), TS('='), NS('E'), TS(';'), NS('N')),									//присвоение значения		
@@ -43,10 +43,9 @@ namespace GRB {
 			),
 		Rule(
 			NS('E'), GRB_ERROR_SERIES + 2,    // ошибка в выражении
-			9,                                // E?i | l | (E) | i(W) | iM | lM | (E)M | i(W)M
+			8,                                // E?i | l | (E) | i(W) | iM | lM | (E)M | i(W)M
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
-			Rule::Chain(1, TS('k')),														//++ --
 			Rule::Chain(3, TS('('), NS('E'), TS(')')),
 			Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),
 			Rule::Chain(2, TS('i'), NS('M')),

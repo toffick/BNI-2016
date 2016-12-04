@@ -161,22 +161,7 @@ namespace FST {
 				RELATION('9', 1), RELATION('9', 0)),
 			NODE()
 			);
-		FST fst_true("", LEX_LITERAL, FST_BLIT, 5,
-			NODE(1, RELATION('t', 1)),
-			NODE(1, RELATION('r', 2)),
-			NODE(1, RELATION('u', 3)),
-			NODE(1, RELATION('e', 4)),
-			NODE()
-			);
-
-		FST fst_false("", LEX_LITERAL, FST_BLIT, 6,
-			NODE(1, RELATION('f', 1)),
-			NODE(1, RELATION('a', 2)),
-			NODE(1, RELATION('l', 3)),
-			NODE(1, RELATION('s', 4)),
-			NODE(1, RELATION('e', 5)),
-			NODE()
-			);
+	
 
 		FST fst_while("", LEX_WHILE, FST_WHILE, 6,
 			NODE(1, RELATION('w', 1)),
@@ -208,13 +193,7 @@ namespace FST {
 			);
 
 
-		FST fst_bool("", LEX_BOOL, FST_BOOL, 5,
-			NODE(1, RELATION('b', 1)),
-			NODE(1, RELATION('o', 2)),
-			NODE(1, RELATION('o', 3)),
-			NODE(1, RELATION('l', 4)),
-			NODE()
-			);
+	
 
 
 
@@ -385,10 +364,8 @@ namespace FST {
 		mas[i++] = fst_var;
 		mas[i++] = fst_ariph;
 		mas[i++] = fst_assig;
-		mas[i++] = fst_bool;
 		mas[i++] = fst_comma;
 		mas[i++] = fst_display;
-		mas[i++] = fst_false;
 		mas[i++] = fst_func;
 		mas[i++] = fst_int;
 		mas[i++] = fst_leftbrace;
@@ -399,7 +376,6 @@ namespace FST {
 		mas[i++] = fst_righthesis;
 		mas[i++] = fst_semicolon;
 		mas[i++] = fst_str;
-		mas[i++] = fst_true;
 		mas[i++] = fst_intlit;
 		mas[i++] = fst_strlit;
 		mas[i++] = fst_id;

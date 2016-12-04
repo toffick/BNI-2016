@@ -105,9 +105,7 @@ namespace Log {
 				if (idT.table[i].iddatatype == IT::INT)
 					std::cout << "\nТип данных: integer";
 				else
-					if (idT.table[i].iddatatype == IT::BOOL)
-						std::cout << "\nТип данных: bool";
-					else if (idT.table[i].iddatatype == IT::STR)
+					 if (idT.table[i].iddatatype == IT::STR)
 						std::cout << "\nТип данных: string";
 					else
 						std::cout << "\nТип данных: operator";
@@ -123,9 +121,7 @@ namespace Log {
 						std::cout << "\nТип ид: O";
 
 
-					if ((idT.table[i].iddatatype == IT::BOOL && idT.table[i].idtype == IT::V) ||
-						(idT.table[i].iddatatype == IT::BOOL && idT.table[i].idtype == IT::L))
-						std::cout << "\nЗначение: " << idT.table[i].value.vbool;
+				
 
 					else if ((idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::V) ||
 						(idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::L))
