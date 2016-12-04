@@ -133,13 +133,15 @@ namespace Log {
 					else if ((idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::V) ||
 						(idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::L))
 					{
-						if (idT.table[i].value.vstr.str[0] == NULL)
+						if (idT.table[i].value.vstr.str[0] == NULL) 
 							std::cout << "\nСтрока: NULL";
 						else {
 							std::cout << "\nСтрока: " << idT.table[i].value.vstr.str;
 							std::cout << "\nДлина строки: " << idT.table[i].value.vstr.len;
 						}
 					}
+					else if ((idT.table[i].idtype == IT::F))
+						std::cout << "\nКол-во параметров: " << idT.table[i].value.parmvalue;
 			}
 		}
 	}

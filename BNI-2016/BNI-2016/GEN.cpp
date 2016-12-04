@@ -12,6 +12,7 @@
 #define STACK ".stack 4096\n"
 #define DATA ".data"
 #define CONST ".const"
+
 #define LINE_BREAK "\n"
 #define DBLINE_BREAK "\n\n"
 
@@ -23,21 +24,24 @@
 #define GEN0(str)				fmt::format(str)
 
 #define T0_0 "{0} PROC uses eax ebx ecx edi esi\n ;N\n ;E\n push 0\n call ExitProcess\n {0} ENDP\n\n"
-#define T0_1 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n ;N\n pop eax\nret\n{0} ENDP \n\n"
+#define T0_1 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;N\n ;E\n  pop eax\nret\n{0} ENDP \n\n"
 #define T0_2 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP  \n\n"
-#define T0_3 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP \n;S\n\n"
+#define T0_3 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;N\n ;E\n pop eax\n ret\n{0} ENDP \n;S\n\n"
 #define T0_4 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP\n;S\n\n"
-#define T0_5 "{0} PROC uses eax ebx ecx edi esi\n ;E\n push 0\n call ExitProcess\n{0} ENDP\n;S\n\n"
+#define T0_5 "{0} PROC uses eax ebx ecx edi esi\n ;N\n ;E\n push 0\n call ExitProcess\n{0} ENDP\n;S\n\n"
 
-#define T1_3 ";E\n pop {0}\n"
+#define T1_3 " pop {0}\n"
 #define T1_11 ";E\n pop {0}\n;N\n"
 
 
-#define T3_0 "\n ,{0}: dword\n"
+#define T3_0 "\n ,{0}: dword\n\n"
 #define T3_1 "\n ,{0}: dword\n ;F"
 
 
-//1. переписать правило для главной функции и шаблоны для них
+#define ID_LIT " push {0}\n"
+
+#define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n push eax\n"
+#define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n push eax\n"
 
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
@@ -47,13 +51,9 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	gencode += LINE_BREAK;
 	gencode += CreateProtSeg(lex);
 	gencode += LINE_BREAK;
-	gencode += CONST;
-	gencode += DBLINE_BREAK;
 	
 	CreateDatSeg(gencode, lex);
 	gencode += STACK;
-	gencode += DBLINE_BREAK;
-
 
 	CreateConstSeg(gencode, lex);
 	gencode += STACK;
@@ -137,17 +137,33 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			}
 			case 3:/*N-> i=E;*/
 			{
-
-				/*сраная польская запись*/
-				PN::PolishNotation(mfst.deducation.lp[i]+2, &lex.lextable, &lex.idtable);
+				//tmp
+			/*сраная польская запись*/
 				tmp.erase(firstOfNoTerminal, 3);
-				tmp.insert(firstOfNoTerminal, GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+				tmp.insert(firstOfNoTerminal, CreateExpression(lex, mfst, &i)+ GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+			//	tmp.insert(firstOfNoTerminal, GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			}
 			case 11: /*N-> i=E;N*/
 			{
 				tmp.erase(firstOfNoTerminal, 3);
 				tmp.insert(firstOfNoTerminal, GEN1(T1_11, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+				break;
+			}
+			}
+			break;
+		}
+		case 2:
+		{
+			switch (mfst.deducation.nrulechains[i])
+			{
+			case 0: 
+			case 1:
+			{
+				tmp.erase(firstOfNoTerminal, 3);
+				std::string k = GEN1(ID_LIT, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+				tmp.insert(firstOfNoTerminal, k);
+
 				break;
 			}
 			}
@@ -182,6 +198,36 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 	return tmp;
 }
 
+std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short* IdIndex)
+{
+	std::string tmp;
+	int i;
+	LT::Entry* Expression = new LT::Entry[200];
+	PN::PolishNotation(Expression,mfst.deducation.lp[*IdIndex] + 2, lex.lextable, lex.idtable);
+	for (i = 0; Expression[i].sn > 0;i++)
+	{	
+		switch (Expression[i].lexema)
+		{
+		case LEX_LITERAL:
+		case LEX_ID:
+			tmp += GEN1(ID_LIT, lex.idtable.table[Expression[i].idxTI].id);			
+			break;
+		case LEX_ARIPH:
+			switch (lex.idtable.table[Expression[i].idxTI].id[0])
+			{
+			case '+':
+				tmp += EXPR_INT_PLUS;
+				break;
+			case '*':
+				tmp += EXPR_INT_IMUL;
+				break;
+			}
+			break;
+		}
+	}
+	*IdIndex += i;
+	return tmp;
+}
 
 std::string Gen::CreateProtSeg(LEX::Lex lex)
 {

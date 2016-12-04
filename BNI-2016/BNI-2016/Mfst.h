@@ -66,11 +66,11 @@ namespace MFST
 		std::stack<MfstState> storestate;
 		Mfst();
 		Mfst(LEX::Lex plex,GRB::Greibach pgrebach);
-		char* getCSt(char* buf);
-		char* getCLenta(char* buf, short pos, short n = 25);
-		char* getDiagnosis(short n, char* buf);
-		bool saveState(Parm::PARM);
-		bool reststate(Parm::PARM);
+		char* getCSt(char* buf);								//получить содержимое стека
+		char* getCLenta(char* buf, short pos, short n = 25);	//лента: n символов с pos
+		char* getDiagnosis(short n, char* buf);		//получить n-ую строчку диагностики
+		bool saveState(Parm::PARM);					//сохранить состояние автомата
+		bool reststate(Parm::PARM);					//восстановить состояние автомата
 		bool push_chain(GRB::Rule::Chain chain);
 		RC_STEP step(Parm::PARM);
 		bool start(Parm::PARM);

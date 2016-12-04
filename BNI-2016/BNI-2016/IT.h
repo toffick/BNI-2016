@@ -36,10 +36,12 @@ namespace IT
 		{
 			int vbool;
 			int vind;				//значение integer
+			int parmvalue;
 			struct {
 				int len;						//длина string
 				char str[TI_STR_MAXSIZE];		//символы string
 			} vstr;								//значение string
+			
 		}value;				//значение идентификатора
 	};
 

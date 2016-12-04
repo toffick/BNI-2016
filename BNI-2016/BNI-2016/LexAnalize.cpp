@@ -83,6 +83,7 @@ namespace LEX
 				break;
 			case FST::FST_WHILE:
 				inloop = true;
+				break;
 		};
 	};
 
@@ -144,6 +145,10 @@ namespace LEX
 			}
 			case IT::P:
 			{
+				if (ItE.idtype == IT::P && IT::IsId(lex.idtable, prefix) != -1)
+				{
+					lex.idtable.table[IT::IsId(lex.idtable, prefix)].value.parmvalue++;
+				}
 				strcpy(ItE.id, prefix);
 				strcat(ItE.id, name);
 				IT::Add(lex.idtable, ItE);
@@ -189,13 +194,16 @@ namespace LEX
 			}
 			case IT::O:
 			{
-				rc = IT::IsId(lex.idtable, name);
+				strncat(ItE.id, name, 5);
+				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX)
 				{
-					strcpy(ItE.id, name);
 					IT::Add(lex.idtable, ItE);
 				}
+				
+					//lex.lextable.table[lex.lextable.size - 1].idxTI = IT::IsId(lex.idtable, name);
 				break;
+
 			}
 
 			default:										//когда пришел ид без параметров
@@ -238,6 +246,7 @@ namespace LEX
 		ItE.value.vbool = -1;
 		ItE.value.vstr.len = 0;
 		ItE.value.vstr.str[0] = 0;
+		ItE.value.parmvalue = 0;
 		ItE.id[0] = 0x00;
 		ItE.iddatatype = IT::OFF;
 		ItE.idtype = IT::N;
@@ -260,6 +269,15 @@ namespace LEX
 					break;
 				};
 			};
+		}
+
+		for (int i = 0; i < lex.lextable.size; i++)
+		{
+			std::cout << lex.lextable.table[i].lexema << "   ";
+			std::cout << lex.lextable.table[i].idxTI;
+			if (lex.lextable.table[i].idxTI != TI_NULLIDX)
+				std::cout << "   "<<lex.idtable.table[lex.lextable.table[i].idxTI].id;
+			std::cout << std::endl;
 		}
 		return lex;
 	}

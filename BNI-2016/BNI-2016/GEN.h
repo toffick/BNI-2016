@@ -8,9 +8,11 @@
 #include "PolishNotation.h"
 namespace Gen
 {
-	void StartGen(LEX::Lex lex, MFST::Mfst mfst,Log::LOG log, Parm::PARM parm);
-	std::string CreateProtSeg(LEX::Lex lex);
-	std::string CreateDatSeg(std::string&, LEX::Lex lex);
-	std::string CreateConstSeg(std::string&, LEX::Lex lex);
-	std::string MainGen(std::string&, LEX::Lex lex, MFST::Mfst mfst);
+	void StartGen(LEX::Lex , MFST::Mfst ,Log::LOG , Parm::PARM );
+	std::string CreateProtSeg(LEX::Lex );
+	std::string CreateDatSeg(std::string&, LEX::Lex );
+	std::string CreateConstSeg(std::string&, LEX::Lex );
+	std::string MainGen(std::string&, LEX::Lex , MFST::Mfst );
+std::string CreateExpression(LEX::Lex, MFST::Mfst, unsigned short*);
+
 }
