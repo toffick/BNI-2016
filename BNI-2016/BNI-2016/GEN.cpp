@@ -15,19 +15,33 @@
 #define LINE_BREAK "\n"
 #define DBLINE_BREAK "\n\n"
 
-#define TITLE ".586\n.model flat, stdcall\n\nincludelib kernel32.lib\nExitProcess PROTO :DWORD\n"
+#define TITLE ".586\n\
+.model flat, stdcall\n\
+\n\
+includelib kernel32.lib\n\
+includelib StatLibC.lib\n\
+\n\
+ExitProcess      PROTO : DWORD\n\
+\n\
+writei PROTO : SDWORD\n\
+writes PROTO : DWORD\n\
+strl   PROTO : DWORD\n\
+ipow   PROTO : DWORD, : DWORD\n\
+sum    PROTO : DWORD, : DWORD\n\
+"
 #define CODE ".code"
+#define END_MAIN "\nend main"
 
 #define GEN2(str, var1,var2)	fmt::format(str, var1, var2)
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "{0} PROC uses eax ebx ecx edi esi\n ;N\n ;E\n push 0\n call ExitProcess\n {0} ENDP\n\n"
+#define T0_0 "{0} PROC \n ;N\n ;E\n\n\n  call ExitProcess\n {0} ENDP\n\n"
 #define T0_1 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;N\n ;E\n  pop eax\nret\n{0} ENDP \n\n"
 #define T0_2 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP  \n\n"
 #define T0_3 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;N\n ;E\n pop eax\n ret\n{0} ENDP \n;S\n\n"
 #define T0_4 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP\n;S\n\n"
-#define T0_5 "{0} PROC uses eax ebx ecx edi esi\n ;N\n ;E\n push 0\n call ExitProcess\n{0} ENDP\n;S\n\n"
+#define T0_5 "{0} PROC \n ;N\n ;E\n\n\n  call ExitProcess\n{0} ENDP\n;S\n\n"
 
 #define T1_3 " pop {0}\n"
 #define T1_11 ";E\n pop {0}\n;N\n"
@@ -51,10 +65,10 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	gencode += TITLE;
 	gencode += LINE_BREAK;
 	gencode += CreateProtSeg(lex);
+	gencode += STACK;
 	gencode += LINE_BREAK;
 	
 	CreateDatSeg(gencode, lex);
-	gencode += STACK;
 
 	CreateConstSeg(gencode, lex);
 	gencode += STACK;
@@ -62,18 +76,19 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	gencode += CODE;
 	gencode += DBLINE_BREAK;
 
-	gencode += MainGen(gencode,lex, mfst);
+	MainGen(gencode,lex, mfst);
 	//gencode += CreateDatSeg(lex);
 	//gencode += CreateConstSeg(lex);
 
 
 
-	
+	gencode += END_MAIN;
 	std::cout << "-----------------------------\n";
 
 //std::cout << gencode;
 *(log.stream) << "\n\n\nКод асм\n\n\n" << gencode;
-
+ //std::ofstream outstream(parm.out);
+ //outstream << gencode;
 }
 std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 {
@@ -232,7 +247,12 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 			break;
 		}
 	}
-	*IdIndex += i;
+	int line = lex.lextable.table[mfst.deducation.lp[*IdIndex]].sn;
+	while (line == lex.lextable.table[mfst.deducation.lp[*IdIndex]].sn)
+		(*IdIndex)++;
+	//*IdIndex += i;
+	(*IdIndex)--;
+
 	return tmp;
 }
 
@@ -315,3 +335,30 @@ for (int i = 0; i < lex.idtable.size; i++)
 }
 return tmp;
 }
+
+//void createTitle(std::string& tmp, LEX::Lex lex)
+//{
+//	
+//	tmp += DBLINE_BREAK;
+//	tmp += CONST;
+//	tmp += DBLINE_BREAK;
+//	tmp += DATA;
+//	tmp += DBLINE_BREAK;
+//	int FuncProtPos=0;
+//	int DataSegPos;
+//	int ConstSegPos;
+//
+//	for (int i = 0; i < lex.idtable.size; i++)
+//	{
+//		DataSegPos = tmp.find(DATA);
+//		ConstSegPos = tmp.find(CONST);
+//
+//
+//
+//	}
+//
+//
+//
+//
+//
+//}

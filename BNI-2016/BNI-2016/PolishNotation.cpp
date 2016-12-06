@@ -48,7 +48,7 @@ namespace PN {
 					}
 					while (parmstack.size())
 					{
-						outstr[lenout++] = parmstack.top();
+						outstr[lenout++] = parmstack.top();												//запихиваем параметры функции в строку
 						parmstack.pop();
 					}
 					outstr[lenout++] = lextable.table[indoffunk];
