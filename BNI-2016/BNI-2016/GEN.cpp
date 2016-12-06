@@ -2,7 +2,7 @@
 #include "GEN.h"
 #include <iostream>
 #define SDW " SDWORD "
-#define BT " BYTE "
+#define DW " DWORD "
 #define VAL_INT_DEFAULT " 0 "
 #define VAL_STR_DEFAULT "\'\',0"
 #define SPACE ' '
@@ -36,23 +36,23 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "{0} PROC \n ;N\n ;E\n\n\n  call ExitProcess\n {0} ENDP\n\n"
-#define T0_1 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;N\n ;E\n  pop eax\nret\n{0} ENDP \n\n"
-#define T0_2 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP  \n\n"
-#define T0_3 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;N\n ;E\n pop eax\n ret\n{0} ENDP \n;S\n\n"
-#define T0_4 "{0} PROC uses eax ebx ecx edi esi\n ;F\n ;E\n pop eax\n ret\n{0} ENDP\n;S\n\n"
-#define T0_5 "{0} PROC \n ;N\n ;E\n\n\n  call ExitProcess\n{0} ENDP\n;S\n\n"
+#define T0_0 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n {0} ENDP\n\n"
+#define T0_1 "\n{0} PROC uses eax ebx ecx esi;F\n;N\n  ;E\n  ret {1}\n{0} ENDP \n\n ;S\n"
+#define T0_2 "\n{0} PROC uses eax ebx ecx esi;F\n  ;E\n  ret {1}\n{0} ENDP  \n\n"
+#define T0_3 "\n{0} PROC uses eax ebx ecx esi;F\n;N\n ;E\n  ret {1}\n{0} ENDP \n\n"
+#define T0_4 "\n{0} PROC uses eax ebx ecx esi;F\n  ;E\n  ret {1}\n{0} ENDP\n;S\n\n"
+#define T0_5 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n{0} ENDP\n;S\n\n"
 
 #define T1_3 " pop {0}\n"
 #define T1_11 ";E\n pop {0}\n;N\n"
 
 
-#define T3_0 "\n ,{0}: dword\n\n"
-#define T3_1 "\n ,{0}: dword\n ;F"
 
+#define T3_0 ", {0}:dword\n\n"
+#define T3_1 ", {0}:dword;F"
 
 #define ID_LIT " push {0}\n"
-
+#define CALL " call {0}\n"
 #define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n push eax\n"
 #define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n push eax\n"
 #define EXPR_SUB_IMUL " pop eax\n pop ebx\n sub eax,ebx\n push eax\n"
@@ -85,17 +85,28 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	gencode += END_MAIN;
 	std::cout << "-----------------------------\n";
 
-//std::cout << gencode;
+std::cout << gencode;
 *(log.stream) << "\n\n\nКод асм\n\n\n" << gencode;
  //std::ofstream outstream(parm.out);
  //outstream << gencode;
 }
+
+
+
+
+
+
+
+//сделать возврат из функции по типу mov eax, edi . заносим значение функции в значение edi (mov edi, значение )
+
+
+
 std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 {
 	tmp += ";S";
 	int k = 0;
 	int id = 0;
-
+	int sizeofstackremove = 0;
 	for (unsigned short i = 0; i < mfst.deducation.size; i++)
 	{
 
@@ -117,26 +128,31 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 		case 0:
 		{
 			tmp.erase(firstOfNoTerminal, 3);
+			if (mfst.deducation.nrulechains[i] != 0 && mfst.deducation.nrulechains[i] != 5) //кол-во параметров для функции(кроме main)
+			{
+				sizeofstackremove = lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].value.parmvalue;
+				sizeofstackremove *= 4;
+			}
 			switch (mfst.deducation.nrulechains[i])
 			{
 			case 0:
 
-				tmp.insert(firstOfNoTerminal, GEN1(T0_0, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN1(T0_0, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			case 1:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_1, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN2(T0_1, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
 				break;
 			case 2:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_2, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN2(T0_2, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
 				break;
 			case 3:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_3, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN2(T0_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
 				break;
 			case 4:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_4, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN2(T0_4, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
 				break;
 			case 5:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_5, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN1(T0_5, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			}
 			break;
@@ -192,10 +208,14 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			switch (mfst.deducation.nrulechains[i])
 			{
 			case 0:
-				tmp.insert(firstOfNoTerminal, GEN1(T3_0, lex.idtable.table[id++].id));
+				tmp.insert(firstOfNoTerminal, GEN1(T3_0, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]+1].idxTI].id));
+		
+
+
 				break;
 			case 1:
-				tmp.insert(firstOfNoTerminal, GEN1(T3_1, lex.idtable.table[id++].id));
+					tmp.insert(firstOfNoTerminal, GEN1(T3_1, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));
+	
 				break;
 			}
 			break;
@@ -226,7 +246,16 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 		{
 		case LEX_LITERAL:
 		case LEX_ID:
-			tmp += GEN1(ID_LIT, lex.idtable.table[Expression[i].idxTI].id);			
+			switch (lex.idtable.table[Expression[i].idxTI].idtype)
+			{
+			case IT::V:
+			case IT::L:
+				tmp += GEN1(ID_LIT, lex.idtable.table[Expression[i].idxTI].id);
+				break;
+			case IT::F:
+				tmp += GEN1(CALL, lex.idtable.table[Expression[i].idxTI].id);
+				break;
+			}
 			break;
 		case LEX_ARIPH:
 			switch (lex.idtable.table[Expression[i].idxTI].id[0])
@@ -295,7 +324,7 @@ std::string Gen::CreateDatSeg(std::string& tmp, LEX::Lex lex)
 				tmp += VAL_INT_DEFAULT;
 				break;
 			case IT::STR:
-				tmp += BT;
+				tmp += DW;
 				tmp += VAL_STR_DEFAULT;
 				break;
 			}
@@ -323,7 +352,7 @@ for (int i = 0; i < lex.idtable.size; i++)
 			break;
 
 		case IT::STR:
-			tmp += BT;
+			tmp += DW;
 			tmp += SPACE;
 			tmp += lex.idtable.table[i].value.vstr.str;
 			tmp += ", 0";
@@ -336,29 +365,3 @@ for (int i = 0; i < lex.idtable.size; i++)
 return tmp;
 }
 
-//void createTitle(std::string& tmp, LEX::Lex lex)
-//{
-//	
-//	tmp += DBLINE_BREAK;
-//	tmp += CONST;
-//	tmp += DBLINE_BREAK;
-//	tmp += DATA;
-//	tmp += DBLINE_BREAK;
-//	int FuncProtPos=0;
-//	int DataSegPos;
-//	int ConstSegPos;
-//
-//	for (int i = 0; i < lex.idtable.size; i++)
-//	{
-//		DataSegPos = tmp.find(DATA);
-//		ConstSegPos = tmp.find(CONST);
-//
-//
-//
-//	}
-//
-//
-//
-//
-//
-//}

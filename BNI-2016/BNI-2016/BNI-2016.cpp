@@ -11,7 +11,10 @@
 #include "Mfst.h"
 #include "GEN.h"
 
-
+int koko(int d, int s)
+{
+	return d + 1;
+}
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_ALL, "rus");
@@ -19,6 +22,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	Log::LOG log;
 	try 
 	{
+		int a = koko(3, 3);
 		Parm::PARM parm = Parm::getparm(argc, argv,errors);
 		log = Log::getlog(parm.log, errors);
 		In::IN in = In::getin(parm.in,errors);
