@@ -2,9 +2,10 @@
 #include "GEN.h"
 #include <iostream>
 #define SDW " SDWORD "
-#define DW " DWORD "
+#define BYTE " BYTE "
+#define DW  " DWORD "
 #define VAL_INT_DEFAULT " 0 "
-#define VAL_STR_DEFAULT "\'\',0"
+#define VAL_STR_DEFAULT " ?"
 #define SPACE ' '
 #define PROTO "PROTO"
 #define PROT_PARM ":DWORD"
@@ -19,6 +20,7 @@
 .model flat, stdcall\n\
 \n\
 includelib kernel32.lib\n\
+includelib libucrt.lib\n\
 includelib StatLibC.lib\n\
 \n\
 ExitProcess      PROTO : DWORD\n\
@@ -36,26 +38,33 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n {0} ENDP\n\n"
-#define T0_1 "\n{0} PROC uses eax ebx ecx esi;F\n;N\n  ;E\n  ret {1}\n{0} ENDP \n\n ;S\n"
-#define T0_2 "\n{0} PROC uses eax ebx ecx esi;F\n  ;E\n  ret {1}\n{0} ENDP  \n\n"
-#define T0_3 "\n{0} PROC uses eax ebx ecx esi;F\n;N\n ;E\n  ret {1}\n{0} ENDP \n\n"
-#define T0_4 "\n{0} PROC uses eax ebx ecx esi;F\n  ;E\n  ret {1}\n{0} ENDP\n;S\n\n"
-#define T0_5 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n{0} ENDP\n;S\n\n"
+#define T0_0 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n\n"
+#define T0_1 "\n{0} PROC ;F\n;N\n  ;E\n pop eax\n ret {1}\n\n{0} ENDP \n\n ;S\n"
+#define T0_2 "\n{0} PROC ;F\n  ;E\n pop eax\n  ret {1}\n\n{0} ENDP  \n\n"
+#define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop eax\n ret {1}\n\n{0} ENDP \n\n"
+#define T0_4 "\n{0} PROC ;F\n  ;E\n pop eax\n ret {1}\n\n{0} ENDP\n;S\n\n"
+#define T0_5 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
 
-#define T1_3 " pop {0}\n"
-#define T1_11 ";E\n pop {0}\n;N\n"
+#define T1_3  " pop {0}\n"
+#define T1_9  " pop {0}\n\n;N"
 
+#define T1_4_S  ";E  call writes\n"
+#define T1_4_I  ";E  call writei\n"
 
+#define T1_12_S  ";E  call writes\n;N\n"
+#define T1_12_I  ";E  call writei\n;N\n"
 
-#define T3_0 ", {0}:dword\n\n"
-#define T3_1 ", {0}:dword;F"
+#define T3_0 " {0}:dword\n\n"
+#define T3_1 "{0}:dword, ;F\n"
 
-#define ID_LIT " push {0}\n"
-#define CALL " call {0}\n"
+#define ID_LIT_I " push {0}\n"
+#define ID_LIT_S " push offset {0}\n"
+
+#define CALL " call {0}\n push eax\n"
+
 #define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n push eax\n"
 #define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n push eax\n"
-#define EXPR_SUB_IMUL " pop eax\n pop ebx\n sub eax,ebx\n push eax\n"
+#define EXPR_SUB_IMUL " pop ebx\n pop eax\n sub eax,ebx\n push eax\n"
 #define EXPR_DIV_IMUL " pop ebx\n pop eax\n cdq\n idiv ebx\n push eax\n"
 
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
@@ -94,10 +103,6 @@ std::cout << gencode;
 
 
 
-
-
-
-//сделать возврат из функции по типу mov eax, edi . заносим значение функции в значение edi (mov edi, значение )
 
 
 
@@ -170,16 +175,38 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			case 3:/*N-> i=E;*/
 			{
 				//tmp
-			/*сраная польская запись*/
 				tmp.erase(firstOfNoTerminal, 3);
 				tmp.insert(firstOfNoTerminal, CreateExpression(lex, mfst, &i)+ GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
-			//	tmp.insert(firstOfNoTerminal, GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			}
-			case 11: /*N-> i=E;N*/
+			case 4:/*N-> dE;*/
+			{
+				
+				tmp.erase(firstOfNoTerminal, 3);
+				if(lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i+1]].idxTI].iddatatype==IT::STR)
+				tmp.insert(firstOfNoTerminal, GEN0(T1_4_S));
+				else 
+					tmp.insert(firstOfNoTerminal, GEN0(T1_4_I));
+
+				break;
+			}
+			case 10:/*N-> dE;N*/
+			{
+			
+				tmp.erase(firstOfNoTerminal, 3);
+				if (lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i+1 ]].idxTI].iddatatype == IT::STR)
+					tmp.insert(firstOfNoTerminal, GEN0(T1_12_S));
+				else
+					tmp.insert(firstOfNoTerminal, GEN0(T1_12_I));		
+				break;
+			}
+			case 9: /*N-> i=E;N*/
 			{
 				tmp.erase(firstOfNoTerminal, 3);
-				tmp.insert(firstOfNoTerminal, GEN1(T1_11, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+				std::string mm = GEN1(T1_9, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+				std::string ll = CreateExpression(lex, mfst, &i);
+
+				tmp.insert(firstOfNoTerminal, ll + mm);
 				break;
 			}
 			}
@@ -193,7 +220,12 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			case 1:
 			{
 				tmp.erase(firstOfNoTerminal, 3);
-				std::string k = GEN1(ID_LIT, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+				std::string k;
+				if(lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].iddatatype==IT::INT)
+				k = GEN1(ID_LIT_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+				else 
+				k = GEN1(ID_LIT_S, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+
 				tmp.insert(firstOfNoTerminal, k);
 
 				break;
@@ -238,7 +270,9 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 {
 	std::string tmp;
 	int i;
-	LT::Entry* Expression = new LT::Entry[200];
+	LT::Entry* Expression = new LT::Entry[100];
+	for (int i = 0; i < 100; i++)
+		std::cout << Expression[i].lexema;
 	PN::PolishNotation(Expression,mfst.deducation.lp[*IdIndex] + 2, lex.lextable, lex.idtable);
 	for (i = 0; Expression[i].sn > 0;i++)
 	{	
@@ -248,9 +282,13 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 		case LEX_ID:
 			switch (lex.idtable.table[Expression[i].idxTI].idtype)
 			{
+			case IT::P:
 			case IT::V:
 			case IT::L:
-				tmp += GEN1(ID_LIT, lex.idtable.table[Expression[i].idxTI].id);
+				if(lex.idtable.table[Expression[i].idxTI].iddatatype==IT::INT)
+				tmp += GEN1(ID_LIT_I, lex.idtable.table[Expression[i].idxTI].id);
+				else
+				tmp += GEN1(ID_LIT_S, lex.idtable.table[Expression[i].idxTI].id);
 				break;
 			case IT::F:
 				tmp += GEN1(CALL, lex.idtable.table[Expression[i].idxTI].id);
@@ -352,7 +390,7 @@ for (int i = 0; i < lex.idtable.size; i++)
 			break;
 
 		case IT::STR:
-			tmp += DW;
+			tmp += BYTE;
 			tmp += SPACE;
 			tmp += lex.idtable.table[i].value.vstr.str;
 			tmp += ", 0";
@@ -364,4 +402,5 @@ for (int i = 0; i < lex.idtable.size; i++)
 }
 return tmp;
 }
+
 

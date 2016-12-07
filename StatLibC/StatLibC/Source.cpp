@@ -4,19 +4,18 @@
 #include <iostream>
 extern "C"
 {
-	/*int _stdcall  strl(char* str)
+	int _stdcall  strl(const char* str)
 	{
 		return strlen(str);
-	}*/
-	//int _stdcall ipow(int i, int j)
-	//{
-	//	return (int)pow(i,j);
-	//}
+	}
+	int _stdcall ipow(int i, int j)
+	{
+		return (int)pow(i,j);
+	}
 
-	void   writes(char* s)
+	void _stdcall  writes(const char* s)
 	{
 		std::cout << s;
-		// printf("%s", s);
 	}
 	void _stdcall  writei(int i)
 	{
@@ -29,8 +28,3 @@ extern "C"
 
 }
 
-//
-//x = 1 + fi(2,3)
-//
-//1 3 2 fi +
-//

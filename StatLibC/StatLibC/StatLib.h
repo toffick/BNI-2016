@@ -50,9 +50,9 @@
 
 extern "C"
 {
-	//int _stdcall  strl(char*);
-	//int _stdcall  ipow(int, int);
-	void   writes(char*);
+	int _stdcall  strl(const char*);
+	int _stdcall  ipow(int, int);
+	void   _stdcall writes(const char*);
 	void _stdcall  writei(int);
 	int _stdcall  sum(int, int);
 

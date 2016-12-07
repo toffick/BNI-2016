@@ -261,19 +261,14 @@ namespace FST {
 			NODE(1, RELATION('n', 6)),
 			NODE()
 			);
-		FST fst_pow("", LEX_ID, FST_STD_LIB, 4,
-			NODE(1, RELATION('p', 1)),
-			NODE(1, RELATION('o', 2)),
-			NODE(1, RELATION('w', 3)),
-			NODE()
-			);
-		FST fst_itoa("", LEX_ID, FST_STD_LIB, 5,
+		FST fst_ipow("", LEX_ID, FST_STD_LIB, 5,
 			NODE(1, RELATION('i', 1)),
-			NODE(1, RELATION('t', 2)),
+			NODE(1, RELATION('p', 2)),
 			NODE(1, RELATION('o', 3)),
-			NODE(1, RELATION('a', 4)),
+			NODE(1, RELATION('w', 4)),
 			NODE()
 			);
+	
 	
 		FST fst_semicolon("", LEX_SEMICOLON,FST_SEMICOLON, 2,
 			NODE(1, RELATION(';', 1)),
@@ -354,8 +349,7 @@ namespace FST {
 		FST* mas = new FST[FST_ARR_SIZE];
 		int i = 0;
 		mas[i++] = fst_strlen;
-		mas[i++] = fst_pow;
-		mas[i++] = fst_itoa;
+		mas[i++] = fst_ipow;
 
 		mas[i++] = fst_while;
 	

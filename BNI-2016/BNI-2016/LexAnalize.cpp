@@ -88,7 +88,7 @@ namespace LEX
 			case IT::V:
 			{
 				strcpy(ItE.id, prefix);
-				strncat(ItE.id, name,5);
+				strncat(ItE.id, name,10);
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX) {
 					switch (ItE.iddatatype)
