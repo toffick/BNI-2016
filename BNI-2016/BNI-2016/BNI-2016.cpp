@@ -34,9 +34,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 		MFST::Mfst mfst(lex, GRB::getGreibach());
-		mfst.start(parm);
+		mfst.start(parm,log);
 		mfst.savededucation();
-		mfst.printrules();
+		mfst.printrules(log);
 		Gen::StartGen(lex,mfst,log,parm);
 
 

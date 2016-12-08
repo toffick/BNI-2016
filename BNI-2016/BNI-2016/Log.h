@@ -25,7 +25,7 @@ namespace Log {
 	void WriteParm(LOG log, Parm::PARM parm);			//вывести в протокол информацию о входных данных
 	void WriteError(LOG log, Error::Errors&);		//вывести в протокол информациб об ошибке
 	void WriteLexTable(LT::LexTable, LOG);
-	void WriteIdTable(IT::IdTable);
+	void WriteIdTable(IT::IdTable, LOG);
 	void WriteLAtables(LT::LexTable, IT::IdTable, Parm::PARM, LOG);
 
 	void close(LOG log);								//закрыть протокол

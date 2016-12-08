@@ -10,34 +10,34 @@ char rbuf[205], sbuf[205], lbuf[1024]; // печать
 #define TS(n) GRB::Ru1e::Chain::T(n)
 #define ISNS(n) GRB::Rule::Chain::isN(n)
 
-#define MFST_TRACE1  std::cout << std::setw(4) << std::left << ++FST_TRACE_n<<": "\
+#define MFST_TRACE1  *(log.stream) << std::setw(4) << std::left << ++FST_TRACE_n<<": "\
                          << std::setw(20) << std::left << rule.getCRule(rbuf, nrulechain)\
                          << std::setw(30) << std::left << MFST::Mfst::getCLenta(lbuf, lenta_position)\
                          << std::setw(20) << std::left << MFST::Mfst::getCSt(sbuf)\
                          << std::endl;
 
-#define MFST_TRACE2 std::cout << std::setw(4) << std::left << FST_TRACE_n << ": "\
+#define MFST_TRACE2 *(log.stream) << std::setw(4) << std::left << FST_TRACE_n << ": "\
 						<< std::setw(20) << std::left <<" " \
 						<< std::setw(30) << std::left << MFST::Mfst::getCLenta(lbuf, lenta_position)\
 						<< std::setw(20) << std::left << MFST::Mfst::getCSt(sbuf)\
 						<< std::endl;
 
-#define MFST_TRACE3 std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": "\
+#define MFST_TRACE3 *(log.stream) << std::setw(4) << std::left << ++FST_TRACE_n << ": "\
 						<< std::setw(20) << std::left << " "\
 						<< std::setw(30) << std::left << MFST::Mfst::getCLenta(lbuf, lenta_position)\
 						<< std::setw(20) << std::left << MFST::Mfst::getCSt(sbuf)\
 						<< std::endl;
 
-#define MFST_TRACE4(c) std::cout << std::setw(4) << std::left << ++FST_TRACE_n << ": " <<std::setw(20)<<std::left<<c<<std::endl;
+#define MFST_TRACE4(c) *(log.stream) << std::setw(4) << std::left << ++FST_TRACE_n << ": " <<std::setw(20)<<std::left<<c<<std::endl;
 
-#define MFST_TRACE5(c) std::cout << std :: setw(4) << std::left << FST_TRACE_n << ": "<<std::setw(20)<<std::left<<c<<std::endl;
+#define MFST_TRACE5(c) *(log.stream) << std :: setw(4) << std::left << FST_TRACE_n << ": "<<std::setw(20)<<std::left<<c<<std::endl;
 
-#define MFST_TRACE6(c, k) std::cout << std::setw(4) << std::left << FST_TRACE_n << ": "<<std::setw(20)<<std::left<<c<<k<<std::endl;
+#define MFST_TRACE6(c, k) *(log.stream) << std::setw(4) << std::left << FST_TRACE_n << ": "<<std::setw(20)<<std::left<<c<<k<<std::endl;
 
-#define MFST_TRACE7 std::cout << std::setw(4) << std::left << state.lenta_position << ": "\
+#define MFST_TRACE7 *(log.stream) << std::setw(4) << std::left << state.lenta_position << ": "\
 	<< std :: setw(20) << std::left << rule.getCRule(rbuf, state.nrulechain)\
 	<< std::endl;
-#define MFST_TRACE_START cout<<endl<<setw( 4)<<left<<"Шаг"<<":"<<\
+#define MFST_TRACE_START *(log.stream)<<endl<<setw( 4)<<left<<"Шаг"<<":"<<\
 						setw(20)<<left<<"Правило"<<\
 						setw(30)<<left<<"Входная лента"<<\
 						setw(20)<<left<<"Стек"<<endl;
@@ -128,7 +128,7 @@ namespace MFST
 		buf[i - pos] = 0x00;
 		return buf;
 	}
-	bool Mfst::saveState(Parm::PARM parm) {
+	bool Mfst::saveState(Parm::PARM parm, Log::LOG log) {
 
 		storestate.push(MfstState(lenta_position, st,nrule, nrulechain));	//сохраняет текущее положение мпка в стек ка
 		if (parm.tr)
@@ -141,7 +141,7 @@ namespace MFST
 			st.push(chain.nt[i]);
 		return true;
 	}
-	bool Mfst::reststate(Parm::PARM parm) 
+	bool Mfst::reststate(Parm::PARM parm,Log::LOG log) 
 	{
 		bool rc;
 		MfstState tmp;
@@ -191,11 +191,11 @@ namespace MFST
 	
 		return rc;
 	}
-	void Mfst::printrules()
+	void Mfst::printrules(Log::LOG log)
 	{
 		MfstState state;
 		GRB::Rule rule;
-		std::cout << "\nДерево разбора\n";
+		*(log.stream) << "\nДерево разбора\n";
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 			state = storestate._Get_container()[k];
@@ -223,7 +223,7 @@ namespace MFST
 		return true;
 		
 	}
-	Mfst::RC_STEP Mfst::step(Parm::PARM parm)
+	Mfst::RC_STEP Mfst::step(Parm::PARM parm, Log::LOG log)
 	{
 		RC_STEP rc = SURPRISE;
 
@@ -239,7 +239,7 @@ namespace MFST
 					{
 						if(parm.tr)
 							MFST_TRACE1;
-						saveState(parm);
+						saveState(parm,log);
 						st.pop();
 						push_chain(chain);
 						rc = NS_OK;
@@ -251,7 +251,7 @@ namespace MFST
 						if (parm.tr)
 							MFST_TRACE4("TNS_NORULECHAIN/NS_NORULE");
 						savediagnosis(NS_NORULECHAIN);
-						rc = reststate(parm) ? NS_NORULECHAIN : NS_NORULE;
+						rc = reststate(parm,log) ? NS_NORULECHAIN : NS_NORULE;
 					};
 				}
 				else
@@ -272,7 +272,7 @@ namespace MFST
 			{
 				if (parm.tr)
 					MFST_TRACE4("TS_NOK/NS_NORULECHAIN");
-				rc = reststate(parm) ? TS_NOK : NS_NORULECHAIN;
+				rc = reststate(parm,log) ? TS_NOK : NS_NORULECHAIN;
 			};
 		}
 		else
@@ -283,17 +283,19 @@ namespace MFST
 		return rc;
 	};
 	
-	bool Mfst::start(Parm::PARM parm)
+	bool Mfst::start(Parm::PARM parm, Log::LOG log)
 	{
-		if(parm.tr)
-			MFST_TRACE_START;
+		
 
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
+		*(log.stream) << "\n\nТрассировка\n";
+		if (parm.tr)
+			MFST_TRACE_START;
 		char buf[MFST_DIAGN_MAXSIZE];
-		rc_step = step(parm);
+		rc_step = step(parm,log);
 		while (rc_step == NS_OK || rc_step == NS_NORULECHAIN || rc_step == TS_OK || rc_step == TS_NOK)
-			rc_step = step(parm);
+			rc_step = step(parm,log);
 		switch (rc_step)
 		{
 		case LENTA_END: 
@@ -302,29 +304,37 @@ namespace MFST
 				MFST_TRACE4("--------->LENTA_END")
 					std::cout << "---------------------------------------------------------------------------------------\n";
 				sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: всего строк %d, синтаксический анализ выполнен без ошибокб", 0, lenta_size);
-				std::cout << std::setw(4) << std::left << 0 << ": всего строк" << lenta_size << ", синтаксический анализ выполнен без ошибок\n";
+				*(log.stream) << std::setw(4) << std::left << 0 << ": всего строк" << lenta_size << ", синтаксический анализ выполнен без ошибок\n";
 			}
 				rc = true;
 				break;
-		case NS_NORULE: { 
-			if (parm.tr)
-			{
-				std::cout << "NS_NORULE";
-				std::cout << getDiagnosis(0, buf) << std::endl;
-				std::cout << getDiagnosis(1, buf) << std::endl;
-				std::cout << getDiagnosis(2, buf) << std::endl;
-			}
+		case NS_NORULE:
+		{ 
+			
+			*(log.stream) << "\n\n Ошибки синтаксического анализатора:\n";
+				*(log.stream) << getDiagnosis(0, buf) << std::endl;
+				*(log.stream) << getDiagnosis(1, buf) << std::endl;
+				*(log.stream) << getDiagnosis(2, buf) << std::endl;
+
+			
+			throw ERROR_THROW(606);
 			break;
 		}
 		case NS_NORULECHAIN:
 			if (parm.tr)
-				std::cout << "NS_NORULECHAIN"; break;
+				std::cout << "NS_NORULECHAIN"; 
+			throw ERROR_THROW(606);
+			break;
 		case NS_ERROR: 
 			if (parm.tr)
-				std::cout << "NS_ERROR"; break;
+				std::cout << "NS_ERROR"; 
+			throw ERROR_THROW(606);
+			break;
 		case SURPRISE: 
 			if (parm.tr)
-				std::cout << "SURPRISE"; break;
+				std::cout << "SURPRISE"; 
+			throw ERROR_THROW(606);
+			break;
 		}
 		return rc;
 	}

@@ -1,3 +1,4 @@
+
 .586
 .model flat, stdcall
 
@@ -7,6 +8,8 @@ includelib StatLibC.lib
 
 ExitProcess      PROTO : DWORD
 
+SetConsoleTitleA PROTO :DWORD
+GetStdHandle     PROTO : DWORD
 writei PROTO : SDWORD
 writes PROTO : DWORD
 strl   PROTO : DWORD
@@ -18,12 +21,13 @@ sum    PROTO : DWORD, : DWORD
 
 
 .data
-maink SDWORD  0 
+mainl SDWORD  0 
 
 
 .const
-L0 SDWORD  4
-L1 SDWORD  0
+csname db 'BNI-2016', 0
+L0 SDWORD  5
+L1 SDWORD  2
 .stack 4096
 
 
@@ -31,12 +35,20 @@ L1 SDWORD  0
 
 
 main PROC 
- push L0
- pop maink
-
- push maink
- call writei
+ push offset csname
+ call SetConsoleTitleA
+  push L0
  push L1
+ pop ebx
+ pop eax
+ cdq
+ idiv ebx
+ push eax
+ pop mainl
+
+  push mainl
+ call writei
+  push L0
 
 
   call ExitProcess

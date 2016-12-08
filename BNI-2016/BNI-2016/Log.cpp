@@ -95,7 +95,7 @@ namespace Log {
 				*(log.stream) << lextable.table[i].lexema;
 		}
 	}
-	void WriteIdTable(IT::IdTable idT)
+	void WriteIdTable(IT::IdTable idT, LOG log)
 	{
 		
 		{
@@ -144,7 +144,7 @@ namespace Log {
 	void WriteLAtables(LT::LexTable lt, IT::IdTable it, Parm::PARM parm, LOG log)
 	{
 		if (parm.it)
-			WriteIdTable(it);
+			WriteIdTable(it,log);
 		if (parm.lt)
 			WriteLexTable(lt,log);
 	}

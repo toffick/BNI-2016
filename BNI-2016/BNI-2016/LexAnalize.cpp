@@ -117,7 +117,9 @@ namespace LEX
 			}
 			case IT::F:
 			{
+				static char fcnum = '0';
 				strncpy(prefix, name, TI_PREFIX_MAX_SIZE);
+				prefix[strlen(prefix)] = fcnum++;
 				strcat(ItE.id, prefix);
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX)
@@ -234,6 +236,7 @@ namespace LEX
 
 	Lex StartLA(In::IN& in, Error::Errors& ers)  // начать лексичский анализ
 	{
+		int er_numb = ers.size;
 		Lex lex;                               
 		FST::FST* fsts = FST::crfsts();  
 		for (int i = 0; i < in.size; i++)
@@ -251,14 +254,16 @@ namespace LEX
 			};
 		}
 
-		for (int i = 0; i < lex.lextable.size; i++)
+	/*	for (int i = 0; i < lex.lextable.size; i++)
 		{
 			std::cout << lex.lextable.table[i].lexema << "   ";
 			std::cout << lex.lextable.table[i].idxTI;
 			if (lex.lextable.table[i].idxTI != TI_NULLIDX)
 				std::cout << "   "<<lex.idtable.table[lex.lextable.table[i].idxTI].id;
 			std::cout << std::endl;
-		}
+		}*/
+		if(er_numb!=ers.size)
+			throw ERROR_THROW(124);
 		return lex;
 	}
 }

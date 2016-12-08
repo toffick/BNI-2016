@@ -8,7 +8,8 @@
 #define VAL_STR_DEFAULT " ?"
 #define SPACE ' '
 #define PROTO "PROTO"
-#define PROT_PARM ":DWORD"
+#define PROT_PARM_I ":SDWORD"
+#define PROT_PARM_S ":DWORD"
 #define STACK ".stack 4096\n"
 #define DATA ".data"
 #define CONST ".const"
@@ -25,6 +26,8 @@ includelib StatLibC.lib\n\
 \n\
 ExitProcess      PROTO : DWORD\n\
 \n\
+SetConsoleTitleA PROTO :DWORD\n\
+GetStdHandle     PROTO : DWORD\n\
 writei PROTO : SDWORD\n\
 writes PROTO : DWORD\n\
 strl   PROTO : DWORD\n\
@@ -38,27 +41,31 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n\n"
+#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n\n"
 #define T0_1 "\n{0} PROC ;F\n;N\n  ;E\n pop eax\n ret {1}\n\n{0} ENDP \n\n ;S\n"
 #define T0_2 "\n{0} PROC ;F\n  ;E\n pop eax\n  ret {1}\n\n{0} ENDP  \n\n"
 #define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop eax\n ret {1}\n\n{0} ENDP \n\n"
 #define T0_4 "\n{0} PROC ;F\n  ;E\n pop eax\n ret {1}\n\n{0} ENDP\n;S\n\n"
-#define T0_5 "\n{0} PROC \n;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
+#define T0_5 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
 
 #define T1_3  " pop {0}\n"
-#define T1_9  " pop {0}\n\n;N"
+#define T1_9  " pop {0}\n\n;N "
 
-#define T1_4_S  ";E  call writes\n"
-#define T1_4_I  ";E  call writei\n"
+#define T1_4_S  " ;E  call writes\n"
+#define T1_4_I  " ;E  call writei\n"
 
-#define T1_12_S  ";E  call writes\n;N\n"
-#define T1_12_I  ";E  call writei\n;N\n"
+#define T1_12_S  " ;E  call writes\n;N \n"
+#define T1_12_I  " ;E  call writei\n;N \n"
 
-#define T3_0 " {0}:dword\n\n"
-#define T3_1 "{0}:dword, ;F\n"
+#define T3_0_I " {0}:SDWORD\n\n"
+#define T3_0_S " {0}:DWORD\n\n"
+
+#define T3_1_I "{0}:SDWORD, ;F\n"
+#define T3_1_S "{0}:DWORD, ;F\n"
 
 #define ID_LIT_I " push {0}\n"
-#define ID_LIT_S " push offset {0}\n"
+#define ID_LIT_S_I " push {0}\n"
+#define ID_LIT_S_L " push offset {0}\n"
 
 #define CALL " call {0}\n push eax\n"
 
@@ -224,7 +231,10 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 				if(lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].iddatatype==IT::INT)
 				k = GEN1(ID_LIT_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
 				else 
-				k = GEN1(ID_LIT_S, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+					if(ID_LIT_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].idtype==IT::L)
+						k = GEN1(ID_LIT_S_L, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
+					else 
+						k = GEN1(ID_LIT_S_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
 
 				tmp.insert(firstOfNoTerminal, k);
 
@@ -240,14 +250,19 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			switch (mfst.deducation.nrulechains[i])
 			{
 			case 0:
-				tmp.insert(firstOfNoTerminal, GEN1(T3_0, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]+1].idxTI].id));
-		
+				if(lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].iddatatype==IT::INT)
+				tmp.insert(firstOfNoTerminal, GEN1(T3_0_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]+1].idxTI].id));
+				else
+				tmp.insert(firstOfNoTerminal, GEN1(T3_0_S, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));
+
 
 
 				break;
 			case 1:
-					tmp.insert(firstOfNoTerminal, GEN1(T3_1, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));
-	
+				if (lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].iddatatype == IT::INT)
+					tmp.insert(firstOfNoTerminal, GEN1(T3_1_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));
+				else
+					tmp.insert(firstOfNoTerminal, GEN1(T3_1_S, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));
 				break;
 			}
 			break;
@@ -284,11 +299,17 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 			{
 			case IT::P:
 			case IT::V:
-			case IT::L:
-				if(lex.idtable.table[Expression[i].idxTI].iddatatype==IT::INT)
-				tmp += GEN1(ID_LIT_I, lex.idtable.table[Expression[i].idxTI].id);
+			//case IT::L:
+				if (lex.idtable.table[Expression[i].idxTI].iddatatype == IT::INT)
+					tmp += GEN1(ID_LIT_I, lex.idtable.table[Expression[i].idxTI].id);
 				else
-				tmp += GEN1(ID_LIT_S, lex.idtable.table[Expression[i].idxTI].id);
+					tmp += GEN1(ID_LIT_S_I, lex.idtable.table[Expression[i].idxTI].id);
+				break;
+			case IT::L:
+				if (lex.idtable.table[Expression[i].idxTI].iddatatype == IT::INT)
+					tmp += GEN1(ID_LIT_I, lex.idtable.table[Expression[i].idxTI].id);
+				else
+					tmp += GEN1(ID_LIT_S_L, lex.idtable.table[Expression[i].idxTI].id);
 				break;
 			case IT::F:
 				tmp += GEN1(CALL, lex.idtable.table[Expression[i].idxTI].id);
@@ -334,9 +355,13 @@ std::string Gen::CreateProtSeg(LEX::Lex lex)
 			tmp += SPACE;
 			tmp += PROTO;
 			tmp += SPACE;
-			while (lex.idtable.table[i++].idtype == IT::P)
+			while (lex.idtable.table[i].idtype == IT::P)
 			{
-				tmp += PROT_PARM;
+				if(lex.idtable.table[i++].iddatatype==IT::INT)
+				tmp += PROT_PARM_I;
+				else 
+					tmp += PROT_PARM_S;
+
 				tmp += ',';
 			}
 			tmp[tmp.size()-1] = '\n';
@@ -376,6 +401,7 @@ std::string Gen::CreateConstSeg(std::string& tmp, LEX::Lex lex)
 	tmp += DBLINE_BREAK;
 	tmp += CONST;
 	tmp += LINE_BREAK;
+	tmp += "csname db 'BNI-2016', 0\n";
 for (int i = 0; i < lex.idtable.size; i++)
  {
 	 if (lex.idtable.table[i].idtype == IT::L)
