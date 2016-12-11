@@ -4,7 +4,7 @@
 #define TI_INT_DEFAULT	0x00000000	//значение по умолчанию для типа integer
 #define TI_STRDEFAULT	"\0"		//значение по умолчанию для типа string
 #define TI_NULLIDX		0xffffffff	//нет элемента таблицы идентификаторов
-#define TI_STR_MAXSIZE	225	
+#define TI_STR_MAXSIZE	5
 #define IT_MAXSIZE		4096
 #define TI_PREFIX_MAX_SIZE	8
 #include "LT.h"

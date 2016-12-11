@@ -21,11 +21,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	try 
 	{
 		Parm::PARM parm = Parm::getparm(argc, argv,errors);
-		log = Log::getlog(parm.log, errors);
-		In::IN in = In::getin(parm.in,errors);
+		log = Log::getlog(parm, errors);
 		Log::WriteLog(log);
-		
-		Log::WriteParm(log,parm);
+
+		Log::WriteParm(log, parm);
+
+		In::IN in = In::getin(parm.in,errors);
+
 		LEX::Lex lex = LEX::StartLA(in, errors);
 		Log::WriteLAtables(lex.lextable, lex.idtable, parm, log);
 		MFST::Mfst mfst(lex, GRB::getGreibach());

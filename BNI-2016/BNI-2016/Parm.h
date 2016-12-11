@@ -7,7 +7,7 @@
 #define PARM_ST L"-st"						//ключ для дерева разбора
 #define PARM_TR L"-tr"						//ключ для вывода трассировки на консоль
 #define PARM_MAX_SIZE 300					//максимальная длина строки параметра
-#define PARM_OUT_DEFAULT_EXT L".out"		//расширение файла объектного кода по умолчанию
+#define PARM_OUT_DEFAULT_EXT L".asm"		//расширение файла объектного кода по умолчанию
 #define PARM_LOG_DEFAULT_EXT L".log"		//расширение файла протокола по умолчанию
 #include "Error.h"
 

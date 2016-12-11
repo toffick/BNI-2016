@@ -91,11 +91,18 @@ namespace In {
 					{
 						ret.chains[ret.size].chain[chain_len++] = t;									//помещаем кавычку в номер строки
 						t = par.get();																	//ссчитываем очередной символ
+			
 						while (ret.code[(int)t] != IN::Q)												//записываем литералам между кавыками
 						{				
+							if (t == EOF)																//конец файла и не закрыли кавычку. ошибочка
+							{
+								Error::adderr(115, ret.lines, errarr);
+								throw ERROR_THROW(116);
+							}
 							ret.chains[ret.size].chain[chain_len++] = t;
 							t = par.get();
 						}
+
 						ret.chains[ret.size].chain[chain_len++] = t;									//дописываем кавычку 
 						ret.chains[ret.size++].chain[chain_len] = 0x00;
 						chain_len = 0;
@@ -116,3 +123,4 @@ namespace In {
 		}
 	}
 };
+

@@ -11,15 +11,20 @@
 namespace Log {
 	struct LOG {
 		wchar_t logfile[PARM_MAX_SIZE];
+		wchar_t outfile[PARM_MAX_SIZE];
 		std::ofstream* stream;
+		std::ofstream* stream_out;
+
 		LOG():stream(NULL)
 		{
+			wcscpy_s(outfile, L"");
 			wcscpy_s(logfile, L"");
 			stream = NULL;
+			stream_out = NULL;
 		}
 	};
 //	static const LOG INITLOG = { L"", NULL };			
-	LOG getlog(wchar_t logfile[], Error::Errors&);						//начальная инициализация LOG
+	LOG getlog(Parm::PARM parm, Error::Errors&);						//начальная инициализация LOG
 	void WriteLine(LOG log, char* c, ...);				//сформировать структуру LOG
 	void WriteLine(LOG log, wchar_t* c, ...);
 	void WriteLog(LOG log);								//вывести в протокол конкатенацию строк

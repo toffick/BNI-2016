@@ -46,7 +46,7 @@ sum    PROTO : DWORD, : DWORD\n\
 #define T0_2 "\n{0} PROC ;F\n  ;E\n pop edx\n  ret \n\n{0} ENDP  \n\n"
 #define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop edx\n ret \n\n{0} ENDP \n\n"
 #define T0_4 "\n{0} PROC ;F\n  ;E\n pop edx\n ret \n\n{0} ENDP\n;S\n\n"
-#define T0_5 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
+//#define T0_5 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
 
 #define T1_3  " pop {0}\n"
 #define T1_9  " pop {0}\n\n;N "
@@ -102,7 +102,7 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	std::cout << "-----------------------------\n";
 
 std::cout << gencode;
-*(log.stream) << "\n\n\nКод асм\n\n\n" << gencode;
+*(log.stream_out) << gencode;
  //std::ofstream outstream(parm.out);
  //outstream << gencode;
 }
@@ -163,9 +163,9 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			case 4:
 				tmp.insert(firstOfNoTerminal, GEN1(T0_4, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
-			case 5:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_5, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
-				break;
+			//case 5:
+				//tmp.insert(firstOfNoTerminal, GEN1(T0_5, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
+				//break;
 			}
 			break;
 		}

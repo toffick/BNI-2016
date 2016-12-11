@@ -6,13 +6,16 @@
 #include "time.h"
 
 namespace Log {
-	LOG getlog(wchar_t logfile[],Error::Errors& e) {
+	LOG getlog(Parm::PARM parm,Error::Errors& e) {
 		LOG* p = new LOG;
-			p->stream = new std::ofstream(logfile);
+			p->stream_out= new std::ofstream(parm.out);
+			if (p->stream_out->fail())
+				Error::adderr(113, e);
+			p->stream = new std::ofstream(parm.log);
 			if (p->stream->fail())
 				Error::adderr(104,e);
-			//	throw ERROR_THROW(112);
-			wcscpy_s(p->logfile, logfile);
+			wcscpy_s(p->logfile, parm.log);
+			wcscpy_s(p->outfile, parm.out);
 			return *p;
 		}
 	void WriteLine(LOG log, char* c, ...) {
@@ -39,6 +42,7 @@ namespace Log {
 		tm *k = localtime(&rawtime);
 		strftime(buffer, 80, " %x %X", k);
 		WriteLine(log,"  Дата: ", buffer, "\n","");
+		
 	}
 	void WriteParm(LOG log, Parm::PARM parm) {
 		WriteLine(log,"\n---- Параметры ----","");

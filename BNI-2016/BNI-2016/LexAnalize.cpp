@@ -129,10 +129,7 @@ namespace LEX
 			}
 			case IT::F:
 			{
-			//	strncpy(ItE.id, name, 7);
 				strncpy(prefix,name,7);
-				
-
 				int rc;
 				char tmp = '0';
 				char t[2];
@@ -156,10 +153,6 @@ namespace LEX
 
 
 				}
-
-
-				//rc = IT::IsId(lex.idtable, ItE.id);
-
 				if (rc == TI_NULLIDX)
 				{
 					fcnum++;
@@ -176,7 +169,6 @@ namespace LEX
 			}
 			case IT::P:
 			{
-				//if (ItE.idtype == IT::P && IT::IsId(lex.idtable, prefix) != -1)
 				char tmp[12];
 				strcpy(tmp,prefix);
 				tmp[strlen(tmp)+1] = 0x00;
@@ -215,7 +207,14 @@ namespace LEX
 					{
 					case IT::STR:
 						{
-							strcpy(ItE.value.vstr.str,name);
+							strncpy(ItE.value.vstr.str,name,TI_STR_MAXSIZE);
+							if (strlen(ItE.value.vstr.str) >= TI_STR_MAXSIZE)
+							{
+								ItE.value.vstr.str[TI_STR_MAXSIZE - 1] = '\'';
+								ItE.value.vstr.str[TI_STR_MAXSIZE] = 0x00;
+							}
+						
+
 							ItE.value.vstr.len = strlen(name)-2;
 							break;
 						}
@@ -317,7 +316,8 @@ namespace LEX
 	Lex StartLA(In::IN& in, Error::Errors& ers)  // начать лексичский анализ
 	{
 		int er_numb = ers.size;
-		Lex lex;                               
+		Lex lex;  
+		bool chain = false;
 		FST::FST* fsts = FST::crfsts();  
 		for (int i = 0; i < in.size; i++)
 		{
@@ -325,13 +325,17 @@ namespace LEX
 			{
 				FST::restartFST(fsts[j], in.chains[i].chain);
 
-				if (FST::execute(fsts[j]))
+				if (chain=FST::execute(fsts[j]))
 				{
 					LT::Add(lex.lextable, LT::Entry(fsts[j].lexema, in.chains[i].line, IT::getIdxTI(fsts[j].lexema, lex.idtable)));
 					CreatId(in.chains[i].line, fsts[j], ers, lex);
 					break;
 				};
 			};
+			if (!chain)
+			{
+				Error::adderr(114, in.chains[i].line, ers);
+			}
 		}
 
 		for (int i = 0; i < lex.lextable.size; i++)

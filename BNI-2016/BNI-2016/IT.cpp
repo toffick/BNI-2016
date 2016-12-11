@@ -8,8 +8,8 @@ namespace IT {
 		p->maxsize = size;
 		p->size = 0;
 		p->table = new Entry[size];
-		for (int i = 0; i < size; i++)
-			memset(p->table[i].value.vstr.str, '\0', size);
+	//	for (int i = 0; i < size; i++)
+	//		memset(p->table[i].value.vstr.str, '\0', TI_STR_MAXSIZE);
 		return (*p);
 	
 	

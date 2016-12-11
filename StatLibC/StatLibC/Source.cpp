@@ -15,7 +15,8 @@ extern "C"
 
 	void _stdcall  writes(const char* s)
 	{
-		std::cout << s<<std::endl;
+		setlocale(0, "rus");
+		std::cout << std::endl << s;
 	}
 	void _stdcall  writei(int i)
 	{

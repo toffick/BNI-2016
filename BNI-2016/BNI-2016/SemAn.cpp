@@ -21,25 +21,13 @@ namespace SA
 	}
 	bool IsMain(LEX::Lex lex, Error::Errors& err)
 	{
-		int mainnumb=0;
 		for (int i = 0; i < lex.lextable.size; i++)
 		{
 			if (lex.lextable.table[i].lexema == LEX_MAIN)
-				mainnumb++;																		//нашли главную функцию - все хорошо
+				return true;																		//нашли главную функцию - все хорошо
 		}
-		if (!mainnumb)																			//ни одной главной функции 
-		{
-			Error::adderr(701, err);
-			return false;
-		}
-		else
-			if (mainnumb > 1)																	//несколько главных функций
-			{
-				Error::adderr(707, err);
-				return false;
-			}
-			else 
-				return true;																	
+		Error::adderr(701,err);
+		return false;
 	
 	}
 	bool ExpressionOperandsType(LEX::Lex lex, Error::Errors& err)
@@ -57,7 +45,7 @@ namespace SA
 				typeofleftvalue = lex.idtable.table[lex.lextable.table[ i - 1].idxTI].iddatatype;											//переменная для типа левостороннего значения
 				while (lex.lextable.table[findexpress].lexema != LEX_SEMICOLON)
 				{
-					if (lex.lextable.table[findexpress].lexema == LEX_ID || lex.lextable.table[findexpress].lexema == LEX_LITERAL)			
+					if ((lex.lextable.table[findexpress].lexema == LEX_ID || lex.lextable.table[findexpress].lexema == LEX_LITERAL) && lex.lextable.table[findexpress].idxTI!=TI_NULLIDX)
 					{
 						if (lex.idtable.table[lex.lextable.table[findexpress].idxTI].iddatatype == IT::STR)									//строковый тип в выражении	
 							strrightfalue = true;																							//нашли строковый тип(не можем далее использовать его с арифм. операциями)
@@ -86,8 +74,6 @@ namespace SA
 				strrightfalue = false;
 			}
 		}
-	
-	
 		return errflag;
 	}
 	bool ValidReturnValue(LEX::Lex lex, Error::Errors& err)
@@ -96,17 +82,16 @@ namespace SA
 		int typeoffunc;
 		for (int i = 0; i < lex.lextable.size; i++)
 		{
-			if (lex.lextable.table[i].lexema == LEX_FUNC)
+			if (lex.lextable.table[i].lexema == LEX_FUNC)														//определение функции
 			{			
-				typeoffunc = lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype;
-				while (lex.lextable.table[i].lexema != LEX_RETURN)
+				typeoffunc = lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype;						//запомнить тип функции
+				while (lex.lextable.table[i].lexema != LEX_RETURN)												//дойти по таблице лексем до ретурна
 					i++;
-				if (lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype != typeoffunc)
+				if (lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype != typeoffunc)					//ссчитать тип ретурна
 				{
-					Error::adderr(704, lex.lextable.table[i].sn, err);
+					Error::adderr(704, lex.lextable.table[i].sn, err);											
 					errflag = false;
 					break;
-					//return false;
 				}
 			}
 		}
@@ -119,26 +104,25 @@ namespace SA
 		int forinsideloop;
 		for (int i = 0; i < lex.lextable.size; i++)
 		{
-			if (lex.lextable.table[i].lexema == LEX_FUNC)
+			if (lex.lextable.table[i].lexema == LEX_FUNC)																				//поиск определения фунции
 			{
-				entry = lex.idtable.table[lex.lextable.table[++i].idxTI];
+				entry = lex.idtable.table[lex.lextable.table[++i].idxTI];																//элемент функции -> элемент entry
 				forinsideloop = ++i;
 			
-				for (forinsideloop; forinsideloop < lex.lextable.size; forinsideloop++)
+				for (forinsideloop; forinsideloop < lex.lextable.size; forinsideloop++)													//цикл по ТЛ от индекса функции
 				{
-					if(lex.lextable.table[forinsideloop].idxTI!=TI_NULLIDX &&lex.lextable.table[forinsideloop].lexema==LEX_ID)
-						if (!strcmp(lex.idtable.table[lex.lextable.table[forinsideloop].idxTI].id, entry.id))
+					if(lex.lextable.table[forinsideloop].idxTI!=TI_NULLIDX && lex.lextable.table[forinsideloop].lexema==LEX_ID)			//перебор все идентификаторов
+						if (!strcmp(lex.idtable.table[lex.lextable.table[forinsideloop].idxTI].id, entry.id))							//если ид совпал с именем искомой функции, зн мы нашли вызов функции
 						{
-							forinsideloop += 2;
+							forinsideloop += 2;																							//пропуск скобок
 							int j = 0;
-							while (j < entry.value.parmvalue)
+							while (j < entry.value.parmvalue)																			//пока не закончились параметры
 							{
 								if (lex.lextable.table[forinsideloop].idxTI!=TI_NULLIDX && lex.idtable.table[lex.lextable.table[forinsideloop].idxTI].iddatatype != entry.value.parmtype[j])
 								{
 									Error::adderr(705, lex.lextable.table[forinsideloop].sn, err);
 									errflag = false;
 									break;
-								//	return false;
 								}
 								else
 								{
@@ -146,6 +130,8 @@ namespace SA
 									forinsideloop += 2;
 								}
 							}
+							//дописать ошибку на неверное кол-во параметров
+
 						}
 
 
