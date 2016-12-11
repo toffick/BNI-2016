@@ -17,7 +17,8 @@ namespace Error
 		ERROR_ENTRY(0, "SYSTEM: Недопустимый код ошибки"), // код ошибки вне диапазона 0 - ERROR_MAX_ENTRY
 		ERROR_ENTRY(1, "SYSTEM: Системный сбой"),
 		ERROR_ENTRY(2, "SYSTEM: Недопустимое количество ошибок"),
-		ERROR_ENTRY_NODEF(3), ERROR_ENTRY_NODEF(4), ERROR_ENTRY_NODEF(5),
+		ERROR_ENTRY(3, "SYSTEM: "),
+		ERROR_ENTRY_NODEF(4), ERROR_ENTRY_NODEF(5),
 		ERROR_ENTRY_NODEF(6), ERROR_ENTRY_NODEF(7), ERROR_ENTRY_NODEF(8), ERROR_ENTRY_NODEF(9),
 		ERROR_ENTRY_NODEF10(10), ERROR_ENTRY_NODEF10(20), ERROR_ENTRY_NODEF10(30), ERROR_ENTRY_NODEF10(40), ERROR_ENTRY_NODEF10(50),
 		ERROR_ENTRY_NODEF10(60), ERROR_ENTRY_NODEF10(70), ERROR_ENTRY_NODEF10(80), ERROR_ENTRY_NODEF10(90),
@@ -50,13 +51,28 @@ namespace Error
 		ERROR_ENTRY(603, "Ошибка в параметрах функции"),
 		ERROR_ENTRY(604, "Ошибка в параметрах вызываемой функции"),
 		ERROR_ENTRY(605, "Ошибка знака в выражении"),
-		ERROR_ENTRY(606, "\n\nCA: Ошибка в синтаксическом анализе"),
+		ERROR_ENTRY(606, "\n\n\nCA: Ошибка в синтаксическом анализе"),
 
 		ERROR_ENTRY_NODEF(607),ERROR_ENTRY_NODEF(608),ERROR_ENTRY_NODEF(609),
 		ERROR_ENTRY_NODEF10(610),ERROR_ENTRY_NODEF10(620),ERROR_ENTRY_NODEF10(630),ERROR_ENTRY_NODEF10(640),
 		ERROR_ENTRY_NODEF10(650),ERROR_ENTRY_NODEF10(660),ERROR_ENTRY_NODEF10(670),ERROR_ENTRY_NODEF10(680),
 		ERROR_ENTRY_NODEF10(690),
-		ERROR_ENTRY_NODEF100(700), ERROR_ENTRY_NODEF100(800), ERROR_ENTRY_NODEF100(900)
+
+
+
+		ERROR_ENTRY(700, "СмА: Ошибка в семантическом анализе"),
+		ERROR_ENTRY(701, "СмА: Отсуствует главная функция"),
+		ERROR_ENTRY(702, "СмА: Oшибочный тип операндов в выражении"),
+		ERROR_ENTRY(703, "СмА: Попытка применить арифметическую операцию к строке"),
+		ERROR_ENTRY(704, "CмА: Oшибочный тип возврата функции"),
+		ERROR_ENTRY(705, "CмА: Неверный тип параметра"),
+		ERROR_ENTRY(706, "\n\nCA: Ошибка в синтаксическом анализе"),
+		ERROR_ENTRY(707, "CмА: Наличие нескольких главных функций"),
+		ERROR_ENTRY_NODEF(708),ERROR_ENTRY_NODEF(709),
+		ERROR_ENTRY_NODEF10(710),ERROR_ENTRY_NODEF10(720),ERROR_ENTRY_NODEF10(730),ERROR_ENTRY_NODEF10(740),
+		ERROR_ENTRY_NODEF10(750),ERROR_ENTRY_NODEF10(760),ERROR_ENTRY_NODEF10(770),ERROR_ENTRY_NODEF10(780),
+		ERROR_ENTRY_NODEF10(790),
+		ERROR_ENTRY_NODEF100(800), ERROR_ENTRY_NODEF100(900)
 	};
 
 	ERROR geterror(int id) {

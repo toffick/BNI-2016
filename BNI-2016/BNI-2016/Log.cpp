@@ -123,7 +123,7 @@ namespace Log {
 
 				
 
-					else if ((idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::V) ||
+					 if ((idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::V) ||
 						(idT.table[i].iddatatype == IT::INT && idT.table[i].idtype == IT::L))
 						std::cout << "\nЗначение: " << idT.table[i].value.vind;
 					else if ((idT.table[i].iddatatype == IT::STR && idT.table[i].idtype == IT::V) ||
@@ -136,7 +136,8 @@ namespace Log {
 							std::cout << "\nДлина строки: " << idT.table[i].value.vstr.len;
 						}
 					}
-					else if ((idT.table[i].idtype == IT::F))
+					else 
+						if ((idT.table[i].idtype == IT::F))
 						std::cout << "\nКол-во параметров: " << idT.table[i].value.parmvalue;
 			}
 		}
@@ -150,8 +151,11 @@ namespace Log {
 	}
 	void close(LOG log)
 	{
-		(log.stream)->close();
-		delete log.stream;
+		if (log.stream) 
+		{
+			(log.stream)->close();
+			delete log.stream;
+		}
 	}
 
 }

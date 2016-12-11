@@ -1,5 +1,5 @@
 ﻿#pragma once
-#define ERRORS_MAX_SIZE 5
+#define ERRORS_MAX_SIZE 10
 #define ERROR_ADD(id)
 #define ERROR_THROW(id) Error::geterror(id);  //throw  ERROR_THROW(id)
 #define ERROR_THROW_IN(id, l, c) Error::geterrorin(id,l,c); //throw ERROR_THROW(id, строка, колонка)

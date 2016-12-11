@@ -1,4 +1,3 @@
-
 .586
 .model flat, stdcall
 
@@ -16,44 +15,55 @@ strl   PROTO : DWORD
 ipow   PROTO : DWORD, : DWORD
 sum    PROTO : DWORD, : DWORD
 
+sss1 PROTO :SDWORD,:SDWORD,:SDWORD
 .stack 4096
 
 
 
 .data
-mainl SDWORD  0 
+mainkk2 SDWORD  0 
 
 
 .const
 csname db 'BNI-2016', 0
 L0 SDWORD  5
-L1 SDWORD  2
+L1 SDWORD  1
+L2 SDWORD  2
+L3 SDWORD  44
+L4 SDWORD  0
 .stack 4096
 
 
 .code
 
 
+sss1 PROC sssf1:SDWORD, sssff1:SDWORD,  sssoo1:SDWORD
+
+   push L0
+ pop edx
+ ret 
+
+sss1 ENDP
+
 main PROC 
  push offset csname
  call SetConsoleTitleA
-  push L0
+  push L3
+ push L2
  push L1
- pop ebx
- pop eax
- cdq
- idiv ebx
- push eax
- pop mainl
+ call sss1
+ push edx
+ pop mainkk2
 
-  push mainl
+  push mainkk2
  call writei
-  push L0
+  push L4
 
 
   call ExitProcess
 
 main ENDP
+
 
 
 end main

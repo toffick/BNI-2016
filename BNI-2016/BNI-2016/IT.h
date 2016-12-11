@@ -6,7 +6,7 @@
 #define TI_NULLIDX		0xffffffff	//нет элемента таблицы идентификаторов
 #define TI_STR_MAXSIZE	225	
 #define IT_MAXSIZE		4096
-#define TI_PREFIX_MAX_SIZE	5
+#define TI_PREFIX_MAX_SIZE	8
 #include "LT.h"
 namespace IT
 {
@@ -34,6 +34,7 @@ namespace IT
 		{
 			int vind;				//значение integer
 			int parmvalue;
+			int parmtype[100];
 			struct {
 				int len;						//длина string
 				char str[TI_STR_MAXSIZE];		//символы string

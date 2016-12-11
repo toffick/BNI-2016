@@ -15,11 +15,11 @@ extern "C"
 
 	void _stdcall  writes(const char* s)
 	{
-		std::cout << s;
+		std::cout << s<<std::endl;
 	}
 	void _stdcall  writei(int i)
 	{
-		std::cout << i;
+		std::cout << i << std::endl;
 	}
 	int _stdcall  sum(int a, int b)
 	{

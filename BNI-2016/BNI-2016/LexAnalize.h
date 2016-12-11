@@ -4,7 +4,6 @@
 #include "LT.h"
 #include "Log.h"
 #include "FST.h"
-
 namespace LEX
 {
 	struct Lex                 // структура результата работы лексического анализатора

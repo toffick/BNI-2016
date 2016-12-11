@@ -42,10 +42,10 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN0(str)				fmt::format(str)
 
 #define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n\n"
-#define T0_1 "\n{0} PROC ;F\n;N\n  ;E\n pop eax\n ret {1}\n\n{0} ENDP \n\n ;S\n"
-#define T0_2 "\n{0} PROC ;F\n  ;E\n pop eax\n  ret {1}\n\n{0} ENDP  \n\n"
-#define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop eax\n ret {1}\n\n{0} ENDP \n\n"
-#define T0_4 "\n{0} PROC ;F\n  ;E\n pop eax\n ret {1}\n\n{0} ENDP\n;S\n\n"
+#define T0_1 "\n{0} PROC ;F\n;N\n  ;E\n pop edx\n ret \n\n{0} ENDP \n\n ;S\n"
+#define T0_2 "\n{0} PROC ;F\n  ;E\n pop edx\n  ret \n\n{0} ENDP  \n\n"
+#define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop edx\n ret \n\n{0} ENDP \n\n"
+#define T0_4 "\n{0} PROC ;F\n  ;E\n pop edx\n ret \n\n{0} ENDP\n;S\n\n"
 #define T0_5 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
 
 #define T1_3  " pop {0}\n"
@@ -67,7 +67,7 @@ sum    PROTO : DWORD, : DWORD\n\
 #define ID_LIT_S_I " push {0}\n"
 #define ID_LIT_S_L " push offset {0}\n"
 
-#define CALL " call {0}\n push eax\n"
+#define CALL " call {0}\n push edx\n"
 
 #define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n push eax\n"
 #define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n push eax\n"
@@ -140,11 +140,11 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 		case 0:
 		{
 			tmp.erase(firstOfNoTerminal, 3);
-			if (mfst.deducation.nrulechains[i] != 0 && mfst.deducation.nrulechains[i] != 5) //кол-во параметров для функции(кроме main)
-			{
-				sizeofstackremove = lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].value.parmvalue;
-				sizeofstackremove *= 4;
-			}
+			//if (mfst.deducation.nrulechains[i] != 0 && mfst.deducation.nrulechains[i] != 5) //кол-во параметров для функции(кроме main)
+			//{
+			//	sizeofstackremove = lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].value.parmvalue;
+			//	sizeofstackremove *= 4;
+			//}
 			switch (mfst.deducation.nrulechains[i])
 			{
 			case 0:
@@ -152,16 +152,16 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 				tmp.insert(firstOfNoTerminal, GEN1(T0_0, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			case 1:
-				tmp.insert(firstOfNoTerminal, GEN2(T0_1, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
+				tmp.insert(firstOfNoTerminal, GEN1(T0_1, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
 			case 2:
-				tmp.insert(firstOfNoTerminal, GEN2(T0_2, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
+				tmp.insert(firstOfNoTerminal, GEN1(T0_2, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
 			case 3:
-				tmp.insert(firstOfNoTerminal, GEN2(T0_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
+				tmp.insert(firstOfNoTerminal, GEN1(T0_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
 			case 4:
-				tmp.insert(firstOfNoTerminal, GEN2(T0_4, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id, sizeofstackremove));
+				tmp.insert(firstOfNoTerminal, GEN1(T0_4, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
 			case 5:
 				tmp.insert(firstOfNoTerminal, GEN1(T0_5, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
@@ -254,10 +254,8 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 				tmp.insert(firstOfNoTerminal, GEN1(T3_0_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]+1].idxTI].id));
 				else
 				tmp.insert(firstOfNoTerminal, GEN1(T3_0_S, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));
-
-
-
 				break;
+
 			case 1:
 				if (lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].iddatatype == IT::INT)
 					tmp.insert(firstOfNoTerminal, GEN1(T3_1_I, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 1].idxTI].id));

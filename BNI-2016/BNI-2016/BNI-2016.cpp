@@ -10,11 +10,9 @@
 #include "LexAnalize.h"
 #include "Mfst.h"
 #include "GEN.h"
+#include "SemAn.h"
 
-int koko(int d, int s)
-{
-	return d + 1;
-}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	setlocale(LC_ALL, "rus");
@@ -22,7 +20,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	Log::LOG log;
 	try 
 	{
-		int a = koko(3, 3);
 		Parm::PARM parm = Parm::getparm(argc, argv,errors);
 		log = Log::getlog(parm.log, errors);
 		In::IN in = In::getin(parm.in,errors);
@@ -31,20 +28,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteParm(log,parm);
 		LEX::Lex lex = LEX::StartLA(in, errors);
 		Log::WriteLAtables(lex.lextable, lex.idtable, parm, log);
-
-
 		MFST::Mfst mfst(lex, GRB::getGreibach());
 		mfst.start(parm,log);
+		SA::MainSemanticAnalize(lex, log, errors);
 		mfst.savededucation();
 		mfst.printrules(log);
+		printerr(errors);
+
 		Gen::StartGen(lex,mfst,log,parm);
 
 
 	}
 	catch (Error::ERROR e)
 	{
-		std::cout << e.id << ": " << e.message << std::endl << std::endl;
-		
+		std::cout << e.id << ": " << e.message << std::endl <<" Подробнее в журнале протокола log\n"<< std::endl;
 		printerr(errors);
 	}
 	Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке

@@ -15,6 +15,7 @@ namespace Log {
 		LOG():stream(NULL)
 		{
 			wcscpy_s(logfile, L"");
+			stream = NULL;
 		}
 	};
 //	static const LOG INITLOG = { L"", NULL };			
