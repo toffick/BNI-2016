@@ -7,9 +7,34 @@
 
 
 
-//дублировать имя функции после мэйна и пизда
+
 namespace LEX
 {
+
+	void AddStdFunc(LEX::Lex& lex)
+	{
+		IT::Entry e1;
+		strcpy(e1.id, "strl");
+		e1.value.parmvalue = 1;     // int fun strlen(take str a)
+		e1.idtype = IT::F;
+		e1.iddatatype = IT::INT;
+		e1.idxfirstLE = TI_NULLIDX;
+		e1.value.parmtype[0] = IT::STR;
+		IT::Add(lex.idtable, e1);
+
+	
+		IT::Entry e2;
+		strcpy(e2.id, "ipow");
+		e2.value.parmvalue = 2;     // int fun strlen(take str a)
+		e2.idtype = IT::F;
+		e2.iddatatype = IT::INT;
+		e2.idxfirstLE = TI_NULLIDX;
+		e2.value.parmtype[0] = IT::INT;
+		e2.value.parmtype[1] = IT::INT;
+		IT::Add(lex.idtable, e2);
+
+	};
+
 	void CreatId(int line, FST::FST& fst, Error::Errors& ers, Lex& lex)
 	{
 		static IT::Entry ItE;											// формируемая строка ТИ
@@ -45,8 +70,6 @@ namespace LEX
 				param = true;
 				break;
 			case FST::FST_STD_LIB:
-				ItE.idtype = IT::F;	
-				ItE.iddatatype = IT::INT;
 				rc = newId(prefix, fst.string, ItE, ers, lex, line);
 				break;
 			case FST::FST_ARIPH:    
@@ -96,8 +119,11 @@ namespace LEX
 			{
 				strcpy(ItE.id, prefix);
 				strncat(ItE.id, name,7);
-				ItE.id[strlen(ItE.id)] = fcnum;
-				ItE.id[strlen(ItE.id)] = 0x00;
+				char t[2];
+				t[0] = fcnum;
+				t[1] = 0x00;
+				strcat(ItE.id, t);
+		
 
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX) {
@@ -208,13 +234,6 @@ namespace LEX
 					case IT::STR:
 						{
 							strncpy(ItE.value.vstr.str,name,TI_STR_MAXSIZE);
-							if (strlen(ItE.value.vstr.str) >= TI_STR_MAXSIZE)
-							{
-								ItE.value.vstr.str[TI_STR_MAXSIZE - 1] = '\'';
-								ItE.value.vstr.str[TI_STR_MAXSIZE] = 0x00;
-							}
-						
-
 							ItE.value.vstr.len = strlen(name)-2;
 							break;
 						}
@@ -253,7 +272,7 @@ namespace LEX
 				char t[2];
 				
 				strcpy(ItE.id, name);	
-				while (tmp <= fcnum)
+				while (tmp < fcnum)
 				{
 					tmp++;
 					t[0] = tmp;
@@ -271,12 +290,21 @@ namespace LEX
 				
 
 				}
+
+				strcpy(ItE.id, name);
+				int std = IT::IsId(lex.idtable, ItE.id);				//ид функции
+				if (std != TI_NULLIDX)
+				{
+					break;
+				}
+
 				strcpy(ItE.id,prefix);
-				strcat(ItE.id, name);			
-				ItE.id[strlen(ItE.id)] = fcnum;
-				ItE.id[strlen(ItE.id)] = 0x00;
+				strcat(ItE.id, name);		
+				t[0] = fcnum;
+				t[1] = 0x00;
+				strcat(ItE.id,t);
 				rc = IT::IsId(lex.idtable, ItE.id);				//ид переменной
-				if (rc == TI_NULLIDX && fc == TI_NULLIDX)
+				if (rc == TI_NULLIDX && fc == TI_NULLIDX && std==TI_NULLIDX)
 				{
 					Error::adderr(122,line,  ers);
 				}
@@ -318,6 +346,7 @@ namespace LEX
 		int er_numb = ers.size;
 		Lex lex;  
 		bool chain = false;
+		AddStdFunc(lex);
 		FST::FST* fsts = FST::crfsts();  
 		for (int i = 0; i < in.size; i++)
 		{
@@ -344,6 +373,7 @@ namespace LEX
 			if (lex.lextable.table[i].idxTI != LT_TI_NULLIDX)
 				std::cout << "   " << lex.idtable.table[lex.lextable.table[i].idxTI].id << "  " << lex.lextable.table[i].idxTI;
 		}
+
 		return lex;
 	}
 }

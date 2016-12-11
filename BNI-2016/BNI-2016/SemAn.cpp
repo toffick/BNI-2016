@@ -13,6 +13,7 @@ namespace SA
 		er = ExpressionOperandsType(lex, err);
 		er = ValidReturnValue(lex, err);
 		er = ValidParmValue(lex, err);
+		er = ValidParmSTDValue(lex, err);
 
 		if(err.size)
 			throw ERROR_THROW(700);
@@ -87,7 +88,7 @@ namespace SA
 				typeoffunc = lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype;						//запомнить тип функции
 				while (lex.lextable.table[i].lexema != LEX_RETURN)												//дойти по таблице лексем до ретурна
 					i++;
-				if (lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype != typeoffunc)					//ссчитать тип ретурна
+				if (lex.lextable.table[i+1].idxTI!=TI_NULLIDX && lex.idtable.table[lex.lextable.table[++i].idxTI].iddatatype != typeoffunc)					//ссчитать тип ретурна
 				{
 					Error::adderr(704, lex.lextable.table[i].sn, err);											
 					errflag = false;
@@ -130,7 +131,7 @@ namespace SA
 									forinsideloop += 2;
 								}
 							}
-							//дописать ошибку на неверное кол-во параметров
+							
 
 						}
 
@@ -145,7 +146,54 @@ namespace SA
 		return errflag;
 	}
 
+	bool ValidParmSTDValue(LEX::Lex lex, Error::Errors& err)
+	{
+		bool errflag = true;
+		for (int i = 0; i < 2;i++)								//перебор всех идентификатров
+		{
+			IT::Entry entry = lex.idtable.table[i];
 
+			if (lex.idtable.table[i].idtype == IT::F)							//поиск функции
+			{
+				for (int j = 0; j < lex.lextable.size; j++)						//поиск лексемы с ид функции
+				{
+					
+					if (lex.lextable.table[j].idxTI == i)						//нашли лексему
+					{
+						int numbofcurfunc = 0;
+						int indinside = j+2;
+						while (numbofcurfunc<entry.value.parmvalue)
+						{
+							if (lex.idtable.table[lex.lextable.table[indinside].idxTI].iddatatype != entry.value.parmtype[numbofcurfunc])
+							{
+								Error::adderr(705, lex.lextable.table[indinside].sn, err);
+								errflag = false;
+							}
+							{
+								int indinside = i + 2;
+								numbofcurfunc++;
+							}
+
+
+						}
+					
+					}
+
+
+				}
+
+
+
+			}
+
+
+
+
+
+		}
+		return errflag;
+	
+	}
 }
 
 

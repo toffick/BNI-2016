@@ -6,11 +6,21 @@ extern "C"
 {
 	int _stdcall  strl(const char* str)
 	{
-		return strlen(str);
+		int i = strlen(str);
+		_asm
+		{
+			mov edx, i
+		}
+		return i;
 	}
 	int _stdcall ipow(int i, int j)
 	{
-		return (int)pow(i,j);
+		int o = (int)pow(i,j);
+		_asm
+		{
+			mov edx, o
+		}
+		return o;
 	}
 
 	void _stdcall  writes(const char* s)

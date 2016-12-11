@@ -252,13 +252,12 @@ namespace FST {
 			NODE(1, RELATION('y', 7)),
 			NODE()
 			);
-		FST fst_strlen("", LEX_ID, FST_STD_LIB, 7,
+		FST fst_strlen("", LEX_ID, FST_STD_LIB, 5,
 			NODE(1, RELATION('s', 1)),
 			NODE(1, RELATION('t', 2)),
 			NODE(1, RELATION('r', 3)),
 			NODE(1, RELATION('l', 4)),
-			NODE(1, RELATION('e', 5)),
-			NODE(1, RELATION('n', 6)),
+	
 			NODE()
 			);
 		FST fst_ipow("", LEX_ID, FST_STD_LIB, 5,

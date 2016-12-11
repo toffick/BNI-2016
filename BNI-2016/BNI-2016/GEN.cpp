@@ -41,7 +41,7 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n\n"
+#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n call ExitProcess\n\n{0} ENDP\n\n"
 #define T0_1 "\n{0} PROC ;F\n;N\n  ;E\n pop edx\n ret \n\n{0} ENDP \n\n ;S\n"
 #define T0_2 "\n{0} PROC ;F\n  ;E\n pop edx\n  ret \n\n{0} ENDP  \n\n"
 #define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop edx\n ret \n\n{0} ENDP \n\n"
@@ -79,8 +79,8 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	std::string gencode;
 	std::cout << "\n________________________________\n";
 	gencode += TITLE;
-	gencode += LINE_BREAK;
-	gencode += CreateProtSeg(lex);
+	//gencode += LINE_BREAK;
+//	gencode += CreateProtSeg(lex);
 	gencode += STACK;
 	gencode += LINE_BREAK;
 	
@@ -103,8 +103,7 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 
 std::cout << gencode;
 *(log.stream_out) << gencode;
- //std::ofstream outstream(parm.out);
- //outstream << gencode;
+
 }
 
 
@@ -284,8 +283,8 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 	std::string tmp;
 	int i;
 	LT::Entry* Expression = new LT::Entry[100];
-	for (int i = 0; i < 100; i++)
-		std::cout << Expression[i].lexema;
+	//for (int i = 0; i < 100; i++)
+		//std::cout << Expression[i].lexema;
 	PN::PolishNotation(Expression,mfst.deducation.lp[*IdIndex] + 2, lex.lextable, lex.idtable);
 	for (i = 0; Expression[i].sn > 0;i++)
 	{	
@@ -310,6 +309,7 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 					tmp += GEN1(ID_LIT_S_L, lex.idtable.table[Expression[i].idxTI].id);
 				break;
 			case IT::F:
+
 				tmp += GEN1(CALL, lex.idtable.table[Expression[i].idxTI].id);
 				break;
 			}
@@ -342,31 +342,31 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 	return tmp;
 }
 
-std::string Gen::CreateProtSeg(LEX::Lex lex)
-{
-	std::string tmp;
-	for (int i = 0; i < lex.idtable.size; i++)
-	{
-		if (lex.idtable.table[i].idtype == IT::F && strcmp(lex.idtable.table[i].id, "main"))
-		{
-			tmp += lex.idtable.table[i++].id;
-			tmp += SPACE;
-			tmp += PROTO;
-			tmp += SPACE;
-			while (lex.idtable.table[i].idtype == IT::P)
-			{
-				if(lex.idtable.table[i++].iddatatype==IT::INT)
-				tmp += PROT_PARM_I;
-				else 
-					tmp += PROT_PARM_S;
-
-				tmp += ',';
-			}
-			tmp[tmp.size()-1] = '\n';
-		}
-	}
-	return tmp;
-}
+//std::string Gen::CreateProtSeg(LEX::Lex lex)
+//{
+//	std::string tmp;
+//	for (int i = 0; i < lex.idtable.size; i++)
+//	{
+//		if (lex.idtable.table[i].idtype == IT::F && strcmp(lex.idtable.table[i].id, "main"))
+//		{
+//			tmp += lex.idtable.table[i++].id;
+//			tmp += SPACE;
+//			tmp += PROTO;
+//			tmp += SPACE;
+//			while (lex.idtable.table[i].idtype == IT::P)
+//			{
+//				if(lex.idtable.table[i++].iddatatype==IT::INT)
+//				tmp += PROT_PARM_I;
+//				else 
+//					tmp += PROT_PARM_S;
+//
+//				tmp += ',';
+//			}
+//			tmp[tmp.size()-1] = '\n';
+//		}
+//	}
+//	return tmp;
+//}
 std::string Gen::CreateDatSeg(std::string& tmp, LEX::Lex lex)
 {
 	tmp += DBLINE_BREAK;
