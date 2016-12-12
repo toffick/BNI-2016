@@ -26,7 +26,11 @@ extern "C"
 	void _stdcall  writes(const char* s)
 	{
 		setlocale(0, "rus");
+		if (s != nullptr)
 		std::cout << std::endl << s;
+		else 
+			std::cout << "\n_bad string value_\n" << s;
+
 	}
 	void _stdcall  writei(int i)
 	{

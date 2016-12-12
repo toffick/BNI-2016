@@ -195,7 +195,7 @@ namespace MFST
 	{
 		MfstState state;
 		GRB::Rule rule;
-		*(log.stream) << "\nДерево разбора\n";
+		*(log.stream) << "\n\n\n--------------------------------------------------------------------\nДерево разбора\n";
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 			state = storestate._Get_container()[k];
@@ -289,7 +289,7 @@ namespace MFST
 
 		bool rc = false;
 		RC_STEP rc_step = SURPRISE;
-		*(log.stream) << "\n\nТрассировка\n";
+		*(log.stream) << "\n\n\n--------------------------------------------------------------------\nТрассировка\n";
 		if (parm.tr)
 			MFST_TRACE_START;
 		char buf[MFST_DIAGN_MAXSIZE];

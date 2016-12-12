@@ -41,24 +41,31 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n call ExitProcess\n\n{0} ENDP\n\n"
-#define T0_1 "\n{0} PROC ;F\n;N\n  ;E\n pop edx\n ret \n\n{0} ENDP \n\n ;S\n"
-#define T0_2 "\n{0} PROC ;F\n  ;E\n pop edx\n  ret \n\n{0} ENDP  \n\n"
-#define T0_3 "\n{0} PROC ;F\n;N\n ;E\n pop edx\n ret \n\n{0} ENDP \n\n"
-#define T0_4 "\n{0} PROC ;F\n  ;E\n pop edx\n ret \n\n{0} ENDP\n;S\n\n"
+#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n;E\n call ExitProcess\n\n\nEXIT_div_on_NULL:\n\
+ push offset DIV_NULL\n\
+ call writes\n\
+ push - 1\n\ call ExitProcess\n\nEXIT_overflow:\n\
+ push offset Overflow\n\
+ call writes\n\
+ push - 2\n\
+ call ExitProcess\n\n\n{0} ENDP\n\n"
+#define T0_1 "\n{0} PROC ;F\n;N\n;E\n pop edx\n ret \n\n{0} ENDP \n\n ;S\n"
+#define T0_2 "\n{0} PROC ;F\n;E\n pop edx\n  ret \n\n{0} ENDP  \n\n"
+#define T0_3 "\n{0} PROC ;F\n;N\n;E\n pop edx\n ret \n\n{0} ENDP \n\n"
+#define T0_4 "\n{0} PROC ;F\n;E\n pop edx\n ret \n\n{0} ENDP\n;S\n\n"
 //#define T0_5 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
 
 #define T1_3  " pop {0}\n"
 #define T1_9  " pop {0}\n\n;N "
 
-#define T1_4_S  " ;E  call writes\n"
-#define T1_4_I  " ;E  call writei\n"
+#define T1_4_S  ";E  call writes\n"
+#define T1_4_I  ";E  call writei\n"
 
-#define T1_12_S  " ;E  call writes\n;N \n"
-#define T1_12_I  " ;E  call writei\n;N \n"
+#define T1_12_S  ";E  call writes\n;N \n"
+#define T1_12_I  ";E  call writei\n;N \n"
 
-#define T3_0_I " {0}:SDWORD\n\n"
-#define T3_0_S " {0}:DWORD\n\n"
+#define T3_0_I " {0}:SDWORD\n"
+#define T3_0_S " {0}:DWORD\n"
 
 #define T3_1_I "{0}:SDWORD, ;F\n"
 #define T3_1_S "{0}:DWORD, ;F\n"
@@ -69,10 +76,12 @@ sum    PROTO : DWORD, : DWORD\n\
 
 #define CALL " call {0}\n push edx\n"
 
-#define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n push eax\n"
-#define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n push eax\n"
-#define EXPR_SUB_IMUL " pop ebx\n pop eax\n sub eax,ebx\n push eax\n"
-#define EXPR_DIV_IMUL " pop ebx\n pop eax\n cdq\n idiv ebx\n push eax\n"
+#define EXPR_INT_PLUS " pop eax\n pop ebx\n add eax,ebx\n jo EXIT_overflow\n push eax\n"
+#define EXPR_INT_IMUL " pop eax\n pop ebx\n imul eax,ebx\n jo EXIT_overflow\n push eax\n"
+#define EXPR_SUB_IMUL " pop ebx\n pop eax\n sub eax,ebx\n jo EXIT_overflow\n push eax\n"
+#define EXPR_DIV_IMUL " pop ebx\n pop eax\n test ebx, ebx\n\
+ jz EXIT_div_on_NULL\n\
+ cdq\n idiv ebx\n push eax\n"
 
 void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 {
@@ -105,11 +114,6 @@ std::cout << gencode;
 *(log.stream_out) << gencode;
 
 }
-
-
-
-
-
 
 
 std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
@@ -162,9 +166,6 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			case 4:
 				tmp.insert(firstOfNoTerminal, GEN1(T0_4, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
-			//case 5:
-				//tmp.insert(firstOfNoTerminal, GEN1(T0_5, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
-				//break;
 			}
 			break;
 		}
@@ -283,8 +284,7 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 	std::string tmp;
 	int i;
 	LT::Entry* Expression = new LT::Entry[100];
-	//for (int i = 0; i < 100; i++)
-		//std::cout << Expression[i].lexema;
+
 	PN::PolishNotation(Expression,mfst.deducation.lp[*IdIndex] + 2, lex.lextable, lex.idtable);
 	for (i = 0; Expression[i].sn > 0;i++)
 	{	
@@ -336,37 +336,11 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 	int line = lex.lextable.table[mfst.deducation.lp[*IdIndex]].sn;
 	while (line == lex.lextable.table[mfst.deducation.lp[*IdIndex]].sn)
 		(*IdIndex)++;
-	//*IdIndex += i;
 	(*IdIndex)--;
 
 	return tmp;
 }
 
-//std::string Gen::CreateProtSeg(LEX::Lex lex)
-//{
-//	std::string tmp;
-//	for (int i = 0; i < lex.idtable.size; i++)
-//	{
-//		if (lex.idtable.table[i].idtype == IT::F && strcmp(lex.idtable.table[i].id, "main"))
-//		{
-//			tmp += lex.idtable.table[i++].id;
-//			tmp += SPACE;
-//			tmp += PROTO;
-//			tmp += SPACE;
-//			while (lex.idtable.table[i].idtype == IT::P)
-//			{
-//				if(lex.idtable.table[i++].iddatatype==IT::INT)
-//				tmp += PROT_PARM_I;
-//				else 
-//					tmp += PROT_PARM_S;
-//
-//				tmp += ',';
-//			}
-//			tmp[tmp.size()-1] = '\n';
-//		}
-//	}
-//	return tmp;
-//}
 std::string Gen::CreateDatSeg(std::string& tmp, LEX::Lex lex)
 {
 	tmp += DBLINE_BREAK;
@@ -399,7 +373,9 @@ std::string Gen::CreateConstSeg(std::string& tmp, LEX::Lex lex)
 	tmp += DBLINE_BREAK;
 	tmp += CONST;
 	tmp += LINE_BREAK;
-	tmp += "csname db 'BNI-2016', 0\n";
+	tmp += "csname db 'BNI-2016', 0\n\
+Overflow db 'ERROR on size of variable', 0\n\
+DIV_NULL db 'ERROR IN DIVISION(NULL)', 0\n";
 for (int i = 0; i < lex.idtable.size; i++)
  {
 	 if (lex.idtable.table[i].idtype == IT::L)

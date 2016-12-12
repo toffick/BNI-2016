@@ -44,10 +44,10 @@ namespace GRB {
 			8,                                // E?i | l | (E) | i(W) | iM | lM | (E)M | i(W)M
 			Rule::Chain(1, TS('i')),
 			Rule::Chain(1, TS('l')),
-			Rule::Chain(3, TS('('), NS('E'), TS(')')),
-			Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),
 			Rule::Chain(2, TS('i'), NS('M')),
 			Rule::Chain(2, TS('l'), NS('M')),
+			Rule::Chain(3, TS('('), NS('E'), TS(')')),
+			Rule::Chain(4, TS('i'), TS('('), NS('W'), TS(')')),
 			Rule::Chain(4, TS('('), NS('E'), TS(')'), NS('M')),
 			Rule::Chain(5, TS('i'), TS('('), NS('W'), TS(')'), NS('M'))
 			),
@@ -68,8 +68,9 @@ namespace GRB {
 		Rule(
 			NS('M'), GRB_ERROR_SERIES + 5,    // операторы в выражениях
 			2,								  // M ? aE | aEM
-			Rule::Chain(2, TS('a'), NS('E')),
-			Rule::Chain(3, TS('a'), NS('E'), NS('M'))
+			Rule::Chain(3, TS('a'), NS('E'), NS('M')),
+			Rule::Chain(2, TS('a'), NS('E'))
+			
 			)
 		);
 
