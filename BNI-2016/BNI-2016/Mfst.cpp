@@ -223,7 +223,7 @@ namespace MFST
 		return true;
 		
 	}
-	Mfst::RC_STEP Mfst::step(Parm::PARM parm, Log::LOG log)
+	Mfst::RC_STEP Mfst::step(Parm::PARM parm, Log::LOG log, Error::Errors& err)
 	{
 		RC_STEP rc = SURPRISE;
 
@@ -277,13 +277,21 @@ namespace MFST
 		}
 		else
 		{
+			if (!st.empty())
+			{
+				Error::adderr(606,err);
+					throw ERROR_THROW(606);
+
+				savediagnosis(NS_NORULECHAIN);
+
+			}
 			rc = LENTA_END;
 		};
 
 		return rc;
 	};
 	
-	bool Mfst::start(Parm::PARM parm, Log::LOG log)
+	bool Mfst::start(Parm::PARM parm, Log::LOG log, Error::Errors& err)
 	{
 		
 
@@ -293,9 +301,9 @@ namespace MFST
 		if (parm.tr)
 			MFST_TRACE_START;
 		char buf[MFST_DIAGN_MAXSIZE];
-		rc_step = step(parm,log);
+		rc_step = step(parm,log,err);
 		while (rc_step == NS_OK || rc_step == NS_NORULECHAIN || rc_step == TS_OK || rc_step == TS_NOK)
-			rc_step = step(parm,log);
+			rc_step = step(parm,log,err);
 		switch (rc_step)
 		{
 		case LENTA_END: 

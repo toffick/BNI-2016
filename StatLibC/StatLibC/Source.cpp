@@ -43,7 +43,7 @@ extern "C"
 	{
 		setlocale(0, "rus");
 		if (s != nullptr)
-		std::cout << std::endl << s;
+			std::cout << std::endl << s;
 		else 
 			std::cout << "\n_bad string value_\n";
 

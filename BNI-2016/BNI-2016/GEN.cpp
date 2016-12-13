@@ -74,6 +74,10 @@ sum    PROTO : DWORD, : DWORD\n\
 #define T1_4_S  ";E  call writes\n"
 #define T1_4_I  ";E  call writei\n"
 
+#define T1_6_S " push offset newline\n call writes\n"
+#define T1_6_S " push offset newline\n call writes\n;N\n"
+
+
 #define T1_12_S  ";E  call writes\n;N \n"
 #define T1_12_I  ";E  call writei\n;N \n"
 
@@ -201,7 +205,17 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 
 				break;
 			}
-			case 10:/*N-> dE;N*/
+			case 5:/*N-> d;*/
+			{
+
+				tmp.erase(firstOfNoTerminal, 3);
+				tmp.insert(firstOfNoTerminal, GEN0(T1_6_S));
+				
+					
+
+				break;
+			}
+			case 11:/*N-> dE;N*/
 			{
 			
 				tmp.erase(firstOfNoTerminal, 3);
@@ -211,13 +225,20 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 					tmp.insert(firstOfNoTerminal, GEN0(T1_12_I));		
 				break;
 			}
-			case 9: /*N-> i=E;N*/
+			case 10: /*N-> i=E;N*/
 			{
 				tmp.erase(firstOfNoTerminal, 3);
 				std::string mm = GEN1(T1_9, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
 				std::string ll = CreateExpression(lex, mfst, &i);
 
 				tmp.insert(firstOfNoTerminal, ll + mm);
+				break;
+			}
+			case 12: /*N-> d;N*/
+			{
+			
+				tmp.erase(firstOfNoTerminal, 3);
+				tmp.insert(firstOfNoTerminal, GEN0(T1_6_S));
 				break;
 			}
 			}
@@ -377,8 +398,9 @@ std::string Gen::CreateConstSeg(std::string& tmp, LEX::Lex lex)
 	tmp += CONST;
 	tmp += LINE_BREAK;
 	tmp += "csname db 'BNI-2016', 0\n\
-Overflow db 'ERROR on size of variable', 0\n\
-DIV_NULL db 'ERROR IN DIVISION(NULL)', 0\n";
+Overflow db 'ERROR overflow', 0\n\
+DIV_NULL db 'ERROR DBN', 0\n\
+newline db ' ',0\n";
 for (int i = 0; i < lex.idtable.size; i++)
  {
 	 if (lex.idtable.table[i].idtype == IT::L)

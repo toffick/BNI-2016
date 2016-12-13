@@ -33,7 +33,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		LEX::Lex lex = LEX::StartLA(in, errors);
 		Log::WriteLAtables(lex.lextable, lex.idtable, parm, log);
 		MFST::Mfst mfst(lex, GRB::getGreibach());
-		mfst.start(parm,log);
+		mfst.start(parm,log,errors);
 		SA::MainSemanticAnalize(lex, log, errors);
 		mfst.savededucation();
 		mfst.printrules(log);

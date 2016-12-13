@@ -212,7 +212,7 @@ namespace SA
 		{
 			if (lex.lextable.table[i].lexema == LEX_DISPLAY || lex.lextable.table[i].lexema == LEX_RETURN)
 			{
-				if (lex.lextable.table[i + 2].lexema != LEX_SEMICOLON)
+				if (lex.lextable.table[i + 2].lexema != LEX_SEMICOLON && lex.lextable.table[i + 1].lexema != LEX_SEMICOLON)
 				{
 					Error::adderr(709, lex.lextable.table[i].sn, err);
 					errflag = false;

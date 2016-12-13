@@ -267,7 +267,7 @@ namespace LEX
 
 			default:										//когда пришел ид без параметров
 			{
-				int fc;
+				int fc=0;
 				char tmp = '0';
 				char t[2];
 				
