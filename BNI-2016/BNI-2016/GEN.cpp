@@ -41,18 +41,31 @@ sum    PROTO : DWORD, : DWORD\n\
 #define GEN1(str, var1)			fmt::format(str, var1)
 #define GEN0(str)				fmt::format(str)
 
-#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n;E\n call ExitProcess\n\n\nEXIT_div_on_NULL:\n\
+#define T0_0 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n\ jmp EXIT\nEXIT_div_on_NULL:\n\
  push offset DIV_NULL\n\
  call writes\n\
  push - 1\n\ call ExitProcess\n\nEXIT_overflow:\n\
  push offset Overflow\n\
  call writes\n\
  push - 2\n\
- call ExitProcess\n\n\n{0} ENDP\n\n"
-#define T0_1 "\n{0} PROC ;F\n;N\n;E\n pop edx\n ret \n\n{0} ENDP \n\n ;S\n"
-#define T0_2 "\n{0} PROC ;F\n;E\n pop edx\n  ret \n\n{0} ENDP  \n\n"
-#define T0_3 "\n{0} PROC ;F\n;N\n;E\n pop edx\n ret \n\n{0} ENDP \n\n"
-#define T0_4 "\n{0} PROC ;F\n;E\n pop edx\n ret \n\n{0} ENDP\n;S\n\n"
+ call ExitProcess\n\nEXIT:\n ;E\n call ExitProcess\n\n\n{0} ENDP\n\n"
+#define T0_1 "\n{0} PROC ;F\n;N\n;E\n pop edx\n \n jmp EXIT\nEXIT_div_on_NULL:\n\
+ push offset DIV_NULL\n\
+ call writes\n\
+ push - 1\n\ call ExitProcess\n\nEXIT_overflow:\n\
+ push offset Overflow\n\
+ call writes\n\
+ push - 2\n\
+ call ExitProcess\n\nEXIT: \n ret \n\n{0} ENDP \n\n ;S\n"
+
+#define T0_4 "\n{0} PROC ;F\n;E\n pop edx\n  \n jmp EXIT\nEXIT_div_on_NULL:\n\
+ push offset DIV_NULL\n\
+ call writes\n\
+ push - 1\n\ call ExitProcess\n\nEXIT_overflow:\n\
+ push offset Overflow\n\
+ call writes\n\
+ push - 2\n\
+ call ExitProcess\n\nEXIT: \n ret \n\n{0} ENDP\n;S\n\n"
 //#define T0_5 "\n{0} PROC \n push offset csname\n call SetConsoleTitleA\n ;N\n ;E\n\n\n  call ExitProcess\n\n{0} ENDP\n;S\n\n"
 
 #define T1_3  " pop {0}\n"
@@ -143,11 +156,7 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 		case 0:
 		{
 			tmp.erase(firstOfNoTerminal, 3);
-			//if (mfst.deducation.nrulechains[i] != 0 && mfst.deducation.nrulechains[i] != 5) //кол-во параметров для функции(кроме main)
-			//{
-			//	sizeofstackremove = lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].value.parmvalue;
-			//	sizeofstackremove *= 4;
-			//}
+
 			switch (mfst.deducation.nrulechains[i])
 			{
 			case 0:
@@ -157,12 +166,7 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			case 1:
 				tmp.insert(firstOfNoTerminal, GEN1(T0_1, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
-			case 2:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_2, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
-				break;
-			case 3:
-				tmp.insert(firstOfNoTerminal, GEN1(T0_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
-				break;
+
 			case 4:
 				tmp.insert(firstOfNoTerminal, GEN1(T0_4, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i] + 2].idxTI].id));
 				break;
@@ -296,7 +300,6 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 			{
 			case IT::P:
 			case IT::V:
-			//case IT::L:
 				if (lex.idtable.table[Expression[i].idxTI].iddatatype == IT::INT)
 					tmp += GEN1(ID_LIT_I, lex.idtable.table[Expression[i].idxTI].id);
 				else
@@ -402,5 +405,3 @@ for (int i = 0; i < lex.idtable.size; i++)
 }
 return tmp;
 }
-
-

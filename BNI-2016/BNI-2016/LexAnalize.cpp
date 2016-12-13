@@ -77,7 +77,7 @@ namespace LEX
 				rc=newId(prefix, fst.string, ItE, ers, lex, line);
 				break;
 			case FST::FST_MAIN: 
-				ItE.iddatatype = IT::OFF;
+				ItE.iddatatype = IT::INT;
 				ItE.idtype = IT::F;
 				rc=newId(prefix, fst.string, ItE, ers, lex, line);
 				lex.idtable.table[lex.idtable.size - 1].id[strlen(lex.idtable.table[lex.idtable.size - 1].id) - 1] = 0x00;

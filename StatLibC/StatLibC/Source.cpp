@@ -6,11 +6,27 @@ extern "C"
 {
 	int _stdcall  strl(const char* str)
 	{
-		int i = strlen(str);
-		_asm
+		int i;
+		if (str != nullptr)
 		{
-			mov edx, i
+			i=strlen(str);
+
+			_asm
+			{
+				mov edx, i
+			}
 		}
+		else 
+		{
+			i = 0;
+
+			_asm
+			{
+				mov edx, i
+			}
+		
+		
+		} 
 		return i;
 	}
 	int _stdcall ipow(int i, int j)
@@ -29,7 +45,7 @@ extern "C"
 		if (s != nullptr)
 		std::cout << std::endl << s;
 		else 
-			std::cout << "\n_bad string value_\n" << s;
+			std::cout << "\n_bad string value_\n";
 
 	}
 	void _stdcall  writei(int i)

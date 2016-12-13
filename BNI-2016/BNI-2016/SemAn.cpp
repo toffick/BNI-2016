@@ -14,6 +14,7 @@ namespace SA
 		er = ValidReturnValue(lex, err);
 		er = ValidParmValue(lex, err);
 		er = ValidParmSTDValue(lex, err);
+		er=Expressiondiaplayreturn(lex,err);
 
 		if(err.size)
 			throw ERROR_THROW(700);
@@ -122,6 +123,8 @@ namespace SA
 								if (lex.lextable.table[forinsideloop].idxTI!=TI_NULLIDX && lex.idtable.table[lex.lextable.table[forinsideloop].idxTI].iddatatype != entry.value.parmtype[j])
 								{
 									Error::adderr(705, lex.lextable.table[forinsideloop].sn, err);
+									forinsideloop += 2;
+
 									errflag = false;
 									break;
 								}
@@ -132,7 +135,11 @@ namespace SA
 								}
 							}
 							
-
+							if (lex.lextable.table[forinsideloop - 1].lexema != LEX_RIGHTHESIS)
+							{
+								Error::adderr(708, lex.lextable.table[forinsideloop].sn, err);
+								errflag = false;
+							}
 						}
 
 
@@ -164,19 +171,23 @@ namespace SA
 						int indinside = j+2;
 						while (numbofcurfunc<entry.value.parmvalue)
 						{
-							if (lex.idtable.table[lex.lextable.table[indinside].idxTI].iddatatype != entry.value.parmtype[numbofcurfunc])
+							if (lex.lextable.table[indinside].idxTI != TI_NULLIDX && lex.idtable.table[lex.lextable.table[indinside].idxTI].iddatatype != entry.value.parmtype[numbofcurfunc])
 							{
 								Error::adderr(705, lex.lextable.table[indinside].sn, err);
 								errflag = false;
 							}
 							{
-								int indinside = i + 2;
+								 indinside+= 2;
 								numbofcurfunc++;
 							}
 
 
 						}
-					
+						if (lex.lextable.table[indinside - 1].lexema != LEX_RIGHTHESIS)
+						{
+							Error::adderr(708, lex.lextable.table[indinside].sn, err);
+							errflag = false;
+						}
 					}
 
 
@@ -194,7 +205,21 @@ namespace SA
 		return errflag;
 	
 	}
-}
+	bool Expressiondiaplayreturn(LEX::Lex lex, Error::Errors& err) 
+	{
+		bool errflag = true;
+		for (int i = 0; i < lex.lextable.size; i++)
+		{
+			if (lex.lextable.table[i].lexema == LEX_DISPLAY || lex.lextable.table[i].lexema == LEX_RETURN)
+			{
+				if (lex.lextable.table[i + 2].lexema != LEX_SEMICOLON)
+				{
+					Error::adderr(709, lex.lextable.table[i].sn, err);
+					errflag = false;
+				}
+			}
+		}
+		return errflag;	
+	}
 
-
-
+} 

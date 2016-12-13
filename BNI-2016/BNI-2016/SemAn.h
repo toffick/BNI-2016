@@ -12,5 +12,6 @@ namespace SA
 	bool ValidReturnValue(LEX::Lex, Error::Errors&);
 	bool ValidParmValue(LEX::Lex, Error::Errors&);
 	bool ValidParmSTDValue(LEX::Lex, Error::Errors&);
+	bool Expressiondiaplayreturn(LEX::Lex, Error::Errors&);
 
 }
