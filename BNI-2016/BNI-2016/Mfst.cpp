@@ -277,7 +277,7 @@ namespace MFST
 		}
 		else
 		{
-			if (!st.empty())
+			if (st.size()!=1)
 			{
 				Error::adderr(606,err);
 					throw ERROR_THROW(606);

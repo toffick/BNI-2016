@@ -75,7 +75,7 @@ sum    PROTO : DWORD, : DWORD\n\
 #define T1_4_I  ";E  call writei\n"
 
 #define T1_6_S " push offset newline\n call writes\n"
-#define T1_6_S " push offset newline\n call writes\n;N\n"
+#define T1_6_SN " push offset newline\n call writes\n;N\n"
 
 
 #define T1_12_S  ";E  call writes\n;N \n"
@@ -238,7 +238,7 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 			{
 			
 				tmp.erase(firstOfNoTerminal, 3);
-				tmp.insert(firstOfNoTerminal, GEN0(T1_6_S));
+				tmp.insert(firstOfNoTerminal, GEN0(T1_6_SN));
 				break;
 			}
 			}

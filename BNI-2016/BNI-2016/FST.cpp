@@ -163,14 +163,6 @@ namespace FST {
 			);
 	
 
-		FST fst_while("", LEX_WHILE, FST_WHILE, 6,
-			NODE(1, RELATION('w', 1)),
-			NODE(1, RELATION('h', 2)),
-			NODE(1, RELATION('i', 3)),
-			NODE(1, RELATION('l', 4)),
-			NODE(1, RELATION('e', 5)),
-			NODE()
-			);
 
 
 		FST fst_int("", LEX_INT, FST_INT, 4,
@@ -230,18 +222,7 @@ namespace FST {
 			NODE()
 			);
 
-		
-		FST fst_inc("", LEX_UNARY, FST_ARIPH, 3,
-			NODE(1, RELATION('+', 1)),
-			NODE(1, RELATION('+', 2)),
-			NODE()
-			);
-	
-		FST fst_dec("", LEX_UNARY, FST_ARIPH, 3,
-			NODE(1, RELATION('-', 1)),
-			NODE(1, RELATION('-', 2)),
-			NODE()
-			);
+
 		FST fst_display("", LEX_DISPLAY, FST_DISPLAY,8,
 			NODE(1, RELATION('d', 1)),
 			NODE(1, RELATION('i', 2)),
@@ -348,12 +329,7 @@ namespace FST {
 		FST* mas = new FST[FST_ARR_SIZE];
 		int i = 0;
 		mas[i++] = fst_strlen;
-		mas[i++] = fst_ipow;
-
-		mas[i++] = fst_while;
-	
-		mas[i++] = fst_dec;
-		mas[i++] = fst_inc;
+		mas[i++] = fst_ipow;		
 		mas[i++] = fst_var;
 		mas[i++] = fst_ariph;
 		mas[i++] = fst_assig;

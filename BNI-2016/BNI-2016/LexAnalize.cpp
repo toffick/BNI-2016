@@ -40,7 +40,6 @@ namespace LEX
 		static IT::Entry ItE;											// формируемая строка ТИ
 		static char  prefix[TI_PREFIX_MAX_SIZE];						// имя текущей функции (префикс)
 		static bool param;												// ссчитываем ли параметры функции
-		static bool inloop = false;										// находимся ли в нутри цикла
 		static bool rc=true;											// проверка на очистку стрки ти 
 		if (rc)															
 		{		
@@ -61,8 +60,7 @@ namespace LEX
 				break;
 			
 			case FST::FST_VAR:  
-				if(inloop)
-					Error::adderr(123, line, ers);
+				
 				ItE.idtype = IT::V;   
 				break;
 			case FST::FST_FUNC: 
@@ -96,15 +94,11 @@ namespace LEX
 				ItE.iddatatype = IT::STR;
 				rc = newId(prefix, fst.string, ItE, ers, lex, line);
 				break;
-			case FST::FST_RIGHTBRACE:
-				inloop = false;																		//вышли из цикла
 
 			case FST::FST_RIGHTHESIS:
 				param = false;																		//вышли из параметров
 				break;
-			case FST::FST_WHILE:
-				inloop = true;
-				break;
+			
 		};
 	};
 
@@ -367,13 +361,13 @@ namespace LEX
 			}
 		}
 
-		for (int i = 0; i < lex.lextable.size; i++)
+	/*	for (int i = 0; i < lex.lextable.size; i++)
 		{
 			std::cout << std::endl << lex.lextable.table[i].lexema;
 			if (lex.lextable.table[i].idxTI != LT_TI_NULLIDX)
 				std::cout << "   " << lex.idtable.table[lex.lextable.table[i].idxTI].id << "  " << lex.lextable.table[i].idxTI;
 		}
-
+*/
 		return lex;
 	}
 }
