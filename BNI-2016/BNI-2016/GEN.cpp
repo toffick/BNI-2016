@@ -118,7 +118,7 @@ void Gen::StartGen(LEX::Lex lex, MFST::Mfst mfst, Log::LOG log, Parm::PARM parm)
 	gencode += CODE;
 	gencode += DBLINE_BREAK;
 
-	MainGen(gencode,lex, mfst);
+	MainGen(gencode,lex, mfst,log);
 	//gencode += CreateDatSeg(lex);
 	//gencode += CreateConstSeg(lex);
 
@@ -133,7 +133,7 @@ std::cout << gencode;
 }
 
 
-std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
+std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst, Log::LOG log)
 {
 	tmp += ";S";
 	int k = 0;
@@ -154,6 +154,7 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 		std::string notermforfind(";");
 		notermforfind.push_back(GRB::Rule::Chain::alphabet_to_char(rule.nn));
 		int firstOfNoTerminal = tmp.find(notermforfind);					//поиск позиции нетерменала текущего правила в строке
+
 		switch (mfst.deducation.nrules[i])
 		{
 	/*программные конструкции*/
@@ -182,19 +183,19 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 		{
 			switch (mfst.deducation.nrulechains[i])
 			{
-			case 1: /*N->dti;*/
+			case 0: /*N->dti;*/
 			{
 				tmp.erase(firstOfNoTerminal, 3);
 				break;
 			}
-			case 3:/*N-> i=E;*/
+			case 2:/*N-> i=E;*/
 			{
 				//tmp
 				tmp.erase(firstOfNoTerminal, 3);
 				tmp.insert(firstOfNoTerminal, CreateExpression(lex, mfst, &i)+ GEN1(T1_3, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			}
-			case 4:/*N-> dE;*/
+			case 3:/*N-> dE;*/
 			{
 				
 				tmp.erase(firstOfNoTerminal, 3);
@@ -205,17 +206,13 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 
 				break;
 			}
-			case 5:/*N-> d;*/
+			case 4:/*N->d;*/
 			{
-
 				tmp.erase(firstOfNoTerminal, 3);
 				tmp.insert(firstOfNoTerminal, GEN0(T1_6_S));
-				
-					
-
 				break;
 			}
-			case 11:/*N-> dE;N*/
+			case 9:/*N->dE;N*/
 			{
 			
 				tmp.erase(firstOfNoTerminal, 3);
@@ -225,16 +222,15 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 					tmp.insert(firstOfNoTerminal, GEN0(T1_12_I));		
 				break;
 			}
-			case 10: /*N-> i=E;N*/
+			case 8: /*N->i=E;N*/
 			{
 				tmp.erase(firstOfNoTerminal, 3);
-				std::string mm = GEN1(T1_9, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id);
-				std::string ll = CreateExpression(lex, mfst, &i);
+				
 
-				tmp.insert(firstOfNoTerminal, ll + mm);
+				tmp.insert(firstOfNoTerminal, CreateExpression(lex, mfst, &i) + GEN1(T1_9, lex.idtable.table[lex.lextable.table[mfst.deducation.lp[i]].idxTI].id));
 				break;
 			}
-			case 12: /*N-> d;N*/
+			case 10: /*N-> d;N*/
 			{
 			
 				tmp.erase(firstOfNoTerminal, 3);
@@ -293,12 +289,12 @@ std::string Gen::MainGen(std::string& tmp, LEX::Lex lex, MFST::Mfst mfst)
 		}
 
 //------------------------------------
-		char rbuf[205];
- std::cout <<"*********"<<std::endl<< std::setw(4) << std::left\
+		/*char rbuf[205];
+		*(log.stream_out) <<"*********"<<std::endl<< std::setw(4) << std::left\
 	<< std :: setw(5) << std::left << rule.getCRule(rbuf, state.nrulechain)\
 	<<"-----------------------------" << std::endl << "*********\n";
 
-			std::cout << "\n" << tmp<<"\n-----------------------------\n";
+		*(log.stream_out) << "\n" << tmp<<"\n-----------------------------\n";*/
 	}
 //------------------------------------	
 	return tmp;
@@ -364,7 +360,6 @@ std::string Gen::CreateExpression(LEX::Lex lex, MFST::Mfst mfst, unsigned short*
 
 	return tmp;
 }
-
 std::string Gen::CreateDatSeg(std::string& tmp, LEX::Lex lex)
 {
 	tmp += DBLINE_BREAK;
@@ -400,7 +395,7 @@ std::string Gen::CreateConstSeg(std::string& tmp, LEX::Lex lex)
 	tmp += "csname db 'BNI-2016', 0\n\
 Overflow db 'ERROR overflow', 0\n\
 DIV_NULL db 'ERROR DBN', 0\n\
-newline db ' ',0\n";
+newline db '0',0\n";
 for (int i = 0; i < lex.idtable.size; i++)
  {
 	 if (lex.idtable.table[i].idtype == IT::L)

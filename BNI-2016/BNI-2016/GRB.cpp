@@ -26,14 +26,12 @@ namespace GRB {
 			),
 		Rule(
 			NS('N'), GRB_ERROR_SERIES + 1,    // ошибочный оператор
-			13,                               // N->dti; | rE; | i=E; | dtfi(F); | dtiN | rE;N | i=E;N | dtfi(F);N |
-			Rule::Chain(5, TS('w'), TS('('), NS('E'), TS(')'),  NS('N')),					//цикл
+			11,                               // N->dti; | rE; | i=E; | dtfi(F); | dtiN | rE;N | i=E;N | dtfi(F);N |
 			Rule::Chain(4, TS('v'), TS('t'), TS('i'), TS(';')),												//объявление идентификатора
 			Rule::Chain(3, TS('r'), NS('E'), TS(';')),														//возврат
 			Rule::Chain(4, TS('i'), TS('='), NS('E'), TS(';')),												//присвоение значения
 			Rule::Chain(3, TS('d'), NS('E'), TS(';')),														//вывод выражения 
 			Rule::Chain(2, TS('d'),  TS(';')),														//вывод выражения 
-			Rule::Chain(6, TS('w'), TS('('), NS('E'), TS(')'),  NS('N'), NS('N')),			//цикл
 			Rule::Chain(4, TS('i'), NS('E'), TS(';'), NS('N')),												//только для унарных
 			Rule::Chain(5, TS('v'), TS('t'), TS('i'), TS(';'), NS('N')),									//объявления переенной
 			Rule::Chain(4, TS('r'), NS('E'), TS(';'), NS('N')),												//вохврат 

@@ -112,6 +112,9 @@ namespace In {
 						Error::adderr(111, ret.lines, pos, errarr);
 						break;
 				}
+				if(chain_len>254)
+					throw ERROR_THROW(117,ret.lines,pos);
+
 				pt = t;																					//предыдущий  символ
 				ret.chains[ret.size].line=ret.lines;													//запись в текущую цепочку номера строки 
 				pos++;

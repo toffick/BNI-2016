@@ -12,7 +12,7 @@ namespace Gen
 	std::string CreateProtSeg(LEX::Lex );
 	std::string CreateDatSeg(std::string&, LEX::Lex );
 	std::string CreateConstSeg(std::string&, LEX::Lex );
-	std::string MainGen(std::string&, LEX::Lex , MFST::Mfst );
-std::string CreateExpression(LEX::Lex, MFST::Mfst, unsigned short*);
+	std::string MainGen(std::string&, LEX::Lex , MFST::Mfst, Log::LOG);
+	std::string CreateExpression(LEX::Lex, MFST::Mfst, unsigned short*);
 
 }

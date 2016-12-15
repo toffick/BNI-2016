@@ -42,15 +42,20 @@ extern "C"
 	void _stdcall  writes(const char* s)
 	{
 		setlocale(0, "rus");
-		if (s != nullptr)
-			std::cout << std::endl << s;
+		if (!strcmp(s, "0"))
+			std::cout << std::endl;
 		else 
-			std::cout << "\n_bad string value_\n";
+		{
+			if (s != nullptr)
+				std::cout << s;
+			else
+				std::cout << "\n_bad string value_\n";
+		}
 
 	}
 	void _stdcall  writei(int i)
 	{
-		std::cout << i << std::endl;
+		std::cout << i;
 	}
 	int _stdcall  sum(int a, int b)
 	{

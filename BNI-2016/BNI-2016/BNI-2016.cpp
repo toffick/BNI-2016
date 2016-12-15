@@ -15,7 +15,6 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	time_t ttt = clock();
 
 	setlocale(LC_ALL, "rus");
 	Error::Errors errors;
@@ -48,11 +47,15 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << e.id << ": " << e.message << std::endl <<" Подробнее в журнале протокола log\n"<< std::endl;
 		printerr(errors);
 	}
+	catch (...)
+	{
+		std::cout << "\nНеизвестная ошибка\n";
+		printerr(errors);
+	}
 
 	Log::WriteError(log, errors);		//вывести в протокол информациб об ошибке
 	Log::close(log);
-	time_t mmm = clock();
-	std::cout << (mmm - ttt)/CLOCKS_PER_SEC;
+	
 	return 0;
 }
 

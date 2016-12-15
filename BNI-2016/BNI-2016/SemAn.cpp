@@ -41,7 +41,7 @@ namespace SA
 		bool strrightfalue=false;
 		for (int i = 0; i < lex.lextable.size; i++)
 		{
-			if (lex.lextable.table[i].lexema == LEX_ASSIG)																					//нашли присваивание													
+			if (lex.lextable.table[i].lexema == LEX_ASSIG && lex.lextable.table[i - 1].idxTI != TI_NULLIDX)																					//нашли присваивание													
 			{
 				findexpress = i + 1;
 				typeofleftvalue = lex.idtable.table[lex.lextable.table[ i - 1].idxTI].iddatatype;											//переменная для типа левостороннего значения

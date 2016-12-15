@@ -58,9 +58,7 @@ namespace LEX
 				if (param)
 					ItE.idtype = IT::P;
 				break;
-			
 			case FST::FST_VAR:  
-				
 				ItE.idtype = IT::V;   
 				break;
 			case FST::FST_FUNC: 
@@ -104,7 +102,7 @@ namespace LEX
 
 	bool newId(char* prefix, char* name, IT::Entry& ItE, Error::Errors& ers, Lex& lex,int line)
 	{
-		static char fcnum = '0';
+		char separ[2] = "0";
 		ItE.idxfirstLE = line;
 		int rc;
 			switch (ItE.idtype)
@@ -112,13 +110,7 @@ namespace LEX
 			case IT::V:
 			{
 				strcpy(ItE.id, prefix);
-				strncat(ItE.id, name,7);
-				char t[2];
-				t[0] = fcnum;
-				t[1] = 0x00;
-				strcat(ItE.id, t);
-		
-
+				strncat(ItE.id, name,10);
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX) {
 					switch (ItE.iddatatype)
@@ -149,36 +141,16 @@ namespace LEX
 			}
 			case IT::F:
 			{
-				strncpy(prefix,name,7);
-				int rc;
-				char tmp = '0';
-				char t[2];
+				strncpy(ItE.id, name, 10);
+				strcat(ItE.id, separ);
+				strcpy(prefix,ItE.id);
+				rc = IT::IsId(lex.idtable, ItE.id);				//ид функции
+				if(!strcmp(name,"ipow") || !strcmp(name, "strl"))
+					Error::adderr(120, line, ers);
 
-				strncpy(ItE.id, name,7);
-				while (tmp <= fcnum)
-				{
-					tmp++;
-					t[0] = tmp;
-					t[1] = 0x00;
-					strcat(ItE.id, t);
-					rc = IT::IsId(lex.idtable, ItE.id);				//ид функции
-					if (rc != TI_NULLIDX)
-					{
-						break;
-					}
-					else
-					{
-						ItE.id[strlen(ItE.id) - 1] = 0x00;
-					}
-
-
-				}
 				if (rc == TI_NULLIDX)
 				{
-					fcnum++;
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
-						ItE.id[strlen(ItE.id)] = fcnum;
-						ItE.id[strlen(ItE.id)] = 0x00;
 					IT::Add(lex.idtable, ItE);
 				}
 				else
@@ -189,19 +161,13 @@ namespace LEX
 			}
 			case IT::P:
 			{
-				char tmp[12];
-				strcpy(tmp,prefix);
-				tmp[strlen(tmp)+1] = 0x00;
-				tmp[strlen(tmp)] = fcnum;
-				int indfc = IT::IsId(lex.idtable, tmp);
+				strcpy(ItE.id, prefix);
+				strncat(ItE.id, name, 10);
+
+				int indfc = IT::IsId(lex.idtable, prefix);
 				if(indfc!=TI_NULLIDX)
 					lex.idtable.table[indfc].value.parmtype[lex.idtable.table[indfc].value.parmvalue++]=ItE.iddatatype;
-				
-				
-				strcpy(ItE.id, prefix);
-				strncat(ItE.id, name,7);
-				ItE.id[strlen(ItE.id)] = fcnum;
-				ItE.id[strlen(ItE.id)] = 0x00;
+
 				rc = IT::IsId(lex.idtable, ItE.id);
 				if (rc == TI_NULLIDX)
 				{
@@ -216,14 +182,15 @@ namespace LEX
 			}
 			case IT::L:
 			{
-				static char litnum = '0';
+				static int koko = 0;
+				char buf[10];
 				rc = IT::IsLiteral(lex.idtable, name,ItE);
 				if (rc == TI_NULLIDX)
 				{
-					ItE.id[0] = 'L';
-					ItE.id[1] = litnum++;
-					ItE.id[2] = 0x00;
-					switch (ItE.iddatatype)
+					_itoa(koko++,buf,10);	
+					strcpy(ItE.id, "L");
+					strcat(ItE.id, buf);
+						switch (ItE.iddatatype)
 					{
 					case IT::STR:
 						{
@@ -237,8 +204,6 @@ namespace LEX
 						
 						break;
 					}
-					
-
 					}
 					lex.lextable.table[lex.lextable.size - 1].idxTI = lex.idtable.size;						//если нет такого ид в таблице ид
 					IT::Add(lex.idtable, ItE);
@@ -261,42 +226,19 @@ namespace LEX
 
 			default:										//когда пришел ид без параметров
 			{
-				int fc=0;
-				char tmp = '0';
-				char t[2];
 				
-				strcpy(ItE.id, name);	
-				while (tmp < fcnum)
-				{
-					tmp++;
-					t[0] = tmp;
-					t[1] = 0x00;
-					strcat(ItE.id,t);
-					fc = IT::IsId(lex.idtable, ItE.id);				//ид функции
-					if (fc != TI_NULLIDX)
-					{
-						break;
-					}
-					else
-					{
-						ItE.id[strlen(ItE.id) - 1] = 0x00;
-					}
 				
-
-				}
+				strncpy(ItE.id, name,10);
+				strcat(ItE.id, separ);
+				int fc = IT::IsId(lex.idtable, ItE.id);				//ид функции
 
 				strcpy(ItE.id, name);
-				int std = IT::IsId(lex.idtable, ItE.id);				//ид функции
-				if (std != TI_NULLIDX)
-				{
-					break;
-				}
+				int std = IT::IsId(lex.idtable, ItE.id);				//ид  стандартной функции
+				
 
 				strcpy(ItE.id,prefix);
 				strcat(ItE.id, name);		
-				t[0] = fcnum;
-				t[1] = 0x00;
-				strcat(ItE.id,t);
+			
 				rc = IT::IsId(lex.idtable, ItE.id);				//ид переменной
 				if (rc == TI_NULLIDX && fc == TI_NULLIDX && std==TI_NULLIDX)
 				{
@@ -306,8 +248,11 @@ namespace LEX
 				{
 					if(rc!= TI_NULLIDX)
 					ItE = IT::getEntry(lex.idtable, rc);
-					else 
-					ItE = IT::getEntry(lex.idtable, fc);
+					else
+						if (std != TI_NULLIDX)
+						ItE = IT::getEntry(lex.idtable, std);
+						else
+							ItE = IT::getEntry(lex.idtable, fc);
 				}
 				break;
 			}		
